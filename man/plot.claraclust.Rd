@@ -4,43 +4,19 @@
 \alias{plot.claraclust}
 \title{Visualization of clustering solution by variables}
 \usage{
-\method{plot}{claraclust}(
-  x,
-  data,
-  variable = NULL,
-  type = NULL,
-  group_by = NULL,
-  confidence_threshold = 0,
-  metric = "euclidean",
-  silhouette_subsample = FALSE,
-  scale_sil = TRUE,
-  plot_all_fuzzy = FALSE,
-  ...
-)
+\method{plot}{claraclust}(x, data, type = NULL, confidence_threshold = 0, ...)
 }
 \arguments{
 \item{x}{an object of class claraclust}
 
 \item{data}{data.frame used for clustering}
 
-\item{variable}{name of variable to plot}
-
 \item{type}{type of plot}
-
-\item{group_by}{grouping variable for scatterplots}
 
 \item{confidence_threshold}{threshold for fuzzy clustering observations to
 be plotted}
 
-\item{metric}{distance metric for silhouette plot, default is euclidean. Irrelevant if silhouette_subsample is TRUE}
-
-\item{silhouette_subsample}{use the subsample from claraclust for silhouette plot instead of all samples}
-
-\item{scale_sil}{scale numeric variables for silhouette plot? Default TRUE, irrelevant if silhouette_subsample is TRUE}
-
-\item{plot_all_fuzzy}{for scatterplot and fuzzy clustering: if confidence threshold > 0, should the observations below the threshold be plotted transparent? Default is FALSE}
-
-\item{...}{additional arguments e.g. for distance metric}
+\item{...}{further arguments for plot functions}
 }
 \value{
 clustering plot
