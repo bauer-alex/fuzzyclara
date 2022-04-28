@@ -28,9 +28,7 @@
 #' (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})
 #'
 #' @return object of class claraclust
-#' @import cluster parallel checkmate tibble dplyr
-#' tidyselect
-#' @importFrom Matrix sparseMatrix
+#' @import cluster parallel checkmate tibble dplyr tidyselect
 #' @export
 claraclust <- function(data, clusters = 5, metric = "euclidean", samples = 10,
                        sample_size = NULL, type = "fixed", cores = 1,
@@ -45,7 +43,7 @@ claraclust <- function(data, clusters = 5, metric = "euclidean", samples = 10,
   checkmate::assert_choice(x = type, choices = c("fixed", "fuzzy"))
   checkmate::assert_numeric(x = cores, lower = 1)
   #checkmate::assert_numeric(x = m, lower = 1)
-  
+
   # pam requires the number of clusters to be smaller than the number of observations -> another check of sample_size
   if(type == "fixed" | m == 1 | clusters == 1){
     checkmate::assert_numeric(x= sample_size, lower = clusters + 1, null.ok = TRUE)
@@ -97,7 +95,7 @@ claraclust <- function(data, clusters = 5, metric = "euclidean", samples = 10,
   }
   else {
     dist_file <- NULL
-    
+
     if(scale == TRUE){
       ind <- unlist(lapply(data, is.numeric), use.names = TRUE)
       for (i in ind) {
@@ -105,8 +103,8 @@ claraclust <- function(data, clusters = 5, metric = "euclidean", samples = 10,
       }
     }
   }
-  
-  
+
+
 
   # optional: Scaling of numerical (and ordinal variables):
 
@@ -135,7 +133,7 @@ claraclust <- function(data, clusters = 5, metric = "euclidean", samples = 10,
   }
   # Sample definition is performed before parallelized computations in order
   # to get reproducible results.
-  
+
   # Use pam clustering if m = 1 or only a single cluster is used:
   change_output_style <- FALSE
   if ((type == "fuzzy" & m == 1) | (type == "fuzzy" & clusters == 1)) {
@@ -186,7 +184,7 @@ claraclust <- function(data, clusters = 5, metric = "euclidean", samples = 10,
       })
       stopCluster(local_cluster)
     }
-    
+
     # Other OS:
     else {
       clustering_results_list <- mclapply(X = 1:samples, FUN = function(i) {
@@ -231,7 +229,7 @@ claraclust <- function(data, clusters = 5, metric = "euclidean", samples = 10,
                                        type = type, m = m,
                                        return_distMatrix = TRUE)
   best_solution$distance_to_medoids <- clustering_results$distance_to_medoids
-  
+
   # Change output style if pam was used for type "fuzzy":
   if (change_output_style == TRUE) {
     # Type:
@@ -239,7 +237,8 @@ claraclust <- function(data, clusters = 5, metric = "euclidean", samples = 10,
     # Weighted distance:
     names(best_solution)[[3]] <- "avg_weighted_dist"
     # Membership scores:
-    membership <- sparseMatrix(i = 1:length(best_solution$clustering), j = best_solution$clustering, x = 1)
+    membership <- Matrix::sparseMatrix(i = 1:length(best_solution$clustering),
+                                       j = best_solution$clustering, x = 1)
     membership <- as.data.frame(as.matrix(membership))
     colnames(membership) <- paste0("Cluster", 1:ncol(membership))
     row.names(membership) <- data$Name

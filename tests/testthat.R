@@ -1,4 +1,4 @@
 library(testthat)
-library(TouristClust)
+library(fuzzyclara)
 
-test_check("TouristClust")
+test_check("fuzzyclara")

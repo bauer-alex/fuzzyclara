@@ -1,12 +1,12 @@
 ---
-title: "Functionality of TouristClust package (interactive)"
-author: "Maximilian Weigert, Asmik Nalmpatian, Alexander Bauer"
+title: "Functionality of fuzzyclara package (interactive)"
+author: "Maximilian Weigert, Asmik Nalmpatian, Jana Gauß, Alexander Bauer"
 date: "`r format(Sys.time(), '%d.%B %Y')`"
 output:
   html_document:
     toc: yes
   vignette: >
-    %\VignetteIndexEntry{Functionality of TouristClust package (interactive)}
+    %\VignetteIndexEntry{Functionality of fuzzyclara package (interactive)}
     %\usepackage[utf8]{inputenc}
     %\VignetteEngine{knitr::rmarkdown}
   rmarkdown::html_vignette: default
@@ -16,10 +16,10 @@ runtime: shiny
 ---
 
 This document gives an overview of the functionality provided by the R package
-`TouristClust`.
+`fuzzyclara`.
 
 ```{r packages, message = FALSE}
-library(TouristClust)
+library(fuzzyclara)
 library(dplyr)
 library(purrr)
 library(shiny)
