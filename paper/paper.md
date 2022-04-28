@@ -1,5 +1,5 @@
 ---
-title: 'TouristClust: Fuzzy clustering for high-dimensional data'
+title: 'fuzzyclara: Fuzzy clustering for high-dimensional data'
 tags:
   - R
   - Cluster analysis
@@ -17,7 +17,7 @@ authors:
 affiliations:
  - name: Department of Statistics, LMU Munich, Germany
    index: 1
-date: 02 July 2021
+date: 30 June 2022
 bibliography: paper.bib
 ---
 

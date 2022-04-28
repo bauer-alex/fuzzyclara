@@ -22,8 +22,7 @@
 #' (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})
 #'
 #' @return object of class claraclust
-#' @import cluster future checkmate future future.apply tibble dplyr
-#' tidyselect tidyverse scales
+#' @import cluster checkmate tibble dplyr tidyselect scales
 #' @importFrom stats as.formula prcomp
 #' @export
 
@@ -31,45 +30,45 @@ plot_cluster_numbers <- function(data, clusters_range = 2:5, metric = "euclidean
                                  sample_size = NULL, type = "fixed", cores = 1,
                                  seed = 1234, m = 2, verbose = 1, return_results = FALSE, ...) {
 
-  # Input checking: 
-  checkmate::assert_numeric(x = clusters_range, lower = 1, upper = nrow(data)) 
+  # Input checking:
+  checkmate::assert_numeric(x = clusters_range, lower = 1, upper = nrow(data))
 
   # Create data.frame with criterion results:
 
   criterion_df <- data.frame(cluster_number = clusters_range,
                       criterion = rep(0, length(clusters_range)))
-  
-  
+
+
   # create list for results
-  
+
   if(return_results == TRUE){
     results <- list()
   }
-  
+
   # Extract and append criterion value for each cluster number:
-  
+
   for(i in clusters_range){
-    y <- claraclust(data, clusters = i, metric = metric, sample_size = sample_size, samples = samples,  
+    y <- claraclust(data, clusters = i, metric = metric, sample_size = sample_size, samples = samples,
                     type = type, seed = seed, m = m, verbose = verbose, cores = cores)
-    
+
     if(return_results == TRUE){
       results[[length(results) + 1]] <- y
     }
-    
+
     if (type == "fixed") {
       criterion_df[criterion_df$cluster_number == i,]["criterion"] <- y$avg_min_dist
     } else {
       criterion_df[criterion_df$cluster_number == i,]["criterion"] <- y$avg_weighted_dist
     }
   }
-  
-  
+
+
   if (type == "fuzzy") {
     ylab_text <- "Minimal Weighted \nAverage Distance"
   } else {
     ylab_text <- "Minimal Average Distance"
   }
-  
+
   plot <- ggplot(criterion_df) +
     geom_line(aes(x = cluster_number, y = criterion), size = 1, linetype = "dotted", col = "darkslategrey") +
     geom_point(aes(x = cluster_number, y = criterion), size = 5, shape = 19, col = "darkslategrey") +
@@ -84,7 +83,7 @@ plot_cluster_numbers <- function(data, clusters_range = 2:5, metric = "euclidean
           axis.title.y = element_text(margin = margin(0, 10, 0, 0)),
           axis.title.x = element_text(margin = margin(10, 0, 0, 0)))+
     scale_x_continuous(breaks = breaks_width(1))
-  
+
   # Return the plot (and the cluster results):
   if(return_results == FALSE){
     return(plot)
@@ -93,7 +92,7 @@ plot_cluster_numbers <- function(data, clusters_range = 2:5, metric = "euclidean
     names(res) <- c("plot", "cluster_results")
     return(res)
   }
-  
+
 }
 
 
