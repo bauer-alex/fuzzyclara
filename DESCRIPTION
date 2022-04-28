@@ -1,0 +1,30 @@
+Package: fuzzyclara
+Title: Fuzzy Clara Clustering
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Maximilian",
+           family = "Weigert",
+           role = c("aut", "cre"),
+           email = "maximilian.weigert@stat.uni-muenchen.de",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: What the package does (one paragraph).
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    shiny
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+LinkingTo: 
+    Rcpp
+Imports: 
+    Rcpp, checkmate, cluster, dplyr, parallel, proxy, readxl,
+    vegclust, ggsci, ggwordcloud, ggpubr, factoextra, ggplot2, tibble,
+    tidyselect, scales
+Depends: 
+    R (>= 2.10)
