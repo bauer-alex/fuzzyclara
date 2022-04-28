@@ -158,7 +158,7 @@ plot(x = cc_fixed, data = USArrests_enriched, variable = "State",
 ### Scatterplot
 ```{r}
 plot(x = cc_fixed, data = USArrests_enriched, type = "scatterplot",
-     variable = "Murder", group_by = "Assault")
+     x_var = "Murder", y_var = "Assault")
 
 ```
 
@@ -185,12 +185,12 @@ plot(x = cc_fuzzy, data = USArrests_enriched, variable = "Assault", confidence_t
 
 ```{r fig.width=6, fig.height=4, message = FALSE}
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-     variable = "Murder", group_by = "Assault", confidence_threshold = 0)
+     x_var = "Murder", y_var = "Assault", confidence_threshold = 0)
 
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-     variable = "Murder", group_by = "Assault", confidence_threshold = 0.5)
+     x_var = "Murder", y_var = "Assault", confidence_threshold = 0.5)
 
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-     variable = "Murder", group_by = "Assault", confidence_threshold = 0.5, plot_all_fuzzy = TRUE)
+     x_var = "Murder", y_var = "Assault", confidence_threshold = 0.5, plot_all_fuzzy = TRUE)
 
 ```
