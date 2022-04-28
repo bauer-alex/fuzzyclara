@@ -43,6 +43,7 @@ plot.claraclust <- function(x, data,
     relevant_obs <- x$membership_scores %>%
       mutate(max_memb_score = do.call(pmax, c(., na.rm = TRUE))) %>%
       filter(max_memb_score >= confidence_threshold)
+    rel_obs <- rownames(relevant_obs)
 
     # transparent observations for scatterplot and pca
     transparent_obs <- data %>% dplyr::filter(!(row.names(data) %in%  rownames(relevant_obs)))
@@ -63,13 +64,15 @@ plot.claraclust <- function(x, data,
     plot <- clara_wordcloud(x = x, data = data, ...)
   }
   else if (!is.null(type) && type == "silhouette") {
-    plot <- clara_silhouette(x = x, data = data, ...)
+    plot <- clara_silhouette(x = x, data = data,
+                             rel_obs = rel_obs, ...)
   }
   else if (!is.null(type) && type == "pca") {
     plot <- clara_pca(x = x, data = data, ...)
   }
   else if (!is.null(type) && type == "scatterplot") {
-    plot <- clara_scatterplot(x = x, data = data, transparent_obs = transparent_obs, ...)
+    plot <- clara_scatterplot(x = x, data = data,
+                              transparent_obs = transparent_obs, ...)
   }
 
 
@@ -265,13 +268,15 @@ clara_scatterplot <- function(x, data, x_var, y_var, transparent_obs = NULL, plo
 #' @param metric distance metric for silhouette plot, default is euclidean. Irrelevant if silhouette_subsample is TRUE
 #' @param silhouette_subsample use the subsample from claraclust for silhouette plot instead of all samples
 #' @param scale_sil scale numeric variables for silhouette plot? Default TRUE, irrelevant if silhouette_subsample is TRUE
+#' @param rel_obs names of observations > threshold
 #' @return silhouette plot
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @export
 clara_silhouette <- function(x, data,
                              metric = "Euclidean",
                              silhouette_subsample = FALSE,
-                             scale_sil = TRUE){
+                             scale_sil = TRUE,
+                             rel_obs = NULL){
 
   if(scale_sil == TRUE){
     ind <- unlist(lapply(data, is.numeric), use.names = TRUE)
@@ -280,12 +285,36 @@ clara_silhouette <- function(x, data,
     }
   }
 
-
   if(silhouette_subsample == FALSE){
+
     sil <- silhouette(as.numeric(data$cluster), dist(select(data, -cluster), method = metric))
+
   } else { # use only subsamples from claraclust in order to not calculate the distance matrix between all samples
-    data_sub <- data[x$subsample_ids, ]
-    sil <- silhouette(as.numeric(data_sub$cluster), x$dist_matrix)
+
+    if(x$type == "fixed"){ # fixed clustering
+
+      data_sub <- data[x$subsample_ids, ]
+      sil <- silhouette(as.numeric(data_sub$cluster), x$dist_matrix)
+
+    } else{ # fuzzy clustering -> data is already filtered by threshold. Distance matrix has to be filtered too
+
+      # considered observations: part of subsample and rel_obs
+      rel_obs_sil <- intersect(rel_obs, rownames(x$distance_to_medoids)[x$subsample_ids])
+
+      data_sub <- data[rel_obs_sil,]
+
+      # get corresponding distance matrix:
+      dist_matrix <- as.matrix(cc_fuzzy$dist_matrix)
+      rownames(dist_matrix) <- rownames(x$distance_to_medoids)[x$subsample_ids]
+      colnames(dist_matrix) <- rownames(x$distance_to_medoids)[x$subsample_ids]
+
+      dist <- dist_matrix[rel_obs_sil, rel_obs_sil]
+
+      sil <- silhouette(as.numeric(data_sub$cluster), dist)
+
+    }
+
+
   }
 
   plot <- fviz_silhouette(sil) + theme_minimal() +

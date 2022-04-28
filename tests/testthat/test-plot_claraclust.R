@@ -145,6 +145,13 @@ test_that("plot_claraclust", { # plots
                          cc_fuzzy$membership_scores$Cluster3) >= 0.5)
   expect_identical(n_obs_conf, nrow(p$data))
 
+  # silhouette, fuzzy, silhouette_subsample = TRUE
+  invisible(capture.output(p <- plot(x = cc_fuzzy, data = USArrests, type = "silhouette",
+                                     silhouette_subsample = TRUE)))
+  # check class of object
+  expect_s3_class(p, "ggplot")
+  expect_s3_class(p$layers[[1]]$geom, "GeomBar")
+
 
 })
 
