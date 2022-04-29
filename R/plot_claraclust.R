@@ -304,7 +304,7 @@ clara_silhouette <- function(x, data,
       data_sub <- data[rel_obs_sil,]
 
       # get corresponding distance matrix:
-      dist_matrix <- as.matrix(cc_fuzzy$dist_matrix)
+      dist_matrix <- as.matrix(x$dist_matrix)
       rownames(dist_matrix) <- rownames(x$distance_to_medoids)[x$subsample_ids]
       colnames(dist_matrix) <- rownames(x$distance_to_medoids)[x$subsample_ids]
 

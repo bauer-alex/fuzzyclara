@@ -12,7 +12,7 @@
 #' @param dist_file scheme for TourIST distance calculation
 #' @param verbose_toLogFile If TRUE, the diagnostic messages are printed to
 #' a log file \code{clustering_progress.log}. Defaults to FALSE.
-#' @param ... Additional arguments passed to the main clustering algorithm 
+#' @param ... Additional arguments passed to the main clustering algorithm
 #' (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})
 #' @inheritParams claraclust
 #' @return clustering solution for data sample
@@ -99,6 +99,9 @@ compute_distance_matrix <- function(data, metric, dist_file) {
     distance <- proxy::dist(data, method = "calculate_distance_tourist",
                             dist_file = dist_file)
   }
+  if(!(sum(is.na(distance)) + sum(is.infinite(distance)) == 0)){
+    stop("Distance matrix contains NA or infinite values. Please specify a suitable distance metric.")
+  }
   return(distance)
 }
 
@@ -171,7 +174,7 @@ assign_cluster <- function(data, metric, medoids, dist_file, type = "fixed",
     dist_dat <- proxy::dist(x         = data[, -1],
                             y         = data_medoids[, -1],
                             method    = metric)
-  } else { 
+  } else {
     dist_dat <- proxy::dist(x         = data[, -1],
                             y         = data_medoids[, -1],
                             method    = "calculate_distance_tourist",
