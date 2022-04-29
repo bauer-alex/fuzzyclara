@@ -10,7 +10,9 @@ clara_pca(
   group_by = NULL,
   transparent_obs = NULL,
   plot_all_fuzzy = FALSE,
-  alpha_fuzzy = 0.4
+  alpha_fuzzy = 0.4,
+  focus = FALSE,
+  focus_clusters = NULL
 )
 }
 \arguments{
@@ -25,6 +27,10 @@ clara_pca(
 \item{plot_all_fuzzy}{for fuzzy clustering and threshold: should observations below threshold be plottet transparent? PCA is performed based on the observations above the threshold}
 
 \item{alpha_fuzzy}{alpha value for observations below threshold, only relevant for plot_all_fuzzy = TRUE}
+
+\item{focus}{for fuzzy clustering, focus on clusters given by variable focus_clusters and plot observations based on probability of belonging to the respective cluster}
+
+\item{focus_clusters}{vector of integers: on which clusters should be focused? If NULL, all clusters are used}
 }
 \value{
 PCA plot

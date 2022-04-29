@@ -162,11 +162,40 @@ plot(x = cc_fixed, data = USArrests_enriched, type = "scatterplot",
 
 ```
 
+For fuzzy clustering, you can focus on one or more clusters and plot the membership probability:
+```{r}
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
+     x_var = "Murder", y_var = "Assault", 
+     focus = TRUE)
+
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
+     x_var = "Murder", y_var = "Assault", 
+     focus = TRUE, focus_clusters = c(1))
+
+```
+
+
+
 ### PCA
 ```{r fig.width=6, fig.height=4}
 plot(x = cc_fixed, data = USArrests_enriched, type = "pca",
      group_by = "Area")
 ```
+
+For fuzzy clustering, you can focus on one or more clusters and plot the membership probability:
+```{r}
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
+     focus = TRUE)
+
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
+     focus = TRUE, focus_clusters = c(1))
+
+```
+
+
+
+
+
 
 ### Silhouette
 ```{r fig.width=6, fig.height=4}

@@ -14,7 +14,7 @@
 plot.claraclust <- function(x, data,
                             type = NULL,
                             confidence_threshold = 0,
-                            ...) {
+                            ...){
 
   # Input checking:
   checkmate::assert(checkmate::check_data_frame(data),
@@ -189,13 +189,22 @@ clara_wordcloud <- function(x, data, variable, seed = 42){
 #' @param plot_all_fuzzy for fuzzy clustering and threshold: should observations below threshold be plottet transparent? PCA is performed based on the observations above the threshold
 #' @param transparent_obs dataset containing observatiosn that are plottet transparent, only relevant for plot_all_fuzzy = TRUE
 #' @param alpha_fuzzy alpha value for observations below threshold, only relevant for plot_all_fuzzy = TRUE
+#' @param focus for fuzzy clustering, focus on clusters given by variable focus_clusters and plot observations based on probability of belonging to the respective cluster
+#' @param focus_clusters vector of integers: on which clusters should be focused? If NULL, all clusters are used
 #' @return PCA plot
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @importFrom stats as.formula prcomp
 #' @export
-clara_pca <- function(x, data, group_by = NULL, transparent_obs = NULL, plot_all_fuzzy = FALSE, alpha_fuzzy = 0.4){
+clara_pca <- function(x, data, group_by = NULL,
+                      transparent_obs = NULL, plot_all_fuzzy = FALSE, alpha_fuzzy = 0.4,
+                      focus = FALSE, focus_clusters = NULL){
 
   checkmate::assert_character(x = group_by, null.ok = TRUE)
+
+  if(x$type == "fuzzy" & focus == TRUE){ # for ficus = TRUE, perform PCA on whole dataset
+    data <- rbind(data, transparent_obs)
+    data$cluster <- NULL
+  }
 
   num_vars <- unlist(lapply(data, is.numeric))
 
@@ -203,61 +212,109 @@ clara_pca <- function(x, data, group_by = NULL, transparent_obs = NULL, plot_all
   pca_result <- stats::prcomp(data[, num_vars], center = FALSE, scale = FALSE) # data is already scaled
   individuals_coord <- as.data.frame(get_pca_ind(pca_result)$coord)
 
-  # Add clusters
-  individuals_coord$cluster <- data$cluster
-
   if (!is.null(group_by)) {
     individuals_coord[, group_by] <- data[, group_by]
   }
+
 
   # Compute the eigenvalues
   eigenvalue <- round(get_eigenvalue(pca_result), 1)
   variance_perc <- eigenvalue$variance.percent
 
 
-  if (!is.null(group_by)) {
-    plot <- ggscatter(
-      individuals_coord, x = "Dim.1", y = "Dim.2",
-      color = "cluster", palette = "npg", ellipse = TRUE, ellipse.type = "convex",
-      shape = group_by, size = 1.5,  legend = "right", ggtheme = theme_bw(),
-      xlab = paste0("Dim 1 (", variance_perc[1], "% )" ),
-      ylab = paste0("Dim 2 (", variance_perc[2], "% )" )
-    ) + stat_mean(aes(color = cluster), size = 4) + theme_minimal()
-  } else {
-    plot <- ggscatter(
-      individuals_coord, x = "Dim.1", y = "Dim.2",
-      color = "cluster", palette = "npg", ellipse = TRUE, ellipse.type = "convex",
-      size = 1.5,  legend = "right", ggtheme = theme_bw(),
-      xlab = paste0("Dim 1 (", variance_perc[1], "% )" ),
-      ylab = paste0("Dim 2 (", variance_perc[2], "% )" )
-    ) + stat_mean(aes(color = cluster), size = 4) + theme_minimal()
-  }
+  if(x$type == "fuzzy" & focus == TRUE){
+    # convert data into long format containing information on membership scores
+    individuals_coord <- cbind(individuals_coord, x$membership_scores)
+    data_long <- individuals_coord %>%
+      tidyr::gather("cluster", "prob", colnames(x$membership_scores))
 
-  if(x$type == "fuzzy" & plot_all_fuzzy == TRUE & nrow(transparent_obs) != 0){ # add transparent observations (probability below threshold)
-    # calculate coordinates
-    coords_transparent <- as.data.frame(as.matrix(transparent_obs[, num_vars])%*% as.matrix(pca_result$rotation))
-    coords_transparent$cluster <- transparent_obs$cluster
-    if (!is.null(group_by)) {
-      coords_transparent[, group_by] <- transparent_obs[, group_by]
+    # select only clusters given by focus_clusters
+    if(!is.null(focus_clusters)){
+      clusters_select <- paste0("Cluster", focus_clusters)
+      if(!all(clusters_select %in% data_long$cluster)){
+        stop("clusters specified by focus_clusters aren't found in the data.")
+      }
+
+      data_long <- data_long %>%
+        filter(cluster %in% clusters_select)
     }
-    colnames(coords_transparent) <- colnames(individuals_coord)
 
     if (!is.null(group_by)) {
-      plot <- plot + geom_point(
-        data = coords_transparent,
-        aes(x = Dim.1, y = Dim.2,
-            color = cluster, shape = !!ensym(group_by),
-            alpha = alpha_fuzzy),
-        size = 1.5, show.legend = FALSE)
+      plot <- ggscatter(
+        data_long, x = "Dim.1", y = "Dim.2",
+        color = "cluster", palette = "npg", # ellipse = TRUE, ellipse.type = "convex",
+        alpha = "prob",
+        shape = group_by, size = 1.5,  legend = "right", ggtheme = theme_bw(),
+        xlab = paste0("Dim 1 (", variance_perc[1], "% )" ),
+        ylab = paste0("Dim 2 (", variance_perc[2], "% )" )
+      ) + stat_mean(aes(color = cluster), size = 4) + theme_minimal() +
+        facet_wrap(~cluster) +
+        guides(color = "none", alpha = guide_legend(title = "membership \n probability"))
     } else {
-      plot <- plot + geom_point(
-        data = coords_transparent,
-        aes(x = Dim.1, y = Dim.2, color = cluster,
-        alpha = alpha_fuzzy),
-        size = 1.5, show.legend = FALSE)
+      plot <- ggscatter(
+        data_long, x = "Dim.1", y = "Dim.2",
+        color = "cluster", palette = "npg", # ellipse = TRUE, ellipse.type = "convex",
+        alpha = "prob",
+        size = 1.5,  legend = "right", ggtheme = theme_bw(),
+        xlab = paste0("Dim 1 (", variance_perc[1], "% )" ),
+        ylab = paste0("Dim 2 (", variance_perc[2], "% )" )
+      ) + stat_mean(aes(color = cluster), size = 4) + theme_minimal() +
+        facet_wrap(~cluster) +
+        guides(color = "none", alpha = guide_legend(title = "membership \n probability"))
+    }
+
+  } else{ # normal PCA plot
+
+    # Add clusters
+    individuals_coord$cluster <- data$cluster
+
+    if (!is.null(group_by)) {
+      plot <- ggscatter(
+        individuals_coord, x = "Dim.1", y = "Dim.2",
+        color = "cluster", palette = "npg", ellipse = TRUE, ellipse.type = "convex",
+        shape = group_by, size = 1.5,  legend = "right", ggtheme = theme_bw(),
+        xlab = paste0("Dim 1 (", variance_perc[1], "% )" ),
+        ylab = paste0("Dim 2 (", variance_perc[2], "% )" )
+        ) + stat_mean(aes(color = cluster), size = 4) + theme_minimal()
+      } else {
+        plot <- ggscatter(
+          individuals_coord, x = "Dim.1", y = "Dim.2",
+          color = "cluster", palette = "npg", ellipse = TRUE, ellipse.type = "convex",
+          size = 1.5,  legend = "right", ggtheme = theme_bw(),
+          xlab = paste0("Dim 1 (", variance_perc[1], "% )" ),
+          ylab = paste0("Dim 2 (", variance_perc[2], "% )" )
+        ) + stat_mean(aes(color = cluster), size = 4) + theme_minimal()
+        }
+
+
+    if(x$type == "fuzzy" && plot_all_fuzzy == TRUE && nrow(transparent_obs) != 0){ # add transparent observations (probability below threshold)
+      # calculate coordinates
+      coords_transparent <- as.data.frame(as.matrix(transparent_obs[, num_vars])%*% as.matrix(pca_result$rotation))
+      coords_transparent$cluster <- transparent_obs$cluster
+      if (!is.null(group_by)) {
+        coords_transparent[, group_by] <- transparent_obs[, group_by]
+      }
+      colnames(coords_transparent) <- colnames(individuals_coord)
+
+      if (!is.null(group_by)) {
+        plot <- plot + geom_point(
+          data = coords_transparent,
+          aes(x = Dim.1, y = Dim.2,
+              color = cluster, shape = !!ensym(group_by),
+              alpha = alpha_fuzzy),
+          size = 1.5, show.legend = FALSE)
+        } else {
+          plot <- plot + geom_point(
+            data = coords_transparent,
+            aes(x = Dim.1, y = Dim.2, color = cluster,
+                alpha = alpha_fuzzy),
+            size = 1.5, show.legend = FALSE)
     }
 
   }
+  }
+
+
 
   return(plot)
 
@@ -275,26 +332,62 @@ clara_pca <- function(x, data, group_by = NULL, transparent_obs = NULL, plot_all
 #' @param plot_all_fuzzy for fuzzy clustering and threshold: should observations below threshold be plottet transparent? The regression line is only based on the observations above the threshold
 #' @param transparent_obs dataset containing observatiosn that are plottet transparent, only relevant for plot_all_fuzzy = TRUE
 #' @param alpha_fuzzy alpha value for observations below threshold, only relevant for plot_all_fuzzy = TRUE
+#' @param focus for fuzzy clustering, focus on clusters given by variable focus_clusters and plot observations based on probability of belonging to the respective cluster
+#' @param focus_clusters vector of integers: on which clusters should be focused? If NULL, all clusters are used
 #' @return scatterplot
-#' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
+#' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud tidyr
 #' @export
-clara_scatterplot <- function(x, data, x_var, y_var, transparent_obs = NULL, plot_all_fuzzy = FALSE, alpha_fuzzy = 0.4){
+clara_scatterplot <- function(x, data, x_var, y_var,
+                              transparent_obs = NULL, plot_all_fuzzy = FALSE, alpha_fuzzy = 0.4,
+                              focus = FALSE, focus_clusters = NULL){
 
   if (((!(!is.null(x_var) & !is.null(y_var)) ) | !(class(data[, x_var]) == "numeric" & class(data[, y_var]) == "numeric"))) {
     stop("Please specify the variables correctly. Both variable and group_by should contain the names of metric variables.")
   }
 
-  plot <- data %>%
-    ggplot(aes(x = !!ensym(x_var), y = !!ensym(y_var), color = cluster) )+
-    geom_point() +
-    geom_smooth(method = "lm") +
-    theme_minimal()  +
-    scale_color_npg()
+  if(x$type == "fuzzy" & focus == TRUE){
+    data <- rbind(data, transparent_obs)
+    data$cluster <- NULL
 
-  if(x$type == "fuzzy" && plot_all_fuzzy == TRUE){
-    plot <- plot +
-      geom_point(data = transparent_obs, aes(x = !!ensym(x_var), y = !!ensym(y_var)), alpha = alpha_fuzzy)
+    # convert data into long format containing information on membership scores
+    data <- cbind(data, x$membership_scores)
+    data_long <- data %>%
+      tidyr::gather("cluster", "prob", colnames(x$membership_scores))
+
+    # select only clusters given by focus_clusters
+    if(!is.null(focus_clusters)){
+      clusters_select <- paste0("Cluster", focus_clusters)
+      if(!all(clusters_select %in% data_long$cluster)){
+        stop("clusters specified by focus_clusters aren't found in the data.")
+      }
+
+      data_long <- data_long %>%
+        filter(cluster %in% clusters_select)
+    }
+
+    plot <- data_long %>%
+      ggplot(aes(x = !!ensym(x_var), y = !!ensym(y_var), alpha = prob, color = cluster))+
+      geom_point() +
+      theme_minimal()  +
+      scale_color_npg() +
+      facet_wrap(~cluster) +
+      guides(color = "none", alpha = guide_legend(title = "membership \n probability"))
+
+  } else{ # normal scatterplot
+    plot <- data %>%
+      ggplot(aes(x = !!ensym(x_var), y = !!ensym(y_var), color = cluster) )+
+      geom_point() +
+      geom_smooth(method = "lm") +
+      theme_minimal()  +
+      scale_color_npg()
+
+    if(x$type == "fuzzy" && plot_all_fuzzy == TRUE){
+      plot <- plot +
+        geom_point(data = transparent_obs, aes(x = !!ensym(x_var), y = !!ensym(y_var)), alpha = alpha_fuzzy)
+    }
   }
+
+
 
   return(plot)
 

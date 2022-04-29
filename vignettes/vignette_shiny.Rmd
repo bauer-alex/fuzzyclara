@@ -282,6 +282,14 @@ shinyApp(
 ```
 
 
+```{r}
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
+     x_var = "Murder", y_var = "Assault", 
+     focus = TRUE)
+```
+
+
+
 ### PCA
 ```{r fig.width=6, fig.height=4}
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
@@ -315,6 +323,13 @@ shinyApp(
 )
 
 ```
+
+```{r}
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
+     focus = TRUE)
+```
+
+
 
 ### Silhouette
 ```{r fig.width=6, fig.height=4}

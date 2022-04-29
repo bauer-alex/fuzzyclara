@@ -167,5 +167,33 @@ test_that("plot_claraclust", { # plots
   expect_s3_class(p$layers[[1]]$geom, "GeomBar")
 
 
+  # focus scatterplot
+  p <- plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
+            x_var = "Murder", y_var = "Assault", focus = TRUE, focus_clusters = c(1, 2))
+  # check class of object
+  expect_s3_class(p, "ggplot")
+  expect_s3_class(p$layers[[1]]$geom, "GeomPoint")
+
+  expect_error(plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
+                    x_var = "Murder", y_var = "Assault",
+                    focus = TRUE, focus_clusters = c(0, 2)))
+
+  # focus pca
+  p <- plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
+            focus = TRUE, focus_clusters = c(1, 2))
+  # check class of object
+  expect_s3_class(p, "ggplot")
+  expect_s3_class(p$layers[[1]]$geom, "GeomPoint")
+
+  p <- plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
+            focus = TRUE, focus_clusters = c(1, 2), group_by = "Area")
+  # check class of object
+  expect_s3_class(p, "ggplot")
+  expect_s3_class(p$layers[[1]]$geom, "GeomPoint")
+
+  expect_error(plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
+                    focus = TRUE, focus_clusters = c(0, 2)))
+
+
 })
 
