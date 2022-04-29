@@ -9,7 +9,8 @@ clara_silhouette(
   data,
   metric = "Euclidean",
   silhouette_subsample = FALSE,
-  scale_sil = TRUE
+  scale_sil = TRUE,
+  rel_obs = NULL
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ clara_silhouette(
 \item{silhouette_subsample}{use the subsample from claraclust for silhouette plot instead of all samples}
 
 \item{scale_sil}{scale numeric variables for silhouette plot? Default TRUE, irrelevant if silhouette_subsample is TRUE}
+
+\item{rel_obs}{names of observations > threshold}
 }
 \value{
 silhouette plot
