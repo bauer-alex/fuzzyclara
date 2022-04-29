@@ -145,6 +145,20 @@ test_that("plot_claraclust", { # plots
                          cc_fuzzy$membership_scores$Cluster3) >= 0.5)
   expect_identical(n_obs_conf, nrow(p$data))
 
+  p <- plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca", confidence_threshold = 0.5,
+            plot_all_fuzzy = TRUE)
+  # check class of object
+  expect_s3_class(p, "ggplot")
+  expect_s3_class(p$layers[[1]]$geom, "GeomPoint")
+
+  p <- plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca", group_by = "Area",
+            confidence_threshold = 0.5,
+            plot_all_fuzzy = TRUE)
+  # check class of object
+  expect_s3_class(p, "ggplot")
+  expect_s3_class(p$layers[[1]]$geom, "GeomPoint")
+
+
   # silhouette, fuzzy, silhouette_subsample = TRUE
   invisible(capture.output(p <- plot(x = cc_fuzzy, data = USArrests, type = "silhouette",
                                      silhouette_subsample = TRUE)))

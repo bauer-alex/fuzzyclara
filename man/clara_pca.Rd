@@ -4,7 +4,14 @@
 \alias{clara_pca}
 \title{Plot function PCA}
 \usage{
-clara_pca(x, data, group_by = NULL)
+clara_pca(
+  x,
+  data,
+  group_by = NULL,
+  transparent_obs = NULL,
+  plot_all_fuzzy = FALSE,
+  alpha_fuzzy = 0.4
+)
 }
 \arguments{
 \item{x}{an object of class claraclust}
@@ -12,6 +19,12 @@ clara_pca(x, data, group_by = NULL)
 \item{data}{prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))}
 
 \item{group_by}{optional grouping variable}
+
+\item{transparent_obs}{dataset containing observatiosn that are plottet transparent, only relevant for plot_all_fuzzy = TRUE}
+
+\item{plot_all_fuzzy}{for fuzzy clustering and threshold: should observations below threshold be plottet transparent? PCA is performed based on the observations above the threshold}
+
+\item{alpha_fuzzy}{alpha value for observations below threshold, only relevant for plot_all_fuzzy = TRUE}
 }
 \value{
 PCA plot

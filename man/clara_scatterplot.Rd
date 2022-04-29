@@ -10,7 +10,8 @@ clara_scatterplot(
   x_var,
   y_var,
   transparent_obs = NULL,
-  plot_all_fuzzy = FALSE
+  plot_all_fuzzy = FALSE,
+  alpha_fuzzy = 0.4
 )
 }
 \arguments{
@@ -21,6 +22,12 @@ clara_scatterplot(
 \item{x_var}{name of x variable}
 
 \item{y_var}{name of y variable}
+
+\item{transparent_obs}{dataset containing observatiosn that are plottet transparent, only relevant for plot_all_fuzzy = TRUE}
+
+\item{plot_all_fuzzy}{for fuzzy clustering and threshold: should observations below threshold be plottet transparent? The regression line is only based on the observations above the threshold}
+
+\item{alpha_fuzzy}{alpha value for observations below threshold, only relevant for plot_all_fuzzy = TRUE}
 }
 \value{
 scatterplot

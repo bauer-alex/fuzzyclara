@@ -305,7 +305,8 @@ shinyApp(
       data = USArrests_enriched,
       type = "pca",
       group_by = "Area",
-      confidence_threshold = input$threshold
+      confidence_threshold = input$threshold,
+      plot_all_fuzzy = TRUE
       )
     })
         

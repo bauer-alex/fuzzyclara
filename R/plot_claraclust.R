@@ -37,6 +37,14 @@ plot.claraclust <- function(x, data,
   int_vars <- unlist(lapply(data, is.integer))
   data[, int_vars] <- lapply(data[, int_vars], as.numeric)
 
+  # if PCA, scale the data
+  if(!is.null(type) && type == "pca"){
+    ind <- unlist(lapply(data, is.numeric), use.names = TRUE)
+    for (i in ind) {
+      data[, ind] <- scale(data[, ind])
+    }
+  }
+
 
   if (x$type == "fuzzy") {
     # Filter relevant observation based on the membership score threshold
@@ -44,6 +52,7 @@ plot.claraclust <- function(x, data,
       mutate(max_memb_score = do.call(pmax, c(., na.rm = TRUE))) %>%
       filter(max_memb_score >= confidence_threshold)
     rel_obs <- rownames(relevant_obs)
+
 
     # transparent observations for scatterplot and pca
     transparent_obs <- data %>% dplyr::filter(!(row.names(data) %in%  rownames(relevant_obs)))
@@ -68,7 +77,8 @@ plot.claraclust <- function(x, data,
                              rel_obs = rel_obs, ...)
   }
   else if (!is.null(type) && type == "pca") {
-    plot <- clara_pca(x = x, data = data, ...)
+    plot <- clara_pca(x = x, data = data,
+                      transparent_obs = transparent_obs, ...)
   }
   else if (!is.null(type) && type == "scatterplot") {
     plot <- clara_scatterplot(x = x, data = data,
@@ -176,18 +186,21 @@ clara_wordcloud <- function(x, data, variable, seed = 42){
 #' @param x an object of class claraclust
 #' @param data prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))
 #' @param group_by optional grouping variable
+#' @param plot_all_fuzzy for fuzzy clustering and threshold: should observations below threshold be plottet transparent? PCA is performed based on the observations above the threshold
+#' @param transparent_obs dataset containing observatiosn that are plottet transparent, only relevant for plot_all_fuzzy = TRUE
+#' @param alpha_fuzzy alpha value for observations below threshold, only relevant for plot_all_fuzzy = TRUE
 #' @return PCA plot
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @importFrom stats as.formula prcomp
 #' @export
-clara_pca <- function(x, data, group_by = NULL){
+clara_pca <- function(x, data, group_by = NULL, transparent_obs = NULL, plot_all_fuzzy = FALSE, alpha_fuzzy = 0.4){
 
   checkmate::assert_character(x = group_by, null.ok = TRUE)
 
   num_vars <- unlist(lapply(data, is.numeric))
 
   # Dimension reduction using PCA
-  pca_result <- stats::prcomp(data[, num_vars],  scale = TRUE)
+  pca_result <- stats::prcomp(data[, num_vars], center = FALSE, scale = FALSE) # data is already scaled
   individuals_coord <- as.data.frame(get_pca_ind(pca_result)$coord)
 
   # Add clusters
@@ -220,6 +233,32 @@ clara_pca <- function(x, data, group_by = NULL){
     ) + stat_mean(aes(color = cluster), size = 4) + theme_minimal()
   }
 
+  if(x$type == "fuzzy" & plot_all_fuzzy == TRUE & nrow(transparent_obs) != 0){ # add transparent observations (probability below threshold)
+    # calculate coordinates
+    coords_transparent <- as.data.frame(as.matrix(transparent_obs[, num_vars])%*% as.matrix(pca_result$rotation))
+    coords_transparent$cluster <- transparent_obs$cluster
+    if (!is.null(group_by)) {
+      coords_transparent[, group_by] <- transparent_obs[, group_by]
+    }
+    colnames(coords_transparent) <- colnames(individuals_coord)
+
+    if (!is.null(group_by)) {
+      plot <- plot + geom_point(
+        data = coords_transparent,
+        aes(x = Dim.1, y = Dim.2,
+            color = cluster, shape = !!ensym(group_by),
+            alpha = alpha_fuzzy),
+        size = 1.5, show.legend = FALSE)
+    } else {
+      plot <- plot + geom_point(
+        data = coords_transparent,
+        aes(x = Dim.1, y = Dim.2, color = cluster,
+        alpha = alpha_fuzzy),
+        size = 1.5, show.legend = FALSE)
+    }
+
+  }
+
   return(plot)
 
 
@@ -233,10 +272,13 @@ clara_pca <- function(x, data, group_by = NULL){
 #' @param data prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))
 #' @param x_var name of x variable
 #' @param y_var name of y variable
+#' @param plot_all_fuzzy for fuzzy clustering and threshold: should observations below threshold be plottet transparent? The regression line is only based on the observations above the threshold
+#' @param transparent_obs dataset containing observatiosn that are plottet transparent, only relevant for plot_all_fuzzy = TRUE
+#' @param alpha_fuzzy alpha value for observations below threshold, only relevant for plot_all_fuzzy = TRUE
 #' @return scatterplot
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @export
-clara_scatterplot <- function(x, data, x_var, y_var, transparent_obs = NULL, plot_all_fuzzy = FALSE){
+clara_scatterplot <- function(x, data, x_var, y_var, transparent_obs = NULL, plot_all_fuzzy = FALSE, alpha_fuzzy = 0.4){
 
   if (((!(!is.null(x_var) & !is.null(y_var)) ) | !(class(data[, x_var]) == "numeric" & class(data[, y_var]) == "numeric"))) {
     stop("Please specify the variables correctly. Both variable and group_by should contain the names of metric variables.")
@@ -251,7 +293,7 @@ clara_scatterplot <- function(x, data, x_var, y_var, transparent_obs = NULL, plo
 
   if(x$type == "fuzzy" && plot_all_fuzzy == TRUE){
     plot <- plot +
-      geom_point(data = transparent_obs, aes(x = !!ensym(x_var), y = !!ensym(y_var)), alpha = 0.4)
+      geom_point(data = transparent_obs, aes(x = !!ensym(x_var), y = !!ensym(y_var)), alpha = alpha_fuzzy)
   }
 
   return(plot)
