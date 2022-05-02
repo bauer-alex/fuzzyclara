@@ -247,7 +247,7 @@ clara_pca <- function(x, data, group_by = NULL,
         shape = group_by, size = 1.5,  legend = "right", ggtheme = theme_bw(),
         xlab = paste0("Dim 1 (", variance_perc[1], "% )" ),
         ylab = paste0("Dim 2 (", variance_perc[2], "% )" )
-      ) + stat_mean(aes(color = cluster), size = 4) + theme_minimal() +
+      ) + theme_minimal() +
         facet_wrap(~cluster) +
         guides(color = "none", alpha = guide_legend(title = "membership \n probability"))
     } else {
@@ -258,7 +258,7 @@ clara_pca <- function(x, data, group_by = NULL,
         size = 1.5,  legend = "right", ggtheme = theme_bw(),
         xlab = paste0("Dim 1 (", variance_perc[1], "% )" ),
         ylab = paste0("Dim 2 (", variance_perc[2], "% )" )
-      ) + stat_mean(aes(color = cluster), size = 4) + theme_minimal() +
+      ) + theme_minimal() +
         facet_wrap(~cluster) +
         guides(color = "none", alpha = guide_legend(title = "membership \n probability"))
     }
@@ -290,10 +290,11 @@ clara_pca <- function(x, data, group_by = NULL,
     if(x$type == "fuzzy" && plot_all_fuzzy == TRUE && nrow(transparent_obs) != 0){ # add transparent observations (probability below threshold)
       # calculate coordinates
       coords_transparent <- as.data.frame(as.matrix(transparent_obs[, num_vars])%*% as.matrix(pca_result$rotation))
-      coords_transparent$cluster <- transparent_obs$cluster
       if (!is.null(group_by)) {
         coords_transparent[, group_by] <- transparent_obs[, group_by]
       }
+      coords_transparent$cluster <- transparent_obs$cluster
+
       colnames(coords_transparent) <- colnames(individuals_coord)
 
       if (!is.null(group_by)) {
