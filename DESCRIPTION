@@ -22,8 +22,22 @@ Config/testthat/edition: 3
 LinkingTo: 
     Rcpp
 Imports: 
-    Rcpp, checkmate, cluster, dplyr, parallel, proxy, readxl,
-    vegclust, ggsci, ggwordcloud, ggpubr, factoextra, ggplot2, tibble,
-    tidyselect, scales
+    Rcpp,
+    checkmate,
+    cluster,
+    dplyr,
+    parallel,
+    proxy,
+    readxl,
+    vegclust,
+    ggsci,
+    ggwordcloud,
+    ggpubr,
+    factoextra,
+    ggplot2,
+    tibble,
+    tidyselect,
+    scales,
+    tidyr
 Depends: 
     R (>= 2.10)
