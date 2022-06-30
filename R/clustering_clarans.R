@@ -36,142 +36,28 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
   # Setting a seed for random processes:
   set.seed(seed)
 
-  # Define default sample size if no sample size is specified:
-  if (is.null(sample_size)) {
-    sample_size <- min(nrow(data), (40 + clusters * 2))
-  }
+  # Randomly select starting medoids:
+  medoids <- sample(x = 1:nrow(data), size = clusters, replace = FALSE)
 
-  # Warning if sample size is larger than number of observations:
-  if (sample_size >= nrow(data)) {
-    sample_size <- nrow(data)
-    samples <- 1
-    sample_ids <- list(1:nrow(data))
-    warning("The specified sample size is larger than the number of
-    observations. PAM clustering is performed on the entire dataset.")
-  }
-  else {
-    # Random generation of subsamples of size sample_size:
-    sample_ids <- lapply(X = 1:samples, FUN = function(i) {
-      sample <- sample(x = 1:nrow(data), size = sample_size, replace = FALSE)
-      return(sample)
-    })
-  }
-  # Sample definition is performed before parallelized computations in order
-  # to get reproducible results.
+  # Assign all observations to closest medoid:
 
-  # Use pam clustering if m = 1 or only a single cluster is used:
-  change_output_style <- FALSE
-  if ((type == "fuzzy" & m == 1) | (type == "fuzzy" & clusters == 1)) {
-    type <- "fixed"
-    change_output_style <- TRUE
-  }
-  # The resulting output, however, should look the usual fuzzy output.
+  # for each cluster:
+  num_neighbors <- 1
+  # while loop for tested medoids by cluster:
+  while (num_neighbors < max_neighbors) {
 
-  # Adding row.names to column:
-  data <- data %>% tibble::rownames_to_column(var = "Name")
+    # Compute sum of distances with assigned medoid:
 
-  # Calculation of clustering results for each sample:
-  if (cores == 1) { # single core
-    clustering_results_list <- lapply(X = 1:samples, FUN = function(i) {
-      if (verbose >= 1) { message("--- Performing calculations for subsample ",i) }
-      clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
-                                      clusters = clusters, metric = metric,
-                                      m = m, sample_size = sample_size,
-                                      type = type, dist_file = dist_file,
-                                      verbose = verbose, ...)
-    })
-  }
-  else {
-    # multi-core
-    print_logMessage(paste0("Run clustering on ", cores, " cores."),
-                     verbose_toLogFile = TRUE, reset_logFile = TRUE)
-    # Windows:
-    if (Sys.info()['sysname'] == "Windows") {
-      local_cluster <- makePSOCKcluster(rep("localhost", cores))
-      clusterExport(cl = local_cluster,
-                    varlist = c("clustering_sample", "compute_distance_matrix",
-                                "perform_sample_clustering",
-                                "assign_cluster", "calculate_memb_score"),
-                    envir = environment(claraclust))
-      clustering_results_list <- parLapply(cl = local_cluster, X = 1:samples,
-                                           fun = function(i) {
-                                             if (verbose >= 1) {
-                                               print_logMessage(paste0("--- Performing calculations for subsample ",i),
-                                                                verbose_toLogFile = TRUE)
-                                             }
-                                             clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
-                                                                             clusters = clusters, metric = metric,
-                                                                             m = m, sample_size = sample_size,
-                                                                             type = type, dist_file = dist_file,
-                                                                             verbose = verbose,
-                                                                             verbose_toLogFile = TRUE, ...)
-                                             return(clustering)
-                                           })
-      stopCluster(local_cluster)
-    }
+    # Compute sum of distances with new medoid:
 
-    # Other OS:
-    else {
-      clustering_results_list <- mclapply(X = 1:samples, FUN = function(i) {
-        if (verbose >= 1) {
-          print_logMessage(paste0("--- Performing calculations for subsample ",i),
-                           verbose_toLogFile = TRUE)
-        }
-        clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
-                                        clusters = clusters, metric = metric,
-                                        m = m, sample_size = sample_size,
-                                        type = type, dist_file = dist_file,
-                                        verbose = verbose,
-                                        verbose_toLogFile = TRUE, ...)
-        return(clustering)
-      }, mc.cores = cores, mc.set.seed = seed)
+    # Raise num_neighbors if old medoid has lower distance:
+    if (1 + 1) {
+      num_neighbors <- num_neighbors + 1
     }
   }
 
-  if (verbose >= 1) {
-    print_logMessage("--- Selecting the best clustering solution...",
-                     verbose_toLogFile = (cores > 1))
-  }
-
-  # Selection of best clustering solution (according to smallest average
-  # distance to closest cluster medoid):
-  min_distance_list <- lapply(X = 1:samples, FUN = function(i) {
-    if (type == "fixed") {
-      dist <- clustering_results_list[[i]]$avg_min_dist
-    } else { # type = "fuzzy"
-      dist <- clustering_results_list[[i]]$avg_weighted_dist
-    }
-    return(dist)
-  })
-  min_distance <- which.min(min_distance_list)
-  best_solution <- clustering_results_list[[min_distance]]
-  best_solution[["type"]] <- type
-
-  # Attach the distance-to-medoids matrix of the full dataset to the result
-  clustering_results <- assign_cluster(data = data,
-                                       medoids = best_solution$medoids,
-                                       metric = metric, dist_file = dist_file,
-                                       type = type, m = m,
-                                       return_distMatrix = TRUE)
-  best_solution$distance_to_medoids <- clustering_results$distance_to_medoids
-
-  # Change output style if pam was used for type "fuzzy":
-  if (change_output_style == TRUE) {
-    # Type:
-    best_solution$type <- "fuzzy"
-    # Weighted distance:
-    names(best_solution)[[3]] <- "avg_weighted_dist"
-    # Membership scores:
-    membership <- Matrix::sparseMatrix(i = 1:length(best_solution$clustering),
-                                       j = best_solution$clustering, x = 1)
-    membership <- as.data.frame(as.matrix(membership))
-    colnames(membership) <- paste0("Cluster", 1:ncol(membership))
-    row.names(membership) <- data$Name
-    element_names <- names(best_solution)
-    best_solution$membership_scores <- membership
-    best_solution <- best_solution[c(element_names[1:3], "membership_scores",
-                                     element_names[4:length(element_names)])]
-  }
+  # Assign each observation to the closest cluster medoid:
+  # (maybe use assign_cluster function of clara computations)
 
   # Return of clustering solution based on the best sample:
   class(best_solution) <- c("fuzzyclara", class(best_solution))
