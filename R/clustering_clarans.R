@@ -1,4 +1,4 @@
-#' Perform clara clustering algorithm
+#' Perform clarans clustering algorithm
 #'
 #' Function to perform clara clustering algorithm in a fixed or fuzzy way.
 #' The function can either be performed using a common dissimilarity metric or
@@ -11,10 +11,9 @@
 #' @param clusters number of clusters
 #' @param metric predefined dissimilarity metric (euclidean, manhattan) or
 #' self-defined dissimilarity function
-#' @param samples number of subsamples
-#' @param sample_size number of observations belonging to a sample. If NULL
-#' (default), the minimum of \code{nrow(data)} and \code{40 + clusters * 2} is
-#' used as sample size.
+#' @param max_neighbors maximum number of randomized medoid searches with each
+#' cluster
+#' @param num_local number of clustering iterations
 #' @param type fixed or fuzzy clustering
 #' @param cores numbers of cores for computation (cores > 1 implies
 #' multithreading)
@@ -29,13 +28,13 @@
 #'
 #' @return object of class fuzzyclara
 #' @import cluster parallel checkmate tibble dplyr tidyselect
-clustering_clara <- function(data, clusters = 5, metric = "euclidean",
-                             samples = 10, sample_size = NULL, type = "fixed",
-                             cores = 1, seed = 1234, m = 2, verbose = 1, ...) {
+clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
+                             max, type = "fixed", max_neighbors = 100,
+                             num_local = num_local, cores = 1, seed = 1234,
+                             m = 2, verbose = 1, ...) {
 
   # Setting a seed for random processes:
   set.seed(seed)
-  dist_file <- NULL
 
   # Define default sample size if no sample size is specified:
   if (is.null(sample_size)) {
@@ -96,18 +95,18 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                     envir = environment(claraclust))
       clustering_results_list <- parLapply(cl = local_cluster, X = 1:samples,
                                            fun = function(i) {
-        if (verbose >= 1) {
-          print_logMessage(paste0("--- Performing calculations for subsample ",i),
-                           verbose_toLogFile = TRUE)
-        }
-        clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
-                                        clusters = clusters, metric = metric,
-                                        m = m, sample_size = sample_size,
-                                        type = type, dist_file = dist_file,
-                                        verbose = verbose,
-                                        verbose_toLogFile = TRUE, ...)
-        return(clustering)
-      })
+                                             if (verbose >= 1) {
+                                               print_logMessage(paste0("--- Performing calculations for subsample ",i),
+                                                                verbose_toLogFile = TRUE)
+                                             }
+                                             clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
+                                                                             clusters = clusters, metric = metric,
+                                                                             m = m, sample_size = sample_size,
+                                                                             type = type, dist_file = dist_file,
+                                                                             verbose = verbose,
+                                                                             verbose_toLogFile = TRUE, ...)
+                                             return(clustering)
+                                           })
       stopCluster(local_cluster)
     }
 
@@ -178,8 +177,3 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   class(best_solution) <- c("fuzzyclara", class(best_solution))
   return(best_solution)
 }
-
-
-
-
-

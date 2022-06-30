@@ -6,7 +6,7 @@
 #' @return printed output
 #' @export
 
-print.claraclust <- function(x, ...) {
+print.fuzzyclara <- function(x, ...) {
   cat("Clustering results\n\n")
   cat("Medoids\n")
   print(x$medoids)

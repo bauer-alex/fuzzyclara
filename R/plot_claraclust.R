@@ -11,7 +11,7 @@
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @importFrom stats as.formula prcomp
 #' @export
-plot.claraclust <- function(x, data,
+plot.fuzzyclara <- function(x, data,
                             type = NULL,
                             confidence_threshold = 0,
                             ...){

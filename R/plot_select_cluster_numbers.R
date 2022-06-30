@@ -48,7 +48,7 @@ plot_cluster_numbers <- function(data, clusters_range = 2:5, metric = "euclidean
   # Extract and append criterion value for each cluster number:
 
   for(i in clusters_range){
-    y <- claraclust(data, clusters = i, metric = metric, sample_size = sample_size, samples = samples,
+    y <- fuzzyclara(data, clusters = i, metric = metric, sample_size = sample_size, samples = samples,
                     type = type, seed = seed, m = m, verbose = verbose, cores = cores)
 
     if(return_results == TRUE){

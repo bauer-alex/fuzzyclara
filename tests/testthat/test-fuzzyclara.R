@@ -1,10 +1,10 @@
-test_that("claraclust_fixed", { # fixed clustering
+test_that("fuzzyclara_fixed", { # fixed clustering
 
   data(USArrests)
 
   # fixed clustering
   n_clusters <- 3
-  cc_fixed   <- claraclust(data        = USArrests,
+  cc_fixed   <- fuzzyclara(data        = USArrests,
                            clusters    = n_clusters,
                            metric      = "euclidean",
                            samples     = 1,
@@ -16,7 +16,7 @@ test_that("claraclust_fixed", { # fixed clustering
   invisible(capture.output(print(cc_fixed)))
 
   # check whole object
-  expect_s3_class(cc_fixed, "claraclust")
+  expect_s3_class(cc_fixed, "fuzzyclara")
   expect_s3_class(cc_fixed, "list")
 
   expect_length(cc_fixed, 8)
@@ -30,7 +30,7 @@ test_that("claraclust_fixed", { # fixed clustering
 
   # data as matrix
   n_clusters <- 3
-  cc_fixed   <- claraclust(data        = as.matrix(USArrests),
+  cc_fixed   <- fuzzyclara(data        = as.matrix(USArrests),
                            clusters    = n_clusters,
                            metric      = "euclidean",
                            samples     = 1,
@@ -40,11 +40,11 @@ test_that("claraclust_fixed", { # fixed clustering
                            verbose     = 0)
 
   # check whole object
-  expect_s3_class(cc_fixed, "claraclust")
+  expect_s3_class(cc_fixed, "fuzzyclara")
   expect_s3_class(cc_fixed, "list")
 
   # warning if sampe size > n_obs
-  expect_warning(claraclust(data        = as.matrix(USArrests),
+  expect_warning(fuzzyclara(data        = as.matrix(USArrests),
                            clusters    = n_clusters,
                            metric      = "euclidean",
                            samples     = 1,
@@ -56,13 +56,13 @@ test_that("claraclust_fixed", { # fixed clustering
 })
 
 
-test_that("claraclust_fuzzy", { # fuzzy clustering
+test_that("fuzzyclara_fuzzy", { # fuzzy clustering
 
   data(USArrests)
 
   # fuzzy clustering
   n_clusters <- 3
-  cc_fuzzy  <- claraclust(data        = USArrests,
+  cc_fuzzy  <- fuzzyclara(data        = USArrests,
                            clusters    = n_clusters,
                            metric      = "euclidean",
                            samples     = 1,
@@ -75,7 +75,7 @@ test_that("claraclust_fuzzy", { # fuzzy clustering
   invisible(capture.output(print(cc_fuzzy)))
 
   # check whole object
-  expect_s3_class(cc_fuzzy, "claraclust")
+  expect_s3_class(cc_fuzzy, "fuzzyclara")
   expect_s3_class(cc_fuzzy, "list")
 
   expect_length(cc_fuzzy, 9)
@@ -90,13 +90,13 @@ test_that("claraclust_fuzzy", { # fuzzy clustering
 })
 
 
-test_that("claraclust_fuzzy_pam", { # use pam clustering if m = 1 or clusters = 1
+test_that("fuzzyclara_fuzzy_pam", { # use pam clustering if m = 1 or clusters = 1
 
   data(USArrests)
 
   # fuzzy clustering with m = 1
   n_clusters <- 3
-  cc_fuzzy  <- claraclust(data        = USArrests,
+  cc_fuzzy  <- fuzzyclara(data        = USArrests,
                           clusters    = n_clusters,
                           metric      = "euclidean",
                           samples     = 1,
@@ -106,7 +106,7 @@ test_that("claraclust_fuzzy_pam", { # use pam clustering if m = 1 or clusters = 
                           seed        = 3526,
                           verbose     = 0)
 
-  cc_fixed   <- claraclust(data        = USArrests,
+  cc_fixed   <- fuzzyclara(data        = USArrests,
                            clusters    = n_clusters,
                            metric      = "euclidean",
                            samples     = 1,
@@ -128,7 +128,7 @@ test_that("claraclust_fuzzy_pam", { # use pam clustering if m = 1 or clusters = 
 
   # fuzzy clustering with clusters = 1
   n_clusters <- 1
-  cc_fuzzy  <- claraclust(data        = USArrests,
+  cc_fuzzy  <- fuzzyclara(data        = USArrests,
                           clusters    = n_clusters,
                           metric      = "euclidean",
                           samples     = 1,
@@ -138,7 +138,7 @@ test_that("claraclust_fuzzy_pam", { # use pam clustering if m = 1 or clusters = 
                           seed        = 3526,
                           verbose     = 0)
 
-  cc_fixed   <- claraclust(data        = USArrests,
+  cc_fixed   <- fuzzyclara(data        = USArrests,
                            clusters    = n_clusters,
                            metric      = "euclidean",
                            samples     = 1,
@@ -160,7 +160,7 @@ test_that("claraclust_fuzzy_pam", { # use pam clustering if m = 1 or clusters = 
 })
 
 
-test_that("claraclust_dist", { # check other distance functions
+test_that("fuzzyclara_dist", { # check other distance functions
 
   data(USArrests)
 
@@ -170,7 +170,7 @@ test_that("claraclust_dist", { # check other distance functions
     sqrt(sum((x - y)^2))
   }
 
-  cc_dist <- claraclust(data        = USArrests,
+  cc_dist <- fuzzyclara(data        = USArrests,
                               clusters    = 3,
                               metric      = dist_function,
                               samples     = 1,
@@ -181,7 +181,7 @@ test_that("claraclust_dist", { # check other distance functions
                               verbose     = 0)
 
   # compare to euclidean -> result must be the same
-  cc_fixed   <- claraclust(data        = USArrests,
+  cc_fixed   <- fuzzyclara(data        = USArrests,
                            clusters    = n_clusters,
                            metric      = "euclidean",
                            samples     = 1,
@@ -197,7 +197,7 @@ test_that("claraclust_dist", { # check other distance functions
 
 
   # clustering with Manhattan and Minkowski
-  cc_manh <- claraclust(data        = USArrests,
+  cc_manh <- fuzzyclara(data        = USArrests,
                         clusters    = 3,
                         metric      = "manhattan",
                         samples     = 1,
@@ -209,7 +209,7 @@ test_that("claraclust_dist", { # check other distance functions
   dist_mink <- function(x, y) {
     proxy::dist(list(x, y), method = "minkowski", p = 1)
   }
-  cc_mink <- claraclust(data        = USArrests,
+  cc_mink <- fuzzyclara(data        = USArrests,
                         clusters    = 3,
                         metric      = dist_mink,
                         samples     = 1,
@@ -226,36 +226,36 @@ test_that("claraclust_dist", { # check other distance functions
 })
 
 
-test_that("claraclust_errors", { # throw errors for wrong input
+test_that("fuzzyclara_errors", { # throw errors for wrong input
 
   data(USArrests)
 
   # claraclust throwing an error with wrong data
-  expect_error(claraclust(data = 1:10))
+  expect_error(fuzzyclara(data = 1:10))
 
   # too many clusters
-  expect_error(claraclust(data = USArrests, clusters = 1000))
+  expect_error(fuzzyclara(data = USArrests, clusters = 1000))
 
   # wrong type
-  expect_error(claraclust(data = USArrests, type = "fix"))
+  expect_error(fuzzyclara(data = USArrests, type = "fix"))
 
   # wrong sample size
-  expect_error(claraclust(data = USArrests, clusters = 5, sample_size = 5, type = "fixed"))
+  expect_error(fuzzyclara(data = USArrests, clusters = 5, sample_size = 5, type = "fixed"))
 
   # unsuitable distance metric
-  expect_error(claraclust(data = USArrests, metric = "Phi", sample_size = 10))
+  expect_error(fuzzyclara(data = USArrests, metric = "Phi", sample_size = 10))
 
 
 })
 
 
-test_that("claraclust_scale", { # scaling of variables
+test_that("fuzzyclara_scale", { # scaling of variables
 
   data(USArrests)
 
   # fixed clustering
   n_clusters <- 1
-  cc_fixed   <- claraclust(data        = USArrests,
+  cc_fixed   <- fuzzyclara(data        = USArrests,
                            clusters    = n_clusters,
                            metric      = "euclidean",
                            samples     = 1,
@@ -272,7 +272,7 @@ test_that("claraclust_scale", { # scaling of variables
   expect_identical(round(matrix(dist_matrix), 2), round(matrix(cc_fixed$dist_matrix), 2))
 
   # without scaling
-  cc_fixed   <- claraclust(data        = USArrests,
+  cc_fixed   <- fuzzyclara(data        = USArrests,
                            clusters    = n_clusters,
                            metric      = "euclidean",
                            samples     = 1,

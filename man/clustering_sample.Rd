@@ -30,15 +30,7 @@ self-defined dissimilarity function}
 
 \item{sample_size}{number of observations belonging to a sample}
 
-\item{type}{fixed or fuzzy clustering}
-
-\item{m}{fuzziness exponent (only for type = "fuzzy")}
-
 \item{dist_file}{scheme for TourIST distance calculation}
-
-\item{verbose}{Can be set to integers between 0 and 2 to control the level of
-detail of the printed diagnostic messages. Higher numbers lead to more detailed
-messages. Defaults to 1.}
 
 \item{verbose_toLogFile}{If TRUE, the diagnostic messages are printed to
 a log file \code{clustering_progress.log}. Defaults to FALSE.}

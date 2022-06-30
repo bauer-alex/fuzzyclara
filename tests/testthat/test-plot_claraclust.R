@@ -1,8 +1,8 @@
-test_that("plot_claraclust", { # plots
+test_that("plot_fuzzyclara", { # plots
 
   data(USArrests)
 
-  cc_fixed <- claraclust(data        = USArrests,
+  cc_fixed <- fuzzyclara(data        = USArrests,
                          clusters    = 3,
                          metric      = "euclidean",
                          samples     = 1,
@@ -122,7 +122,7 @@ test_that("plot_claraclust", { # plots
 
 
   ## confidence threshold for fuzzy clustering
-  cc_fuzzy <- claraclust(data        = USArrests,
+  cc_fuzzy <- fuzzyclara(data        = USArrests,
                          clusters    = 3,
                          metric      = "euclidean",
                          samples     = 1,

@@ -27,11 +27,23 @@ Statement of the problem, partitioning cluster analysis for high-dimensional
 data, fuzzy algorithms, general package for whole cluster analysis process,
 own distance function
 
+# Summary
+The package \code{fuzzyclara}
 
-# Combination of fuzzy and clara clustering
+# Statement of Need
+The concepts of fuzzy . Together with this, we aim to provide a package
+reflecting the pipeline for performing 
+\\ R offers several packages containing. However, a combination of both
+methods
 
+# Combination of fuzzy and clara/clarans clustering
+- Algorithmus/Flowchart
+- Fuzzy for Subsamples
+- Formel für Verrechnung
 
-# Visualization techniques
+# Clustering pipeline
+
+# Application
 
 
 # Acknowledgements

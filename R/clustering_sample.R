@@ -14,7 +14,6 @@
 #' a log file \code{clustering_progress.log}. Defaults to FALSE.
 #' @param ... Additional arguments passed to the main clustering algorithm
 #' (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})
-#' @inheritParams claraclust
 #' @return clustering solution for data sample
 #' @import dplyr cluster
 clustering_sample <- function(data, sample_ids, clusters = 5,
