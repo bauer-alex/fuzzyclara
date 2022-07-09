@@ -1,4 +1,4 @@
-test_that("fuzzyclara_fixed", { # fixed clustering
+test_that("fuzzyclara_fixed_clara", { # fixed clustering
 
   data(USArrests)
 
@@ -45,32 +45,32 @@ test_that("fuzzyclara_fixed", { # fixed clustering
 
   # warning if sampe size > n_obs
   expect_warning(fuzzyclara(data        = as.matrix(USArrests),
-                           clusters    = n_clusters,
-                           metric      = "euclidean",
-                           samples     = 1,
-                           sample_size = 100,
-                           type        = "fixed",
-                           seed        = 3526,
-                           verbose     = 0))
+                            clusters    = n_clusters,
+                            metric      = "euclidean",
+                            samples     = 1,
+                            sample_size = 100,
+                            type        = "fixed",
+                            seed        = 3526,
+                            verbose     = 0))
 
 })
 
 
-test_that("fuzzyclara_fuzzy", { # fuzzy clustering
+test_that("fuzzyclara_fuzzy_clara", { # fuzzy clustering
 
   data(USArrests)
 
   # fuzzy clustering
   n_clusters <- 3
   cc_fuzzy  <- fuzzyclara(data        = USArrests,
-                           clusters    = n_clusters,
-                           metric      = "euclidean",
-                           samples     = 1,
-                           sample_size = 20,
-                           type        = "fuzzy",
-                           m = 3,
-                           seed        = 3526,
-                           verbose     = 0)
+                          clusters    = n_clusters,
+                          metric      = "euclidean",
+                          samples     = 1,
+                          sample_size = 20,
+                          type        = "fuzzy",
+                          m = 3,
+                          seed        = 3526,
+                          verbose     = 0)
 
   invisible(capture.output(print(cc_fuzzy)))
 
@@ -171,14 +171,14 @@ test_that("fuzzyclara_dist", { # check other distance functions
   }
 
   cc_dist <- fuzzyclara(data        = USArrests,
-                              clusters    = 3,
-                              metric      = dist_function,
-                              samples     = 1,
-                              sample_size = NULL,
-                              type        = "fixed",
-                              m           = 2,
-                              seed        = 3526,
-                              verbose     = 0)
+                        clusters    = 3,
+                        metric      = dist_function,
+                        samples     = 1,
+                        sample_size = NULL,
+                        type        = "fixed",
+                        m           = 2,
+                        seed        = 3526,
+                        verbose     = 0)
 
   # compare to euclidean -> result must be the same
   cc_fixed   <- fuzzyclara(data        = USArrests,
