@@ -167,7 +167,6 @@ assign_cluster <- function(data, metric, medoids, dist_file, type = "fixed",
   # Extraction of obtained medoids of the data:
   data_medoids <- data %>% filter(Name %in% medoids)
 
-
   # Calculate the distances to the cluster medoids:
   if (is.null(dist_file)) {
     dist_dat <- proxy::dist(x         = data[, -1],
@@ -204,7 +203,6 @@ assign_cluster <- function(data, metric, medoids, dist_file, type = "fixed",
   # Return of clustering information:
   dist_dat <- as.data.frame(dist_dat[1:nrow(dist_dat),]) # conversion from 'crossdist' to 'matrix'
   colnames(dist_dat) <- paste0("Distance_to_Cluster", 1:ncol(dist_dat))
-
   assignment_dat <- data.frame("assignment" = cluster_assignments,
                                "distance"   = distances)
   assignment_dat$Distance_to_Clusters <- dist_dat
