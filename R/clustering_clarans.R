@@ -122,7 +122,6 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
         distances <- rowSums(dist_dat * memb_scores)
       }
       distance <- sum(distances)
-      print(distance)
 
       # Change best medoids if distance criteria is minimal:
       if (distance < distance_best_it) {
@@ -140,7 +139,6 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
       medoids_best <- medoids_best_it
       distance_best <- distance_best_it
     }
-    print(distance_best)
     iteration <- iteration + 1
   }
 
@@ -204,11 +202,11 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
     clustering_result[["membership_scores"]] <- membership
   }
 
-  if (return_distMatrix) {
-    distances_to_medoids <- round(as.data.frame(assignment_dat$Distance_to_Clusters), 2)
-    row.names(distances_to_medoids) <- data$Name
-    clustering_result[["distance_to_medoids"]] <- distances_to_medoids
-  }
+  #if (return_distMatrix) {
+  #  distances_to_medoids <- round(as.data.frame(assignment_dat$Distance_to_Clusters), 2)
+  #  row.names(distances_to_medoids) <- data$Name
+  #  clustering_result[["distance_to_medoids"]] <- distances_to_medoids
+  #}
 
   # Return of clustering solution based on the best sample:
   class(clustering_result) <- c("fuzzyclara", class(clustering_result))
