@@ -130,7 +130,7 @@ perform_sample_clustering <- function(dist, clusters, type, names, m, ...) {
 
   # Fuzzy pam clustering:
   if (type == "fuzzy") {
-    fuzzy_sample <- vegclust::vegclustdist(x = dist, mobileMemb = clusters,
+    fuzzy_sample <- my_vegclustdist(x = dist, mobileMemb = clusters,
                                            method = "FCMdd", m = m, ...)
     medoids <- names[as.numeric(fuzzy_sample$mobileCenters)]
     dist_to_clusters <- fuzzy_sample$dist2clusters
