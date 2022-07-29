@@ -201,6 +201,8 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
     row.names(membership) <- data$Name
     clustering_result[["membership_scores"]] <- membership
   }
+  clustering_result[["type"]] <- type
+  clustering_results[["metric"]] <- metric
 
   #if (return_distMatrix) {
   #  distances_to_medoids <- round(as.data.frame(assignment_dat$Distance_to_Clusters), 2)

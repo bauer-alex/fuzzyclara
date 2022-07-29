@@ -16,9 +16,9 @@ plot.fuzzyclara <- function(x, data, type = NULL, confidence_threshold = 0,
                             na.omit = FALSE, ...){
 
   # Input checking:
+  checkmate::assert_class(x = x, class = "fuzzyclara")
   checkmate::assert(checkmate::check_data_frame(data),
                     checkmate::check_matrix(data), combine = "or")
-  checkmate::assert_list(x = x)
   checkmate::assert_numeric(x = confidence_threshold, lower = 0, upper = 1)
   checkmate::assert_choice(x = type,
                            choices = c("wordclouds", "silhouette",

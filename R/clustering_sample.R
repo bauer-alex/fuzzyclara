@@ -157,6 +157,8 @@ perform_sample_clustering <- function(dist, clusters, type, names, m, ...) {
 #' @param dist_file scheme for TourIST distance calculation
 #' @param type fixed or fuzzy clustering
 #' @param m fuzziness exponent (only for type = fuzzy)
+#' @param return_distMatrix Should the distanceds to the cluster medoids be
+#' returned?
 #' @return list with information on cluster results (medoid, cluster
 #' assignment, average distance to the closest medoid (weighted
 #' average distance to the closest medoid in case of fuzzy clustering))

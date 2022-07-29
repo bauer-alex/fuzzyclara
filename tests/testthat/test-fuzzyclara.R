@@ -19,7 +19,7 @@ test_that("fuzzyclara_fixed_clara", { # fixed clustering
   expect_s3_class(cc_fixed, "fuzzyclara")
   expect_s3_class(cc_fixed, "list")
 
-  expect_length(cc_fixed, 8)
+  expect_length(cc_fixed, 9)
 
 
   # check final cluster distance matrix
@@ -78,7 +78,7 @@ test_that("fuzzyclara_fuzzy_clara", { # fuzzy clustering
   expect_s3_class(cc_fuzzy, "fuzzyclara")
   expect_s3_class(cc_fuzzy, "list")
 
-  expect_length(cc_fuzzy, 9)
+  expect_length(cc_fuzzy, 10)
 
 
   # check membership scores

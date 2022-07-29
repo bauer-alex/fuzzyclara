@@ -28,6 +28,9 @@ sample}
 \item{type}{fixed or fuzzy clustering}
 
 \item{m}{fuzziness exponent (only for type = fuzzy)}
+
+\item{return_distMatrix}{Should the distanceds to the cluster medoids be
+returned?}
 }
 \value{
 list with information on cluster results (medoid, cluster

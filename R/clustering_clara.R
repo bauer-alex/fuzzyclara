@@ -147,6 +147,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   min_distance <- which.min(min_distance_list)
   best_solution <- clustering_results_list[[min_distance]]
   best_solution[["type"]] <- type
+  best_solution[["metric"]] <- metric
 
   # Attach the distance-to-medoids matrix of the full dataset to the result
   clustering_results <- assign_cluster(data = data,
