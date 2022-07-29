@@ -6,15 +6,14 @@
 #' @param type type of plot
 #' @param confidence_threshold threshold for fuzzy clustering observations to
 #' be plotted
+#' @param na.omit Should missing values be excluded for plotting?
 #' @param ... further arguments for plot functions
 #' @return clustering plot
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @importFrom stats as.formula prcomp
 #' @export
-plot.fuzzyclara <- function(x, data,
-                            type = NULL,
-                            confidence_threshold = 0,
-                            ...){
+plot.fuzzyclara <- function(x, data, type = NULL, confidence_threshold = 0,
+                            na.omit = FALSE, ...){
 
   # Input checking:
   checkmate::assert(checkmate::check_data_frame(data),
@@ -67,7 +66,7 @@ plot.fuzzyclara <- function(x, data,
 
   # Creation of plot object:
   if (is.null(type)) {
-    plot <- clara_bar_boxplot(x = x, data = data, ...)
+    plot <- clara_bar_boxplot(x = x, data = data, na.omit = na.omit, ...)
   }
   else if (!is.null(type) && type == "wordclouds") {
     plot <- clara_wordcloud(x = x, data = data, ...)
@@ -96,13 +95,15 @@ plot.fuzzyclara <- function(x, data,
 #'
 #' Function to plot a barplot or a boxplot
 #' @param x an object of class claraclust
-#' @param data prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))
+#' @param data prepared data.frame (contains cluster variable, observations are
+#' already filtered by threshold (fuzzy))
 #' @param variable name of variable to plot
 #' @param group_by optional grouping variable
 #' @return barplot or boxplot
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @export
-clara_bar_boxplot <- function(x, data, variable, group_by = NULL){
+clara_bar_boxplot <- function(x, data, variable, group_by = NULL,
+                              na.omit = FALSE) {
 
   checkmate::assert_character(x = variable)
   checkmate::assert_character(x = group_by, null.ok = TRUE)
@@ -110,10 +111,15 @@ clara_bar_boxplot <- function(x, data, variable, group_by = NULL){
     stop("Dataset does not contain the given variable.")
   }
 
+  # Remove missing values if specified:
+  if (na.omit == TRUE) {
+    data <- data %>% filter(!is.na(!!sym(variable)))
+  }
 
   if (class(data[, variable]) == "numeric"){ # boxplot
     plot <- ggplot2::ggplot(data = data,
-                            mapping = aes(x = cluster, y = !!ensym(variable), fill = cluster)) +
+                            mapping = aes(x = cluster, y = !!ensym(variable),
+                                          fill = cluster)) +
       geom_boxplot() + theme_minimal() +
       scale_fill_npg()
   } else{ # barplot

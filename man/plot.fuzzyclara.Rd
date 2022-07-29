@@ -4,7 +4,7 @@
 \alias{plot.fuzzyclara}
 \title{Visualization of clustering solution by variables}
 \usage{
-\method{plot}{fuzzyclara}(x, data, type = NULL, confidence_threshold = 0, ...)
+\method{plot}{fuzzyclara}(x, data, type = NULL, confidence_threshold = 0, na.omit = FALSE, ...)
 }
 \arguments{
 \item{x}{an object of class claraclust}
@@ -15,6 +15,8 @@
 
 \item{confidence_threshold}{threshold for fuzzy clustering observations to
 be plotted}
+
+\item{na.omit}{Should missing values be excluded for plotting?}
 
 \item{...}{further arguments for plot functions}
 }

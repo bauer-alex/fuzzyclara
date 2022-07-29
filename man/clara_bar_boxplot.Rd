@@ -4,12 +4,13 @@
 \alias{clara_bar_boxplot}
 \title{Plot function barplot or boxplot}
 \usage{
-clara_bar_boxplot(x, data, variable, group_by = NULL)
+clara_bar_boxplot(x, data, variable, group_by = NULL, na.omit = FALSE)
 }
 \arguments{
 \item{x}{an object of class claraclust}
 
-\item{data}{prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))}
+\item{data}{prepared data.frame (contains cluster variable, observations are
+already filtered by threshold (fuzzy))}
 
 \item{variable}{name of variable to plot}
 
