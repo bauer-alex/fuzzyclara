@@ -4,17 +4,12 @@ template:
 navbar:
   right:
   - icon: fa-github
-#href: https://github.com/bauer-alex/APCtools
+    href: https://github.com/MaxWeigert/fuzzyclara
 
 reference:
   - title: "my title"
-desc: "my description"
-contents:
-  - my_function1
-  - my_function2
-- title: "some other title"
-desc: "my package description"
-contents:
-  - my_function1
-  - my_function2
-  - my_function3
+    desc: "my description"
+    contents:
+      - clustering_clara
+      - clustering_clarans
+  
