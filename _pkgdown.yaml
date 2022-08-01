@@ -7,9 +7,33 @@ navbar:
     href: https://github.com/MaxWeigert/fuzzyclara
 
 reference:
-  - title: "my title"
-    desc: "my description"
+  - title: "Clustering functions"
+    desc: "Functions to perform the actual cluster analysis"
     contents:
+      - fuzzyclara
       - clustering_clara
       - clustering_clarans
+  - title: "Helper functions for cluster analysis"
+    desc: "Functions to support the computation of the cluster analysis"
+    contents:
+      - assign_cluster
+      - calculate_memb_score
+      - compute_distance_matrix
+      - perform_sample_clustering
+      - print_log_message
+      - plot_cluster_numbers
+  - title: "Visualization functions for clustering results"
+    desc: "Function to visualize clustering solutions in different ways"
+    contents:
+      - clara_bar_boxplot
+      - clara_pca
+      - clara_silhouette
+      - clara_scatterplot
+      - clara_wordcloud
+      - plot.fuzzyclara
+  - title: "Analysis function of clustering results"
+    desc: Further functions to analyze obtained clustering solutions
+    contents:
+      - print.fuzzyclara
+      - predict.fuzzyclara
   
