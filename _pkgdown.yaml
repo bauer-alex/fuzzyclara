@@ -4,7 +4,7 @@ template:
 navbar:
   right:
   - icon: fa-github
-#href: https://github.com/bauer-alex/APCtools
+#href: https://github.com/MaxWeigert/fuzzyclara
 
 reference:
   - title: "my title"
