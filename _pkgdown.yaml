@@ -4,7 +4,7 @@ template:
 navbar:
   right:
   - icon: fa-github
-#href: https://github.com/MaxWeigert/fuzzyclara
+    href: https://github.com/MaxWeigert/fuzzyclara
 
 reference:
   - title: "my title"
