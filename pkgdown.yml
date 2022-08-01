@@ -1,0 +1,8 @@
+pandoc: 2.7.3
+pkgdown: 2.0.6
+pkgdown_sha: ~
+articles:
+  main_functionality: main_functionality.html
+  vignette_shiny: vignette_shiny.html
+last_built: 2022-08-01T14:54Z
+
