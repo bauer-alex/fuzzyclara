@@ -26,9 +26,11 @@
 #' @importFrom stats as.formula prcomp
 #' @export
 
-plot_cluster_numbers <- function(data, clusters_range = 2:5, metric = "euclidean", samples = 10,
+plot_cluster_numbers <- function(data, clusters_range = 2:5,
+                                 metric = "euclidean", samples = 10,
                                  sample_size = NULL, type = "fixed", cores = 1,
-                                 seed = 1234, m = 2, verbose = 1, return_results = FALSE, ...) {
+                                 seed = 1234, m = 2, verbose = 1,
+                                 return_results = FALSE, ...) {
 
   # Input checking:
   checkmate::assert_numeric(x = clusters_range, lower = 1, upper = nrow(data))
@@ -48,7 +50,8 @@ plot_cluster_numbers <- function(data, clusters_range = 2:5, metric = "euclidean
   # Extract and append criterion value for each cluster number:
 
   for(i in clusters_range){
-    y <- fuzzyclara(data, clusters = i, metric = metric, sample_size = sample_size, samples = samples,
+    y <- fuzzyclara(data, clusters = i, metric = metric,
+                    sample_size = sample_size, samples = samples,
                     type = type, seed = seed, m = m, verbose = verbose, cores = cores)
 
     if(return_results == TRUE){
@@ -70,8 +73,10 @@ plot_cluster_numbers <- function(data, clusters_range = 2:5, metric = "euclidean
   }
 
   plot <- ggplot(criterion_df) +
-    geom_line(aes(x = cluster_number, y = criterion), size = 1, linetype = "dotted", col = "darkslategrey") +
-    geom_point(aes(x = cluster_number, y = criterion), size = 5, shape = 19, col = "darkslategrey") +
+    geom_line(aes(x = cluster_number, y = criterion), size = 1,
+              linetype = "dotted", col = "darkslategrey") +
+    geom_point(aes(x = cluster_number, y = criterion), size = 5, shape = 19,
+               col = "darkslategrey") +
     ylab(ylab_text) + xlab("Cluster number") +
     theme_minimal() +
     theme(text = element_text(size = 17), axis.title = element_text(size = 17),

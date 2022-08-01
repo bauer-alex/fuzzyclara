@@ -216,33 +216,3 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
 }
 
 
-################################################################################
-
-
-#' Calculate membership score of one observation for each medoid
-#'
-#' Function to calculate a membership score for one observation
-#' for each medoid based on the distance of this observation to all medoids
-#' @param dist_med vector of distances to medoids
-#' @param m fuzziness exponent (only for type = fuzzy)
-#' @return list with membership scores for one observation
-calculate_memb_score <- function(dist_med, m) {
-
-  perfect_match <- match(x = 0, table = dist_med)
-  list_memb <- as.list(rep(x = 0, times = length(dist_med)))
-  names(list_memb) <- paste0("Cluster_", 1:length(dist_med))
-
-  if (!is.na(perfect_match)) {
-    list_memb[[paste0("Cluster_", perfect_match)]] <- 1
-
-  } else {
-    for (i in 1:length(dist_med)) {
-      dist_proportion <- dist_med[i] / dist_med
-      dist_proportion_exp <- dist_proportion ^ (1 / (m - 1))
-      dist_proportion_exp_inv <- 1 / sum(dist_proportion_exp)
-      list_memb[[i]] <- dist_proportion_exp_inv
-    }
-
-  }
-  return(list_memb)
-}

@@ -4,7 +4,7 @@
 \alias{compute_distance_matrix}
 \title{Compute the dissimilarity matrix for a data sample}
 \usage{
-compute_distance_matrix(data, metric, dist_file)
+compute_distance_matrix(data, metric)
 }
 \arguments{
 \item{data}{sample of data.frame to be clustered}

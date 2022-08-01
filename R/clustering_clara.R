@@ -35,7 +35,6 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
 
   # Setting a seed for random processes:
   set.seed(seed)
-  dist_file <- NULL
 
   # Define default sample size if no sample size is specified:
   if (is.null(sample_size)) {
@@ -78,8 +77,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
       clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
                                       clusters = clusters, metric = metric,
                                       m = m, sample_size = sample_size,
-                                      type = type, dist_file = dist_file,
-                                      verbose = verbose, ...)
+                                      type = type, verbose = verbose, ...)
     })
   }
   else {
@@ -103,8 +101,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
         clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
                                         clusters = clusters, metric = metric,
                                         m = m, sample_size = sample_size,
-                                        type = type, dist_file = dist_file,
-                                        verbose = verbose,
+                                        type = type, verbose = verbose,
                                         verbose_toLogFile = TRUE, ...)
         return(clustering)
       })
@@ -121,8 +118,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
         clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
                                         clusters = clusters, metric = metric,
                                         m = m, sample_size = sample_size,
-                                        type = type, dist_file = dist_file,
-                                        verbose = verbose,
+                                        type = type, verbose = verbose,
                                         verbose_toLogFile = TRUE, ...)
         return(clustering)
       }, mc.cores = cores, mc.set.seed = seed)
@@ -149,11 +145,10 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   best_solution[["type"]] <- type
   best_solution[["metric"]] <- metric
 
-  # Attach the distance-to-medoids matrix of the full dataset to the result
+  # Attach the distance-to-medoids matrix of the full dataset to the result:
   clustering_results <- assign_cluster(data = data,
                                        medoids = best_solution$medoids,
-                                       metric = metric, dist_file = dist_file,
-                                       type = type, m = m,
+                                       metric = metric, type = type, m = m,
                                        return_distMatrix = TRUE)
   best_solution$distance_to_medoids <- clustering_results$distance_to_medoids
 

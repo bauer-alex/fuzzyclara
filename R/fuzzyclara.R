@@ -58,7 +58,8 @@ fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
   # pam requires the number of clusters to be smaller than the number of
   # observations -> another check of sample_size
   if(type == "fixed" | m == 1 | clusters == 1){
-    checkmate::assert_numeric(x= sample_size, lower = clusters + 1, null.ok = TRUE)
+    checkmate::assert_numeric(x = sample_size, lower = clusters + 1,
+                              null.ok = TRUE)
   }
 
   # Convert data into data.frame if necessary:
@@ -74,46 +75,11 @@ fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
     name_metric <- metric
   }
 
-  # Specific operations for tourist distance function:
-  if (name_metric[[1]] == "calculate_distance_tourist") {
-    dist_file <- read_xlsx(path = "Distanzberechnung/Distanzuebersicht.xlsx") %>%
-      dplyr::filter(Clustervariable == "ja")
-    # Subset of data:
-    data <- data %>%
-      dplyr::select(tidyselect::all_of(prepare_variable_names(dist_file)))
-    # Computation of individual weights for each variable in distance file:
-    dist_file <- dist_file %>%
-      mutate(weight_total = compute_variable_weights(dist_file))
-
-    # Recoding of ordinal variables:
-    #cnames <- colnames(data)
-    ordinal_vars <- dist_file %>% filter(Skalenniveau == "ordinal") %>%
-      select(Variable) %>% unlist() %>% as.vector()
-    data[, ordinal_vars] <- lapply(X = data[, ordinal_vars], FUN = function(x) {
-      as.integer(unlist(x, use.names = TRUE))
-    })
-
-    # Scaling of metric variables:
+  if(scale == TRUE){
+    # optional: Scaling of numerical (and ordinal) variables:
     ind <- unlist(lapply(data, is.numeric), use.names = TRUE)
     for (i in ind) {
       data[, ind] <- scale(data[, ind])
-    }
-
-    # Registration of user-defined function:
-    if (!pr_DB$entry_exists("calculate_distance_tourist")) {
-      pr_DB$set_entry(FUN = calculate_distance_tourist,
-                      names = "calculate_distance_tourist")
-    }
-  }
-  else {
-    dist_file <- NULL
-
-    if(scale == TRUE){
-      # optional: Scaling of numerical (and ordinal) variables:
-      ind <- unlist(lapply(data, is.numeric), use.names = TRUE)
-      for (i in ind) {
-        data[, ind] <- scale(data[, ind])
-      }
     }
   }
 

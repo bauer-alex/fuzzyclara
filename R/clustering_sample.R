@@ -9,7 +9,6 @@
 #' @param metric predefined dissimilarity metric (euclidean, manhattan) or
 #' self-defined dissimilarity function
 #' @param sample_size number of observations belonging to a sample
-#' @param dist_file scheme for TourIST distance calculation
 #' @param verbose_toLogFile If TRUE, the diagnostic messages are printed to
 #' a log file \code{clustering_progress.log}. Defaults to FALSE.
 #' @param ... Additional arguments passed to the main clustering algorithm
@@ -18,9 +17,8 @@
 #' @import dplyr cluster
 clustering_sample <- function(data, sample_ids, clusters = 5,
                               metric = "euclidean", sample_size = NULL,
-                              type = "fixed", m = 2, dist_file = NULL,
-                              verbose = 1, verbose_toLogFile = FALSE,
-                              ...) {
+                              type = "fixed", m = 2, verbose = 1,
+                              verbose_toLogFile = FALSE, ...) {
 
   # Reduction of data to sample observations:
   data_sample <- data %>% dplyr::slice(sample_ids)
@@ -38,8 +36,7 @@ clustering_sample <- function(data, sample_ids, clusters = 5,
     print_logMessage("Calculating the distance matrix...",
                      verbose_toLogFile = verbose_toLogFile)
   }
-  dist_matrix <- compute_distance_matrix(data = data_sample, metric = metric,
-                                         dist_file = dist_file)
+  dist_matrix <- compute_distance_matrix(data = data_sample, metric = metric)
 
   # Clustering of data sample:
   if (verbose >= 2) {
@@ -61,8 +58,7 @@ clustering_sample <- function(data, sample_ids, clusters = 5,
   }
   clustering_results <- assign_cluster(data = data,
                                        medoids = clustering_results_sample$medoid,
-                                       metric = metric, dist_file = dist_file,
-                                       type = type, m = m)
+                                       metric = metric, type = type, m = m)
 
   # add information about subsample, distance matrix, clustering of subsample for silhouette plot
   clustering_results[["subsample_ids"]] <- sample_ids
@@ -86,20 +82,16 @@ clustering_sample <- function(data, sample_ids, clusters = 5,
 #' @param dist_file scheme for TourIST distance calculation
 #' @return dissimilarity matrix for data sample
 #' @import proxy
-compute_distance_matrix <- function(data, metric, dist_file) {
+compute_distance_matrix <- function(data, metric) {
 
   # Deletion of column "name":
   data <- data %>% dplyr::select(-Name)
 
   # Calculation of dissimilarity matrix:
-  if (is.null(dist_file)) {
-    distance <- proxy::dist(data, method = metric)
-  } else {
-    distance <- proxy::dist(data, method = "calculate_distance_tourist",
-                            dist_file = dist_file)
-  }
+  distance <- proxy::dist(data, method = metric)
+
   if(!(sum(is.na(distance)) + sum(is.infinite(distance)) == 0)){
-    stop("Distance matrix contains NA or infinite values. Please specify a suitable distance metric.")
+    stop("The distance matrix contains NA or infinite values. Please specify a suitable distance metric.")
   }
   return(distance)
 }
@@ -154,32 +146,23 @@ perform_sample_clustering <- function(dist, clusters, type, names, m, ...) {
 #' self-defined dissimilarity function
 #' @param medoids medoids of the obtained clustering solution for the data
 #' sample
-#' @param dist_file scheme for TourIST distance calculation
 #' @param type fixed or fuzzy clustering
 #' @param m fuzziness exponent (only for type = fuzzy)
-#' @param return_distMatrix Should the distanceds to the cluster medoids be
+#' @param return_distMatrix Should the distances to the cluster medoids be
 #' returned?
 #' @return list with information on cluster results (medoid, cluster
 #' assignment, average distance to the closest medoid (weighted
 #' average distance to the closest medoid in case of fuzzy clustering))
 #' @import proxy
-assign_cluster <- function(data, metric, medoids, dist_file, type = "fixed",
+assign_cluster <- function(data, metric, medoids, type = "fixed",
                            m = 2, return_distMatrix = FALSE) {
 
   # Extraction of obtained medoids of the data:
   data_medoids <- data %>% filter(Name %in% medoids)
 
   # Calculate the distances to the cluster medoids:
-  if (is.null(dist_file)) {
-    dist_dat <- proxy::dist(x         = data[, -1],
-                            y         = data_medoids[, -1],
-                            method    = metric)
-  } else {
-    dist_dat <- proxy::dist(x         = data[, -1],
-                            y         = data_medoids[, -1],
-                            method    = "calculate_distance_tourist",
-                            dist_file = dist_file) # optional dist_file
-  }
+  dist_dat <- proxy::dist(x = data[, -1], y = data_medoids[, -1],
+                          method = metric)
 
   # Assignment to the medoid with minimum distance:
   cluster_assignments <- apply(dist_dat, 1, which.min)
@@ -232,7 +215,7 @@ assign_cluster <- function(data, metric, medoids, dist_file, type = "fixed",
     clustering_result[["membership_scores"]] <- membership
   }
 
-  if (return_distMatrix) {
+  if (return_distMatrix == TRUE) {
     distances_to_medoids <- round(as.data.frame(assignment_dat$Distance_to_Clusters), 2)
     row.names(distances_to_medoids) <- data$Name
     clustering_result[["distance_to_medoids"]] <- distances_to_medoids

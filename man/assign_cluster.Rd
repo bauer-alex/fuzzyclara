@@ -8,7 +8,6 @@ assign_cluster(
   data,
   metric,
   medoids,
-  dist_file,
   type = "fixed",
   m = 2,
   return_distMatrix = FALSE
@@ -23,13 +22,11 @@ self-defined dissimilarity function}
 \item{medoids}{medoids of the obtained clustering solution for the data
 sample}
 
-\item{dist_file}{scheme for TourIST distance calculation}
-
 \item{type}{fixed or fuzzy clustering}
 
 \item{m}{fuzziness exponent (only for type = fuzzy)}
 
-\item{return_distMatrix}{Should the distanceds to the cluster medoids be
+\item{return_distMatrix}{Should the distances to the cluster medoids be
 returned?}
 }
 \value{

@@ -12,7 +12,6 @@ clustering_sample(
   sample_size = NULL,
   type = "fixed",
   m = 2,
-  dist_file = NULL,
   verbose = 1,
   verbose_toLogFile = FALSE,
   ...
@@ -29,8 +28,6 @@ clustering_sample(
 self-defined dissimilarity function}
 
 \item{sample_size}{number of observations belonging to a sample}
-
-\item{dist_file}{scheme for TourIST distance calculation}
 
 \item{verbose_toLogFile}{If TRUE, the diagnostic messages are printed to
 a log file \code{clustering_progress.log}. Defaults to FALSE.}
