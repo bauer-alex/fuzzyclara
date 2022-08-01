@@ -10,7 +10,8 @@ assign_cluster(
   medoids,
   type = "fixed",
   m = 2,
-  return_distMatrix = FALSE
+  return_distMatrix = FALSE,
+  return_data_medoids = FALSE
 )
 }
 \arguments{
@@ -28,6 +29,9 @@ sample}
 
 \item{return_distMatrix}{Should the distances to the cluster medoids be
 returned?}
+
+\item{return_data_medoids}{Should medoid data be returned? (This could be
+used for assigning new observations to the clusters.)}
 }
 \value{
 list with information on cluster results (medoid, cluster

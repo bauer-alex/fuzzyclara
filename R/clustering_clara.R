@@ -143,14 +143,17 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   min_distance <- which.min(min_distance_list)
   best_solution <- clustering_results_list[[min_distance]]
   best_solution[["type"]] <- type
+  best_solution[["algorithm"]] <- "clara"
   best_solution[["metric"]] <- metric
 
   # Attach the distance-to-medoids matrix of the full dataset to the result:
   clustering_results <- assign_cluster(data = data,
                                        medoids = best_solution$medoids,
                                        metric = metric, type = type, m = m,
-                                       return_distMatrix = TRUE)
+                                       return_distMatrix = TRUE,
+                                       return_data_medoids = TRUE)
   best_solution$distance_to_medoids <- clustering_results$distance_to_medoids
+  best_solution$data_medoids <- clustering_results$data_medoids
 
   # Change output style if pam was used for type "fuzzy":
   if (change_output_style == TRUE) {

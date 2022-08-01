@@ -13,12 +13,15 @@
 #' @param m fuzziness exponent (only for type = fuzzy)
 #' @param return_distMatrix Should the distances to the cluster medoids be
 #' returned?
+#' @param return_data_medoids Should medoid data be returned? (This could be
+#' used for assigning new observations to the clusters.)
 #' @return list with information on cluster results (medoid, cluster
 #' assignment, average distance to the closest medoid (weighted
 #' average distance to the closest medoid in case of fuzzy clustering))
 #' @import proxy
 assign_cluster <- function(data, metric, medoids, type = "fixed",
-                           m = 2, return_distMatrix = FALSE) {
+                           m = 2, return_distMatrix = FALSE,
+                           return_data_medoids = FALSE) {
 
   # Extraction of obtained medoids of the data:
   data_medoids <- data %>% filter(Name %in% medoids)
@@ -82,6 +85,11 @@ assign_cluster <- function(data, metric, medoids, type = "fixed",
     distances_to_medoids <- round(as.data.frame(assignment_dat$Distance_to_Clusters), 2)
     row.names(distances_to_medoids) <- data$Name
     clustering_result[["distance_to_medoids"]] <- distances_to_medoids
+  }
+
+  if (return_data_medoids == TRUE) {
+    row.names(data_medoids) <- data_medoids[, 1]
+    clustering_result[["data_medoids"]] <- data_medoids[, -1]
   }
 
   # Return of clustering results:
