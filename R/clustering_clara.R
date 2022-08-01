@@ -143,6 +143,10 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   min_distance <- which.min(min_distance_list)
   best_solution <- clustering_results_list[[min_distance]]
   best_solution[["type"]] <- type
+  if (type == "fixed") {
+    m <- 1
+  }
+  best_solution[["fuzzyness"]] <- m
   best_solution[["algorithm"]] <- "clara"
   best_solution[["metric"]] <- metric
 

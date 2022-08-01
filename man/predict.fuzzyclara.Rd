@@ -4,20 +4,17 @@
 \alias{predict.fuzzyclara}
 \title{Prediction of cluster assignments}
 \usage{
-\method{predict}{fuzzyclara}(object, newdata, return_distMatrix, ...)
+\method{predict}{fuzzyclara}(object, newdata, ...)
 }
 \arguments{
 \item{object}{an object of class claraclust}
 
 \item{newdata}{data.frame to look variables with which to predict}
 
-\item{return_distMatrix}{Should the distanceds to the cluster medoids be
-returned?}
-
 \item{...}{further arguments for predict functions}
 }
 \value{
-clustering plot
+clustering plot tibble
 }
 \description{
 Function to predict cluster assignments
