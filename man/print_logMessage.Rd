@@ -4,21 +4,17 @@
 \alias{print_logMessage}
 \title{Print diagnostic messages to console or log file}
 \usage{
-print_logMessage(
-  diag_message,
-  verbose_toLogFile = FALSE,
-  reset_logFile = FALSE
-)
+print_logMessage(message, verbose_toLogFile = FALSE, reset_logFile = FALSE)
 }
 \arguments{
+\item{message}{Diagnostic message as character}
+
 \item{verbose_toLogFile}{If TRUE, the diagnostic messages are printed to
 a log file \code{clustering_progress.log}. Defaults to FALSE.}
 
 \item{reset_logFile}{If TRUE, the log file \code{clustering_progress.log} is
 newly created and a potential previous version of it is deleted. Defaults to
 FALSE.}
-
-\item{message}{Diagnostic message as character}
 }
 \description{
 Print diagnostic messages to console or log file

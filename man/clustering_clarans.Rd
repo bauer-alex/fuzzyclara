@@ -8,7 +8,6 @@ clustering_clarans(
   data,
   clusters = 5,
   metric = "euclidean",
-  max,
   type = "fixed",
   max_neighbors = 100,
   num_local = num_local,

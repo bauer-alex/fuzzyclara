@@ -20,7 +20,6 @@ This document gives an overview of the functionality provided by the R package
 ```{r packages, message = FALSE}
 library(fuzzyclara)
 library(dplyr)
-library(rlang)
 ```
 
 

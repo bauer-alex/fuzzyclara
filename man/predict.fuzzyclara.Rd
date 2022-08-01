@@ -4,7 +4,7 @@
 \alias{predict.fuzzyclara}
 \title{Prediction of cluster assignments}
 \usage{
-\method{predict}{fuzzyclara}(object, newdata, return_distMatrix...)
+\method{predict}{fuzzyclara}(object, newdata, return_distMatrix, ...)
 }
 \arguments{
 \item{object}{an object of class claraclust}

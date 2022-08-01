@@ -11,8 +11,6 @@ compute_distance_matrix(data, metric)
 
 \item{metric}{predefined dissimilarity metric (euclidean, manhattan) or
 self-defined dissimilarity function}
-
-\item{dist_file}{scheme for TourIST distance calculation}
 }
 \value{
 dissimilarity matrix for data sample

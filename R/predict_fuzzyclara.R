@@ -8,7 +8,7 @@
 #' @param ... further arguments for predict functions
 #' @return clustering plot
 #' @export
-predict.fuzzyclara <- function(object, newdata, return_distMatrix...){
+predict.fuzzyclara <- function(object, newdata, return_distMatrix, ...){
 
   # Input checking:
   checkmate::assert_class(x = object, class = "fuzzyclara")

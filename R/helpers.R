@@ -7,7 +7,7 @@
 #' FALSE.
 #' @inheritParams clustering_sample
 #'
-print_logMessage <- function(diag_message, verbose_toLogFile = FALSE,
+print_logMessage <- function(message, verbose_toLogFile = FALSE,
                              reset_logFile = FALSE) {
 
   log_file <- "clustering_progress.log"
@@ -20,9 +20,9 @@ print_logMessage <- function(diag_message, verbose_toLogFile = FALSE,
   }
 
   if (!verbose_toLogFile) { # print to console
-    message(diag_message)
+    message(message)
 
   } else { # print to log file
-    write(diag_message, file = log_file, append = TRUE)
+    write(message, file = log_file, append = TRUE)
   }
 }

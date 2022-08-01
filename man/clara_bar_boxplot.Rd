@@ -15,6 +15,8 @@ already filtered by threshold (fuzzy))}
 \item{variable}{name of variable to plot}
 
 \item{group_by}{optional grouping variable}
+
+\item{na.omit}{Should missing values be excluded for plotting?}
 }
 \value{
 barplot or boxplot

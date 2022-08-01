@@ -99,6 +99,7 @@ plot.fuzzyclara <- function(x, data, type = NULL, confidence_threshold = 0,
 #' already filtered by threshold (fuzzy))
 #' @param variable name of variable to plot
 #' @param group_by optional grouping variable
+#' @param na.omit Should missing values be excluded for plotting?
 #' @return barplot or boxplot
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @export

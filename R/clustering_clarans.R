@@ -29,9 +29,9 @@
 #' @return object of class fuzzyclara
 #' @import cluster parallel checkmate tibble dplyr tidyselect
 clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
-                             max, type = "fixed", max_neighbors = 100,
-                             num_local = num_local, cores = 1, seed = 1234,
-                             m = 2, verbose = 1, ...) {
+                               type = "fixed", max_neighbors = 100,
+                               num_local = num_local, cores = 1, seed = 1234,
+                               m = 2, verbose = 1, ...) {
 
   # Setting a seed for random processes:
   set.seed(seed)
