@@ -20,7 +20,7 @@ reference:
       - calculate_memb_score
       - compute_distance_matrix
       - perform_sample_clustering
-      - print_log_message
+      - print_logMessage
       - plot_cluster_numbers
   - title: "Visualization functions for clustering results"
     desc: "Function to visualize clustering solutions in different ways"
