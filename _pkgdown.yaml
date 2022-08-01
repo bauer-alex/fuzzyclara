@@ -13,6 +13,7 @@ reference:
       - fuzzyclara
       - clustering_clara
       - clustering_clarans
+      - clustering_sample
   - title: "Helper functions for cluster analysis"
     desc: "Functions to support the computation of the cluster analysis"
     contents:
