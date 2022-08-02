@@ -4,15 +4,7 @@
 \alias{plot.fuzzyclara}
 \title{Visualization of clustering solution by variables}
 \usage{
-\method{plot}{fuzzyclara}(
-  x,
-  data,
-  type = "boxplot",
-  variable,
-  confidence_threshold = 0,
-  na.omit = FALSE,
-  ...
-)
+\method{plot}{fuzzyclara}(x, data, type = "boxplot", confidence_threshold = 0, na.omit = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class claraclust}

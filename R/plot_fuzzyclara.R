@@ -17,7 +17,7 @@
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @importFrom stats as.formula prcomp
 #' @export
-plot.fuzzyclara <- function(x, data, type = "boxplot", variable,
+plot.fuzzyclara <- function(x, data, type = "boxplot",
                             confidence_threshold = 0, na.omit = FALSE, ...){
 
   # Input checking:
@@ -121,7 +121,7 @@ plot.fuzzyclara <- function(x, data, type = "boxplot", variable,
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @export
 clara_barplot <- function(x, data, variable, group_by = NULL,
-                              na.omit = FALSE) {
+                          na.omit = FALSE) {
 
   checkmate::assert_character(x = variable)
   checkmate::assert_character(x = group_by, null.ok = TRUE)
@@ -165,7 +165,7 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @export
 clara_boxplot <- function(x, data, variable, group_by = NULL,
-                              na.omit = FALSE) {
+                          na.omit = FALSE) {
 
   checkmate::assert_character(x = variable)
   checkmate::assert_character(x = group_by, null.ok = TRUE)
