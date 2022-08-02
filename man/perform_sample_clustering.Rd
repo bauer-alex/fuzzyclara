@@ -4,7 +4,7 @@
 \alias{perform_sample_clustering}
 \title{Perform pam or vegclust clustering on a data sample}
 \usage{
-perform_sample_clustering(dist, clusters, type, names, m, ...)
+perform_sample_clustering(dist, clusters, type, names, m, build, ...)
 }
 \arguments{
 \item{dist}{dissimilarity matrix}
@@ -16,6 +16,9 @@ perform_sample_clustering(dist, clusters, type, names, m, ...)
 \item{names}{vector of names for observations}
 
 \item{m}{fuzziness exponent (only for type = fuzzy)}
+
+\item{build}{additional build algorithm to choose initial medoids (only
+relevant for type = "fuzzy". Default FALSE.)}
 
 \item{...}{Additional arguments passed to the main clustering algorithm
 (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})}

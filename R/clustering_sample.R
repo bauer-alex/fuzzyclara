@@ -16,6 +16,8 @@
 #' messages. Defaults to 1.
 #' @param verbose_toLogFile If TRUE, the diagnostic messages are printed to
 #' a log file \code{clustering_progress.log}. Defaults to FALSE.
+#' @param build additional build algorithm to choose initial medoids (only
+#' relevant for type = "fuzzy". Default FALSE.)
 #' @param ... Additional arguments passed to the main clustering algorithm
 #' (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})
 #' @return clustering solution for data sample
@@ -23,7 +25,7 @@
 clustering_sample <- function(data, sample_ids, clusters = 5,
                               metric = "euclidean", sample_size = NULL,
                               type = "fixed", m = 2, verbose = 1,
-                              verbose_toLogFile = FALSE, ...) {
+                              verbose_toLogFile = FALSE, build = FALSE, ...) {
 
   # Reduction of data to sample observations:
   data_sample <- data %>% dplyr::slice(sample_ids)
@@ -53,6 +55,7 @@ clustering_sample <- function(data, sample_ids, clusters = 5,
                                                          type = type,
                                                          names = data_sample$Name,
                                                          m = m,
+                                                         build = build,
                                                          ...)
 
   # Assignment of each observations of the entire dataset to closest medoid
@@ -110,12 +113,15 @@ compute_distance_matrix <- function(data, metric) {
 #' @param type fixed or fuzzy clustering
 #' @param names vector of names for observations
 #' @param m fuzziness exponent (only for type = fuzzy)
+#' @param build additional build algorithm to choose initial medoids (only
+#' relevant for type = "fuzzy". Default FALSE.)
 #' @param ... Additional arguments passed to the main clustering algorithm
 #' (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})
 #' @return list with information on cluster results (medoid and cluster
 #' assignment)
 #' @import vegclust cluster
-perform_sample_clustering <- function(dist, clusters, type, names, m, ...) {
+perform_sample_clustering <- function(dist, clusters, type, names, m,
+                                      build, ...) {
 
   # Fixed pam clustering:
   if (type == "fixed") {
@@ -126,8 +132,26 @@ perform_sample_clustering <- function(dist, clusters, type, names, m, ...) {
 
   # Fuzzy pam clustering:
   if (type == "fuzzy") {
-    fuzzy_sample <- my_vegclustdist(x = dist, mobileMemb = clusters,
-                                           method = "FCMdd", m = m, ...)
+
+    # Additional build algorithm if specified:
+    if (build == TRUE) {
+
+      # Select first medoid as the one which has the smallest cost
+      starting_medoids <- c()
+      starting_medoids[1] <- which.min(rowSums(dist))
+
+      # Select other medoids according to minimizing costs:
+      # TODO
+    }
+
+
+    if (build == FALSE) {
+      fuzzy_sample <- my_vegclustdist(x = dist, mobileMemb = clusters,
+                                      method = "FCMdd", m = m, ...)
+    }
+    else {
+      # TODO
+    }
     medoids <- names[as.numeric(fuzzy_sample$mobileCenters)]
     dist_to_clusters <- fuzzy_sample$dist2clusters
     clustering_df <- apply(X = dist_to_clusters, MARGIN = 1, FUN = which.min)
@@ -138,6 +162,9 @@ perform_sample_clustering <- function(dist, clusters, type, names, m, ...) {
   clustering_result <- list("medoids" = medoids, "clustering" = clustering)
   return(clustering_result)
 }
+
+################################################################################
+
 
 
 

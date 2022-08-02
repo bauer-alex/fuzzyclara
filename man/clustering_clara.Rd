@@ -15,6 +15,7 @@ clustering_clara(
   seed = 1234,
   m = 2,
   verbose = 1,
+  build = FALSE,
   ...
 )
 }
@@ -44,6 +45,9 @@ multithreading)}
 \item{verbose}{Can be set to integers between 0 and 2 to control the level of
 detail of the printed diagnostic messages. Higher numbers lead to more detailed
 messages. Defaults to 1.}
+
+\item{build}{additional build algorithm to choose initial medoids (only
+relevant for type = "fuzzy". Default FALSE.)}
 
 \item{...}{Additional arguments passed to the main clustering algorithm and
 to proxy::dist for the calculation of the distance matrix

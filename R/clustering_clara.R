@@ -23,6 +23,8 @@
 #' @param verbose Can be set to integers between 0 and 2 to control the level of
 #' detail of the printed diagnostic messages. Higher numbers lead to more detailed
 #' messages. Defaults to 1.
+#' @param build additional build algorithm to choose initial medoids (only
+#' relevant for type = "fuzzy". Default FALSE.)
 #' @param ... Additional arguments passed to the main clustering algorithm and
 #' to proxy::dist for the calculation of the distance matrix
 #' (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})
@@ -31,7 +33,8 @@
 #' @import cluster parallel checkmate tibble dplyr tidyselect
 clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                              samples = 10, sample_size = NULL, type = "fixed",
-                             cores = 1, seed = 1234, m = 2, verbose = 1, ...) {
+                             cores = 1, seed = 1234, m = 2, verbose = 1,
+                             build = FALSE, ...) {
 
   # Setting a seed for random processes:
   set.seed(seed)
@@ -77,7 +80,8 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
       clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
                                       clusters = clusters, metric = metric,
                                       m = m, sample_size = sample_size,
-                                      type = type, verbose = verbose, ...)
+                                      type = type, verbose = verbose,
+                                      build = build, ...)
     })
   }
   else {
@@ -102,7 +106,8 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                                         clusters = clusters, metric = metric,
                                         m = m, sample_size = sample_size,
                                         type = type, verbose = verbose,
-                                        verbose_toLogFile = TRUE, ...)
+                                        verbose_toLogFile = TRUE,
+                                        build = build, ...)
         return(clustering)
       })
       stopCluster(local_cluster)
@@ -119,7 +124,8 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                                         clusters = clusters, metric = metric,
                                         m = m, sample_size = sample_size,
                                         type = type, verbose = verbose,
-                                        verbose_toLogFile = TRUE, ...)
+                                        verbose_toLogFile = TRUE,
+                                        build = build, ...)
         return(clustering)
       }, mc.cores = cores, mc.set.seed = seed)
     }

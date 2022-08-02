@@ -19,6 +19,7 @@ fuzzyclara(
   m = 2,
   verbose = 1,
   scale = TRUE,
+  build = FALSE,
   ...
 )
 }
@@ -59,6 +60,9 @@ messages. Defaults to 1.}
 
 \item{scale}{scale numeric variables before distance matrix calculation?
 Default TRUE}
+
+\item{build}{additional build algorithm to choose initial medoids (only
+relevant for type = "fuzzy". Default FALSE.)}
 
 \item{...}{Additional arguments passed to the main clustering algorithm and
 to proxy::dist for the calculation of the distance matrix

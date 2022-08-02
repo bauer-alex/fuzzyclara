@@ -14,6 +14,7 @@ clustering_sample(
   m = 2,
   verbose = 1,
   verbose_toLogFile = FALSE,
+  build = FALSE,
   ...
 )
 }
@@ -39,6 +40,9 @@ messages. Defaults to 1.}
 
 \item{verbose_toLogFile}{If TRUE, the diagnostic messages are printed to
 a log file \code{clustering_progress.log}. Defaults to FALSE.}
+
+\item{build}{additional build algorithm to choose initial medoids (only
+relevant for type = "fuzzy". Default FALSE.)}
 
 \item{...}{Additional arguments passed to the main clustering algorithm
 (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})}

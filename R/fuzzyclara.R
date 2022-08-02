@@ -30,6 +30,8 @@
 #' messages. Defaults to 1.
 #' @param scale scale numeric variables before distance matrix calculation?
 #' Default TRUE
+#' @param build additional build algorithm to choose initial medoids (only
+#' relevant for type = "fuzzy". Default FALSE.)
 #' @param ... Additional arguments passed to the main clustering algorithm and
 #' to proxy::dist for the calculation of the distance matrix
 #' (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})
@@ -41,7 +43,7 @@ fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
                        algorithm = "clara", samples = 10, sample_size = NULL,
                        max_neighbors = 100, num_local = 10, type = "fixed",
                        cores = 1, seed = 1234, m = 2, verbose = 1,
-                       scale = TRUE, ...) {
+                       scale = TRUE, build = FALSE, ...) {
 
   # Input checking:
   checkmate::assert(checkmate::check_data_frame(data),
@@ -89,7 +91,7 @@ fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
     result <- clustering_clara(data, clusters = clusters, metric = metric,
                                samples = samples, sample_size = sample_size,
                                type = type, cores = cores, seed = seed, m = m,
-                               verbose = verbose, ...)
+                               verbose = verbose, build = build, ...)
   }
   if (algorithm == "clarans") {
     result <- clustering_clarans(data, clusters = clusters, metric = metric,
