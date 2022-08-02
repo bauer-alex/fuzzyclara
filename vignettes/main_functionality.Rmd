@@ -145,7 +145,6 @@ plot(x = cc_fixed, data = USArrests_enriched, variable = "Assault")
 ### Barplot
 ```{r}
 plot(x = cc_fixed, data = USArrests_enriched, variable = "Area")
-
 ```
 
 ### Wordcloud

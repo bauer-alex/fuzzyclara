@@ -3,10 +3,9 @@
 #' Function to provide graphical visualization of distribution
 #' @param x An object of class claraclust
 #' @param data data.frame used for clustering
-#' @param type Type of plot. One of \code{c("barplot","boxplot","wordclouds",
+#' @param type,variable Type of plot. One of \code{c("barplot","boxplot","wordclouds",
 #' "silhouette","pca","scatterplot")}. Defaults to NULL, which either plots
-#' a barplot or a boxplot, depending on the class of \code{variable} specified
-#' as part of the \code{...} argument.
+#' a barplot or a boxplot, depending on the class of \code{variable}.
 #' @param confidence_threshold Threshold for fuzzy clustering observations to
 #' be plotted. Must be a number between 0 and 1. Defaults to 0.
 #' @param na.omit Should missing values be excluded for plotting? Defaults to
@@ -17,7 +16,7 @@
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @importFrom stats as.formula prcomp
 #' @export
-plot.fuzzyclara <- function(x, data, type = "boxplot",
+plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
                             confidence_threshold = 0, na.omit = FALSE, ...){
 
   # Input checking:
@@ -27,7 +26,9 @@ plot.fuzzyclara <- function(x, data, type = "boxplot",
   checkmate::assert_numeric(x = confidence_threshold, lower = 0, upper = 1)
   checkmate::assert_choice(x = type,
                            choices = c("boxplot","wordclouds", "silhouette",
-                                       "pca", "scatterplot"))
+                                       "pca", "scatterplot"), null.ok = TRUE)
+  checkmate::assert_character(x = variable, null.ok = TRUE)
+
 
   # Convertion of matrix to data.frame:
   if (!(any(class(data) == "data.frame"))) {
@@ -42,7 +43,7 @@ plot.fuzzyclara <- function(x, data, type = "boxplot",
   data[, int_vars] <- lapply(data[, int_vars], as.numeric)
 
   # if PCA, scale the data
-  if(type == "pca"){
+  if (!is.null(type) && type == "pca"){
     ind <- unlist(lapply(data, is.numeric), use.names = TRUE)
     for (i in ind) {
       data[, ind] <- scale(data[, ind])
@@ -71,7 +72,9 @@ plot.fuzzyclara <- function(x, data, type = "boxplot",
   # Handle 'type = NULL':
   if (is.null(type)) {
     # Check if 'variable' argument was specified
-    mget("variable", ifnotfound = stop("Please specify the 'type' or the variable' argument."))
+    if (is.null(variable)) {
+      stop("Please specify the 'type' or the variable' argument.")
+    }
 
     type <- ifelse(class(data[[variable]]) != "numeric", "barplot","boxplot")
   }
