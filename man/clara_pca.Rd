@@ -8,29 +8,37 @@ clara_pca(
   x,
   data,
   group_by = NULL,
-  transparent_obs = NULL,
   plot_all_fuzzy = FALSE,
+  transparent_obs = NULL,
   alpha_fuzzy = 0.4,
   focus = FALSE,
   focus_clusters = NULL
 )
 }
 \arguments{
-\item{x}{an object of class claraclust}
+\item{x}{An object of class claraclust}
 
-\item{data}{prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))}
+\item{data}{Prepared data.frame (contains cluster variable, observations are
+already filtered by threshold (fuzzy))}
 
-\item{group_by}{optional grouping variable}
+\item{group_by}{Optional grouping variable}
 
-\item{transparent_obs}{dataset containing observatiosn that are plottet transparent, only relevant for plot_all_fuzzy = TRUE}
+\item{plot_all_fuzzy}{For fuzzy clustering and threshold: should observations
+below threshold be plottet transparent? PCA is performed based on the
+observations above the threshold. Defaults to FALSE.}
 
-\item{plot_all_fuzzy}{for fuzzy clustering and threshold: should observations below threshold be plottet transparent? PCA is performed based on the observations above the threshold}
+\item{transparent_obs}{data.frame containing observations that are plotted
+transparent, only relevant for \code{plot_all_fuzzy = TRUE}.}
 
-\item{alpha_fuzzy}{alpha value for observations below threshold, only relevant for plot_all_fuzzy = TRUE}
+\item{alpha_fuzzy}{Alpha value for observations below threshold, only
+relevant for \code{plot_all_fuzzy = TRUE}. Defaults to 0.4.}
 
-\item{focus}{for fuzzy clustering, focus on clusters given by variable focus_clusters and plot observations based on probability of belonging to the respective cluster}
+\item{focus}{For fuzzy clustering, focus on clusters given by variable
+\code{focus_clusters} and plot observations based on probability of belonging
+to the respective cluster. Defaults to FALSE.}
 
-\item{focus_clusters}{vector of integers: on which clusters should be focused? If NULL, all clusters are used}
+\item{focus_clusters}{Optional vector of integers to focus on specific
+clusters}
 }
 \value{
 PCA plot

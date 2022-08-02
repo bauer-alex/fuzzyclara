@@ -7,13 +7,13 @@
 clara_wordcloud(x, data, variable, seed = 42)
 }
 \arguments{
-\item{x}{an object of class claraclust}
+\item{x}{An object of class claraclust}
 
-\item{data}{prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))}
+\item{data}{Prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))}
 
-\item{variable}{name of variable to plot}
+\item{variable}{Name of variable to plot}
 
-\item{seed}{optional seed}
+\item{seed}{Random number seed. Defaults to 42.}
 }
 \value{
 wordcloud plot

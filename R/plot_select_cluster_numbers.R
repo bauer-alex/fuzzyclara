@@ -2,26 +2,30 @@
 #'
 #' Function to provide graphical visualization for selecting the optimal number of clusters
 #' @param data data.frame to be clustered
-#' @param clusters_range range for numbers of clusters
-#' @param metric predefined dissimilarity metric (euclidean, manhattan) or
-#' self-defined dissimilarity function
-#' @param samples number of subsamples
-#' @param sample_size number of observations belonging to a sample. If NULL
+#' @param clusters_range Evaluated range for the number of clusters. Defaults to
+#' \code{2:5}.
+#' @param metric Predefined dissimilarity metric (one of \code{c("euclidean",
+#' "manhattan")}) or self-defined dissimilarity function. Defaults to
+#' \code{"euclidean"}.
+#' @param samples Number of subsamples
+#' @param sample_size Number of observations belonging to a sample. If NULL
 #' (default), the minimum of \code{nrow(data)} and \code{40 + clusters * 2} is
 #' used as sample size.
-#' @param type fixed or fuzzy clustering
-#' @param cores numbers of cores for computation (cores > 1 implies
-#' multithreading)
-#' @param seed random number seed
-#' @param m fuzziness exponent (only for type = "fuzzy")
+#' @param type One of \code{c("fixed","fuzzy")}, defining the type of clustering.
+#' Defaults to \code{"fixed"}.
+#' @param cores Number of cores for computation. \code{cores > 1} implies
+#' multithreading. Defaults to 1.
+#' @param seed Random number seed. Defaults to 1234.
+#' @param m Fuzziness exponent, used when \code{type = "fuzzy"}. Defaults to 2.
 #' @param verbose Can be set to integers between 0 and 2 to control the level of
 #' detail of the printed diagnostic messages. Higher numbers lead to more detailed
 #' messages. Defaults to 1.
-#' @param return_results return clustering results (claraclust objects) as a list
-#' @param ... Additional arguments passed to the main clustering algorithm
-#' (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})
+#' @param return_results Indicator if clustering results (claraclust objects)
+#' should be returned as a list. Defaults to FALSE.
+#' @param ... Additional arguments passed to the main clustering algorithm call
+#' with \code{\link{fuzzyclara}}.
 #'
-#' @return object of class claraclust
+#' @return Object of class claraclust
 #' @import cluster checkmate tibble dplyr tidyselect scales
 #' @importFrom stats as.formula prcomp
 #' @export
@@ -36,23 +40,21 @@ plot_cluster_numbers <- function(data, clusters_range = 2:5,
   checkmate::assert_numeric(x = clusters_range, lower = 1, upper = nrow(data))
 
   # Create data.frame with criterion results:
-
   criterion_df <- data.frame(cluster_number = clusters_range,
                       criterion = rep(0, length(clusters_range)))
 
 
-  # create list for results
-
+  # Create list for results
   if(return_results == TRUE){
     results <- list()
   }
 
   # Extract and append criterion value for each cluster number:
-
   for(i in clusters_range){
     y <- fuzzyclara(data, clusters = i, metric = metric,
                     sample_size = sample_size, samples = samples,
-                    type = type, seed = seed, m = m, verbose = verbose, cores = cores)
+                    type = type, seed = seed, m = m, verbose = verbose, cores = cores,
+                    ...)
 
     if(return_results == TRUE){
       results[[length(results) + 1]] <- y
@@ -79,14 +81,12 @@ plot_cluster_numbers <- function(data, clusters_range = 2:5,
                col = "darkslategrey") +
     ylab(ylab_text) + xlab("Cluster number") +
     theme_minimal() +
-    theme(text = element_text(size = 17), axis.title = element_text(size = 17),
-          axis.text = element_text(size = 17),
-          legend.text = element_text(size = 17),
-          plot.title = element_text(hjust = 0.5, size = 17, face = "bold"),
-          strip.text.y = element_text(size = 17), legend.text.align = 0,
-          strip.placement = "outside", strip.background = element_blank(),
-          axis.title.y = element_text(margin = margin(0, 10, 0, 0)),
-          axis.title.x = element_text(margin = margin(10, 0, 0, 0)))+
+    theme(plot.title        = element_text(hjust = 0.5),
+          legend.text.align = 0,
+          strip.placement   = "outside",
+          strip.background  = element_blank(),
+          axis.title.y      = element_text(margin = margin(0, 10, 0, 0)),
+          axis.title.x      = element_text(margin = margin(10, 0, 0, 0)))+
     scale_x_continuous(breaks = breaks_width(1))
 
   # Return the plot (and the cluster results):
@@ -99,6 +99,3 @@ plot_cluster_numbers <- function(data, clusters_range = 2:5,
   }
 
 }
-
-
-

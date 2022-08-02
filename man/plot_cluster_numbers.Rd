@@ -22,37 +22,41 @@ plot_cluster_numbers(
 \arguments{
 \item{data}{data.frame to be clustered}
 
-\item{clusters_range}{range for numbers of clusters}
+\item{clusters_range}{Evaluated range for the number of clusters. Defaults to
+\code{2:5}.}
 
-\item{metric}{predefined dissimilarity metric (euclidean, manhattan) or
-self-defined dissimilarity function}
+\item{metric}{Predefined dissimilarity metric (one of \code{c("euclidean",
+"manhattan")}) or self-defined dissimilarity function. Defaults to
+\code{"euclidean"}.}
 
-\item{samples}{number of subsamples}
+\item{samples}{Number of subsamples}
 
-\item{sample_size}{number of observations belonging to a sample. If NULL
+\item{sample_size}{Number of observations belonging to a sample. If NULL
 (default), the minimum of \code{nrow(data)} and \code{40 + clusters * 2} is
 used as sample size.}
 
-\item{type}{fixed or fuzzy clustering}
+\item{type}{One of \code{c("fixed","fuzzy")}, defining the type of clustering.
+Defaults to \code{"fixed"}.}
 
-\item{cores}{numbers of cores for computation (cores > 1 implies
-multithreading)}
+\item{cores}{Number of cores for computation. \code{cores > 1} implies
+multithreading. Defaults to 1.}
 
-\item{seed}{random number seed}
+\item{seed}{Random number seed. Defaults to 1234.}
 
-\item{m}{fuzziness exponent (only for type = "fuzzy")}
+\item{m}{Fuzziness exponent, used when \code{type = "fuzzy"}. Defaults to 2.}
 
 \item{verbose}{Can be set to integers between 0 and 2 to control the level of
 detail of the printed diagnostic messages. Higher numbers lead to more detailed
 messages. Defaults to 1.}
 
-\item{return_results}{return clustering results (claraclust objects) as a list}
+\item{return_results}{Indicator if clustering results (claraclust objects)
+should be returned as a list. Defaults to FALSE.}
 
-\item{...}{Additional arguments passed to the main clustering algorithm
-(\code{\link{pam}} or \code{\link[vegclust]{vegclust}})}
+\item{...}{Additional arguments passed to the main clustering algorithm call
+with \code{\link{fuzzyclara}}.}
 }
 \value{
-object of class claraclust
+Object of class claraclust
 }
 \description{
 Function to provide graphical visualization for selecting the optimal number of clusters

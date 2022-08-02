@@ -14,17 +14,21 @@ clara_silhouette(
 )
 }
 \arguments{
-\item{x}{an object of class claraclust}
+\item{x}{An object of class claraclust}
 
-\item{data}{prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))}
+\item{data}{Prepared data.frame (contains cluster variable, observations are
+already filtered by threshold (fuzzy))}
 
-\item{metric}{distance metric for silhouette plot, default is euclidean. Irrelevant if silhouette_subsample is TRUE}
+\item{metric}{Distance metric for silhouette plot. Defaults to
+\code{"Euclidean"}. Irrelevant if \code{silhouette_subsample} is TRUE.}
 
-\item{silhouette_subsample}{use the subsample from claraclust for silhouette plot instead of all samples}
+\item{silhouette_subsample}{Use the subsample from claraclust for silhouette
+plot instead of all samples? Defaults to FALSE.}
 
-\item{scale_sil}{scale numeric variables for silhouette plot? Default TRUE, irrelevant if silhouette_subsample is TRUE}
+\item{scale_sil}{Scale numeric variables for silhouette plot? Defaults to
+TRUE. Irrelevant if \code{silhouette_subsample} is TRUE.}
 
-\item{rel_obs}{names of observations > threshold}
+\item{rel_obs}{Names of observations > threshold.}
 }
 \value{
 silhouette plot

@@ -4,24 +4,36 @@
 \alias{plot.fuzzyclara}
 \title{Visualization of clustering solution by variables}
 \usage{
-\method{plot}{fuzzyclara}(x, data, type = NULL, confidence_threshold = 0, na.omit = FALSE, ...)
+\method{plot}{fuzzyclara}(
+  x,
+  data,
+  type = "boxplot",
+  variable,
+  confidence_threshold = 0,
+  na.omit = FALSE,
+  ...
+)
 }
 \arguments{
-\item{x}{an object of class claraclust}
+\item{x}{An object of class claraclust}
 
 \item{data}{data.frame used for clustering}
 
-\item{type}{type of plot}
+\item{type}{Type of plot. One of \code{c("barplot","boxplot","wordclouds",
+"silhouette","pca","scatterplot")}. Defaults to NULL, which either plots
+a barplot or a boxplot, depending on the class of \code{variable} specified
+as part of the \code{...} argument.}
 
-\item{confidence_threshold}{threshold for fuzzy clustering observations to
-be plotted}
+\item{confidence_threshold}{Threshold for fuzzy clustering observations to
+be plotted. Must be a number between 0 and 1. Defaults to 0.}
 
-\item{na.omit}{Should missing values be excluded for plotting?}
+\item{na.omit}{Should missing values be excluded for plotting? Defaults to
+FALSE.}
 
-\item{...}{further arguments for plot functions}
+\item{...}{Further arguments for internal plot functions.}
 }
 \value{
-clustering plot
+Clustering plot
 }
 \description{
 Function to provide graphical visualization of distribution

@@ -1,19 +1,24 @@
 #' Visualization of clustering solution by variables
 #'
 #' Function to provide graphical visualization of distribution
-#' @param x an object of class claraclust
+#' @param x An object of class claraclust
 #' @param data data.frame used for clustering
-#' @param type type of plot
-#' @param confidence_threshold threshold for fuzzy clustering observations to
-#' be plotted
-#' @param na.omit Should missing values be excluded for plotting?
-#' @param ... further arguments for plot functions
-#' @return clustering plot
+#' @param type Type of plot. One of \code{c("barplot","boxplot","wordclouds",
+#' "silhouette","pca","scatterplot")}. Defaults to NULL, which either plots
+#' a barplot or a boxplot, depending on the class of \code{variable} specified
+#' as part of the \code{...} argument.
+#' @param confidence_threshold Threshold for fuzzy clustering observations to
+#' be plotted. Must be a number between 0 and 1. Defaults to 0.
+#' @param na.omit Should missing values be excluded for plotting? Defaults to
+#' FALSE.
+#' @param ... Further arguments for internal plot functions.
+#'
+#' @return Clustering plot
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @importFrom stats as.formula prcomp
 #' @export
-plot.fuzzyclara <- function(x, data, type = NULL, confidence_threshold = 0,
-                            na.omit = FALSE, ...){
+plot.fuzzyclara <- function(x, data, type = "boxplot", variable,
+                            confidence_threshold = 0, na.omit = FALSE, ...){
 
   # Input checking:
   checkmate::assert_class(x = x, class = "fuzzyclara")
@@ -21,8 +26,8 @@ plot.fuzzyclara <- function(x, data, type = NULL, confidence_threshold = 0,
                     checkmate::check_matrix(data), combine = "or")
   checkmate::assert_numeric(x = confidence_threshold, lower = 0, upper = 1)
   checkmate::assert_choice(x = type,
-                           choices = c("wordclouds", "silhouette",
-                                       "pca", "scatterplot"), null.ok = TRUE)
+                           choices = c("boxplot","wordclouds", "silhouette",
+                                       "pca", "scatterplot"))
 
   # Convertion of matrix to data.frame:
   if (!(any(class(data) == "data.frame"))) {
@@ -37,7 +42,7 @@ plot.fuzzyclara <- function(x, data, type = NULL, confidence_threshold = 0,
   data[, int_vars] <- lapply(data[, int_vars], as.numeric)
 
   # if PCA, scale the data
-  if(!is.null(type) && type == "pca"){
+  if(type == "pca"){
     ind <- unlist(lapply(data, is.numeric), use.names = TRUE)
     for (i in ind) {
       data[, ind] <- scale(data[, ind])
@@ -63,23 +68,33 @@ plot.fuzzyclara <- function(x, data, type = NULL, confidence_threshold = 0,
   }
 
 
+  # Handle 'type = NULL':
+  if (is.null(type)) {
+    # Check if 'variable' argument was specified
+    mget("variable", ifnotfound = stop("Please specify the 'type' or the variable' argument."))
+
+    type <- ifelse(class(data[[variable]]) != "numeric", "barplot","boxplot")
+  }
 
   # Creation of plot object:
-  if (is.null(type)) {
-    plot <- clara_bar_boxplot(x = x, data = data, na.omit = na.omit, ...)
-  }
-  else if (!is.null(type) && type == "wordclouds") {
+  if (type == "barplot") {
+    plot <- clara_barplot(x = x, data = data, na.omit = na.omit, ...)
+
+  } else if (type == "boxplot") {
+    plot <- clara_boxplot(x = x, data = data, na.omit = na.omit, ...)
+
+  } else if (type == "wordclouds") {
     plot <- clara_wordcloud(x = x, data = data, ...)
-  }
-  else if (!is.null(type) && type == "silhouette") {
+
+  } else if (type == "silhouette") {
     plot <- clara_silhouette(x = x, data = data,
                              rel_obs = rel_obs, ...)
-  }
-  else if (!is.null(type) && type == "pca") {
+
+  } else if (type == "pca") {
     plot <- clara_pca(x = x, data = data,
                       transparent_obs = transparent_obs, ...)
-  }
-  else if (!is.null(type) && type == "scatterplot") {
+
+  } else if (type == "scatterplot") {
     plot <- clara_scatterplot(x = x, data = data,
                               transparent_obs = transparent_obs, ...)
   }
@@ -91,19 +106,21 @@ plot.fuzzyclara <- function(x, data, type = NULL, confidence_threshold = 0,
 
 
 
-#' Plot function barplot or boxplot
+#' Plot function barplot
 #'
-#' Function to plot a barplot or a boxplot
-#' @param x an object of class claraclust
-#' @param data prepared data.frame (contains cluster variable, observations are
+#' Function to plot a barplot
+#' @param x An object of class claraclust
+#' @param data Prepared data.frame (contains cluster variable, observations are
 #' already filtered by threshold (fuzzy))
-#' @param variable name of variable to plot
-#' @param group_by optional grouping variable
-#' @param na.omit Should missing values be excluded for plotting?
-#' @return barplot or boxplot
+#' @param variable Name of variable to plot
+#' @param group_by Optional grouping variable
+#' @param na.omit Should missing values be excluded for plotting? Defaults to
+#' FALSE.
+#'
+#' @return barplot
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @export
-clara_bar_boxplot <- function(x, data, variable, group_by = NULL,
+clara_barplot <- function(x, data, variable, group_by = NULL,
                               na.omit = FALSE) {
 
   checkmate::assert_character(x = variable)
@@ -117,18 +134,14 @@ clara_bar_boxplot <- function(x, data, variable, group_by = NULL,
     data <- data %>% filter(!is.na(!!sym(variable)))
   }
 
-  if (class(data[, variable]) == "numeric"){ # boxplot
-    plot <- ggplot2::ggplot(data = data,
-                            mapping = aes(x = cluster, y = !!ensym(variable),
-                                          fill = cluster)) +
-      geom_boxplot() + theme_minimal() +
-      scale_fill_npg()
-  } else{ # barplot
-    plot <- ggplot2::ggplot(data = data,
-                          mapping = aes(x = cluster, fill = !!ensym(variable))) +
-      geom_bar(position = "fill") + theme_minimal() +
-      scale_fill_brewer(palette = "Accent")
+  if (class(data[, variable]) == "numeric"){
+    stop("The specified 'variable' has to be non-numeric.")
   }
+
+  plot <- ggplot2::ggplot(data = data,
+                          mapping = aes(x = cluster, fill = !!ensym(variable))) +
+    geom_bar(position = "fill") + theme_minimal() +
+    scale_fill_brewer(palette = "Accent")
 
   if(!is.null(group_by)){
     if (!(group_by %in% names(data))) {
@@ -139,18 +152,63 @@ clara_bar_boxplot <- function(x, data, variable, group_by = NULL,
   }
 
   return(plot)
-
-
 }
+
+
+
+#' Plot function boxplot
+#'
+#' Function to plot a boxplot
+#' @inheritParams clara_barplot
+#'
+#' @return boxplot
+#' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
+#' @export
+clara_boxplot <- function(x, data, variable, group_by = NULL,
+                              na.omit = FALSE) {
+
+  checkmate::assert_character(x = variable)
+  checkmate::assert_character(x = group_by, null.ok = TRUE)
+  if (!(variable %in% names(data))) {
+    stop("Dataset does not contain the given variable.")
+  }
+
+  # Remove missing values if specified:
+  if (na.omit == TRUE) {
+    data <- data %>% filter(!is.na(!!sym(variable)))
+  }
+
+  if (class(data[, variable]) != "numeric"){
+    stop("The specified 'variable' has to be numeric.")
+  }
+
+  plot <- ggplot2::ggplot(data = data,
+                          mapping = aes(x = cluster, y = !!ensym(variable),
+                                        fill = cluster)) +
+    geom_boxplot() + theme_minimal() +
+    scale_fill_npg()
+
+  if(!is.null(group_by)){
+    if (!(group_by %in% names(data))) {
+      stop("Dataset does not contain the given grouping variable.")
+    }
+
+    plot <- plot + facet_wrap(as.formula(paste("~", group_by)))
+  }
+
+  return(plot)
+}
+
 
 
 #' Plot function wordcloud
 #'
 #' Function to plot a wordcloud
-#' @param x an object of class claraclust
-#' @param data prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))
-#' @param variable name of variable to plot
-#' @param seed optional seed
+#' @param x An object of class claraclust
+#' @param data Prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))
+#' @param variable Name of variable to plot
+#' @param seed Random number seed. Defaults to 42.
+#'
 #' @return wordcloud plot
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @export
@@ -190,20 +248,29 @@ clara_wordcloud <- function(x, data, variable, seed = 42){
 #' Plot function PCA
 #'
 #' Function to plot PCA results
-#' @param x an object of class claraclust
-#' @param data prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))
-#' @param group_by optional grouping variable
-#' @param plot_all_fuzzy for fuzzy clustering and threshold: should observations below threshold be plottet transparent? PCA is performed based on the observations above the threshold
-#' @param transparent_obs dataset containing observatiosn that are plottet transparent, only relevant for plot_all_fuzzy = TRUE
-#' @param alpha_fuzzy alpha value for observations below threshold, only relevant for plot_all_fuzzy = TRUE
-#' @param focus for fuzzy clustering, focus on clusters given by variable focus_clusters and plot observations based on probability of belonging to the respective cluster
-#' @param focus_clusters vector of integers: on which clusters should be focused? If NULL, all clusters are used
+#' @param x An object of class claraclust
+#' @param data Prepared data.frame (contains cluster variable, observations are
+#' already filtered by threshold (fuzzy))
+#' @param group_by Optional grouping variable
+#' @param plot_all_fuzzy For fuzzy clustering and threshold: should observations
+#' below threshold be plottet transparent? PCA is performed based on the
+#' observations above the threshold. Defaults to FALSE.
+#' @param transparent_obs data.frame containing observations that are plotted
+#' transparent, only relevant for \code{plot_all_fuzzy = TRUE}.
+#' @param alpha_fuzzy Alpha value for observations below threshold, only
+#' relevant for \code{plot_all_fuzzy = TRUE}. Defaults to 0.4.
+#' @param focus For fuzzy clustering, focus on clusters given by variable
+#' \code{focus_clusters} and plot observations based on probability of belonging
+#' to the respective cluster. Defaults to FALSE.
+#' @param focus_clusters Optional vector of integers to focus on specific
+#' clusters
+#'
 #' @return PCA plot
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @importFrom stats as.formula prcomp
 #' @export
-clara_pca <- function(x, data, group_by = NULL,
-                      transparent_obs = NULL, plot_all_fuzzy = FALSE, alpha_fuzzy = 0.4,
+clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
+                      transparent_obs = NULL, alpha_fuzzy = 0.4,
                       focus = FALSE, focus_clusters = NULL){
 
   checkmate::assert_character(x = group_by, null.ok = TRUE)
@@ -333,20 +400,28 @@ clara_pca <- function(x, data, group_by = NULL,
 #' Plot function scatterplot
 #'
 #' Function to plot a scatterplot
-#' @param x an object of class claraclust
-#' @param data prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))
-#' @param x_var name of x variable
-#' @param y_var name of y variable
-#' @param plot_all_fuzzy for fuzzy clustering and threshold: should observations below threshold be plottet transparent? The regression line is only based on the observations above the threshold
-#' @param transparent_obs dataset containing observatiosn that are plottet transparent, only relevant for plot_all_fuzzy = TRUE
-#' @param alpha_fuzzy alpha value for observations below threshold, only relevant for plot_all_fuzzy = TRUE
-#' @param focus for fuzzy clustering, focus on clusters given by variable focus_clusters and plot observations based on probability of belonging to the respective cluster
-#' @param focus_clusters vector of integers: on which clusters should be focused? If NULL, all clusters are used
+#' @param x An object of class claraclust
+#' @param data Prepared data.frame (contains cluster variable, observations are
+#' already filtered by threshold (fuzzy))
+#' @param x_var,y_var Names of x and y variable
+#' @param plot_all_fuzzy For fuzzy clustering and threshold: should observations
+#' below threshold be plottet transparent? The regression line is only based on
+#' the observations above the threshold. Defaults to FALSE.
+#' @param transparent_obs data.frame containing observations that are plotted
+#' transparent, only relevant for \code{plot_all_fuzzy = TRUE}.
+#' @param alpha_fuzzy Alpha value for observations below threshold, only
+#' relevant for \code{plot_all_fuzzy = TRUE}. Defaults to 0.4.
+#' @param focus For fuzzy clustering, focus on clusters given by variable
+#' \code{focus_clusters} and plot observations based on probability of belonging
+#' to the respective cluster. Defaults to FALSE.
+#' @param focus_clusters Optional vector of integers to focus on specific
+#' clusters
+#'
 #' @return scatterplot
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud tidyr
 #' @export
-clara_scatterplot <- function(x, data, x_var, y_var,
-                              transparent_obs = NULL, plot_all_fuzzy = FALSE, alpha_fuzzy = 0.4,
+clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = FALSE,
+                              transparent_obs = NULL, alpha_fuzzy = 0.4,
                               focus = FALSE, focus_clusters = NULL){
 
   if (((!(!is.null(x_var) & !is.null(y_var)) ) | !(class(data[, x_var]) == "numeric" & class(data[, y_var]) == "numeric"))) {
@@ -406,12 +481,17 @@ clara_scatterplot <- function(x, data, x_var, y_var,
 #' Plot function silhouette
 #'
 #' Function to plot a scatterplot
-#' @param x an object of class claraclust
-#' @param data prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))
-#' @param metric distance metric for silhouette plot, default is euclidean. Irrelevant if silhouette_subsample is TRUE
-#' @param silhouette_subsample use the subsample from claraclust for silhouette plot instead of all samples
-#' @param scale_sil scale numeric variables for silhouette plot? Default TRUE, irrelevant if silhouette_subsample is TRUE
-#' @param rel_obs names of observations > threshold
+#' @param x An object of class claraclust
+#' @param data Prepared data.frame (contains cluster variable, observations are
+#' already filtered by threshold (fuzzy))
+#' @param metric Distance metric for silhouette plot. Defaults to
+#' \code{"Euclidean"}. Irrelevant if \code{silhouette_subsample} is TRUE.
+#' @param silhouette_subsample Use the subsample from claraclust for silhouette
+#' plot instead of all samples? Defaults to FALSE.
+#' @param scale_sil Scale numeric variables for silhouette plot? Defaults to
+#' TRUE. Irrelevant if \code{silhouette_subsample} is TRUE.
+#' @param rel_obs Names of observations > threshold.
+#'
 #' @return silhouette plot
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @export
@@ -467,7 +547,4 @@ clara_silhouette <- function(x, data,
 
   return(plot)
 
-
 }
-
-
