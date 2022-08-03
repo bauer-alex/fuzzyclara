@@ -56,41 +56,52 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for fuzzyclara</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">data</span>, type <span class="op">=</span> <span class="cn">NULL</span>, confidence_threshold <span class="op">=</span> <span class="fl">0</span>, na.omit <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">data</span>,</span>
+<span>  type <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  confidence_threshold <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  na.omit <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
-<dd><p>an object of class claraclust</p></dd>
+<dd><p>An object of class claraclust</p></dd>
 
 
 <dt>data</dt>
 <dd><p>data.frame used for clustering</p></dd>
 
 
-<dt>type</dt>
-<dd><p>type of plot</p></dd>
+<dt>type, variable</dt>
+<dd><p>Type of plot. One of <code>c("barplot","boxplot","wordclouds",
+"silhouette","pca","scatterplot")</code>. Defaults to NULL, which either plots
+a barplot or a boxplot, depending on the class of <code>variable</code>.</p></dd>
 
 
 <dt>confidence_threshold</dt>
-<dd><p>threshold for fuzzy clustering observations to
-be plotted</p></dd>
+<dd><p>Threshold for fuzzy clustering observations to
+be plotted. Must be a number between 0 and 1. Defaults to 0.</p></dd>
 
 
 <dt>na.omit</dt>
-<dd><p>Should missing values be excluded for plotting?</p></dd>
+<dd><p>Should missing values be excluded for plotting? Defaults to
+FALSE.</p></dd>
 
 
 <dt>...</dt>
-<dd><p>further arguments for plot functions</p></dd>
+<dd><p>Further arguments for internal plot functions.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>clustering plot</p>
+<p>Clustering plot</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

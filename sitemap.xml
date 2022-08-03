@@ -31,7 +31,10 @@
     <loc>/reference/calculate_memb_score.html</loc>
   </url>
   <url>
-    <loc>/reference/clara_bar_boxplot.html</loc>
+    <loc>/reference/clara_barplot.html</loc>
+  </url>
+  <url>
+    <loc>/reference/clara_boxplot.html</loc>
   </url>
   <url>
     <loc>/reference/clara_pca.html</loc>

@@ -60,8 +60,8 @@
 <span>  <span class="va">data</span>,</span>
 <span>  <span class="va">x_var</span>,</span>
 <span>  <span class="va">y_var</span>,</span>
-<span>  transparent_obs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  plot_all_fuzzy <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  transparent_obs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  alpha_fuzzy <span class="op">=</span> <span class="fl">0.4</span>,</span>
 <span>  focus <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  focus_clusters <span class="op">=</span> <span class="cn">NULL</span></span>
@@ -71,39 +71,43 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
-<dd><p>an object of class claraclust</p></dd>
+<dd><p>An object of class claraclust</p></dd>
 
 
 <dt>data</dt>
-<dd><p>prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))</p></dd>
+<dd><p>Prepared data.frame (contains cluster variable, observations are
+already filtered by threshold (fuzzy))</p></dd>
 
 
-<dt>x_var</dt>
-<dd><p>name of x variable</p></dd>
-
-
-<dt>y_var</dt>
-<dd><p>name of y variable</p></dd>
-
-
-<dt>transparent_obs</dt>
-<dd><p>dataset containing observatiosn that are plottet transparent, only relevant for plot_all_fuzzy = TRUE</p></dd>
+<dt>x_var, y_var</dt>
+<dd><p>Names of x and y variable</p></dd>
 
 
 <dt>plot_all_fuzzy</dt>
-<dd><p>for fuzzy clustering and threshold: should observations below threshold be plottet transparent? The regression line is only based on the observations above the threshold</p></dd>
+<dd><p>For fuzzy clustering and threshold: should observations
+below threshold be plottet transparent? The regression line is only based on
+the observations above the threshold. Defaults to FALSE.</p></dd>
+
+
+<dt>transparent_obs</dt>
+<dd><p>data.frame containing observations that are plotted
+transparent, only relevant for <code>plot_all_fuzzy = TRUE</code>.</p></dd>
 
 
 <dt>alpha_fuzzy</dt>
-<dd><p>alpha value for observations below threshold, only relevant for plot_all_fuzzy = TRUE</p></dd>
+<dd><p>Alpha value for observations below threshold, only
+relevant for <code>plot_all_fuzzy = TRUE</code>. Defaults to 0.4.</p></dd>
 
 
 <dt>focus</dt>
-<dd><p>for fuzzy clustering, focus on clusters given by variable focus_clusters and plot observations based on probability of belonging to the respective cluster</p></dd>
+<dd><p>For fuzzy clustering, focus on clusters given by variable
+<code>focus_clusters</code> and plot observations based on probability of belonging
+to the respective cluster. Defaults to FALSE.</p></dd>
 
 
 <dt>focus_clusters</dt>
-<dd><p>vector of integers: on which clusters should be focused? If NULL, all clusters are used</p></dd>
+<dd><p>Optional vector of integers to focus on specific
+clusters</p></dd>
 
 </dl></div>
     <div class="section level2">

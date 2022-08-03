@@ -68,27 +68,31 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
-<dd><p>an object of class claraclust</p></dd>
+<dd><p>An object of class claraclust</p></dd>
 
 
 <dt>data</dt>
-<dd><p>prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))</p></dd>
+<dd><p>Prepared data.frame (contains cluster variable, observations are
+already filtered by threshold (fuzzy))</p></dd>
 
 
 <dt>metric</dt>
-<dd><p>distance metric for silhouette plot, default is euclidean. Irrelevant if silhouette_subsample is TRUE</p></dd>
+<dd><p>Distance metric for silhouette plot. Defaults to
+<code>"Euclidean"</code>. Irrelevant if <code>silhouette_subsample</code> is TRUE.</p></dd>
 
 
 <dt>silhouette_subsample</dt>
-<dd><p>use the subsample from claraclust for silhouette plot instead of all samples</p></dd>
+<dd><p>Use the subsample from claraclust for silhouette
+plot instead of all samples? Defaults to FALSE.</p></dd>
 
 
 <dt>scale_sil</dt>
-<dd><p>scale numeric variables for silhouette plot? Default TRUE, irrelevant if silhouette_subsample is TRUE</p></dd>
+<dd><p>Scale numeric variables for silhouette plot? Defaults to
+TRUE. Irrelevant if <code>silhouette_subsample</code> is TRUE.</p></dd>
 
 
 <dt>rel_obs</dt>
-<dd><p>names of observations &gt; threshold</p></dd>
+<dd><p>Names of observations &gt; threshold.</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -78,39 +78,42 @@
 
 
 <dt>clusters_range</dt>
-<dd><p>range for numbers of clusters</p></dd>
+<dd><p>Evaluated range for the number of clusters. Defaults to
+<code>2:5</code>.</p></dd>
 
 
 <dt>metric</dt>
-<dd><p>predefined dissimilarity metric (euclidean, manhattan) or
-self-defined dissimilarity function</p></dd>
+<dd><p>Predefined dissimilarity metric (one of <code>c("euclidean",
+"manhattan")</code>) or self-defined dissimilarity function. Defaults to
+<code>"euclidean"</code>.</p></dd>
 
 
 <dt>samples</dt>
-<dd><p>number of subsamples</p></dd>
+<dd><p>Number of subsamples</p></dd>
 
 
 <dt>sample_size</dt>
-<dd><p>number of observations belonging to a sample. If NULL
+<dd><p>Number of observations belonging to a sample. If NULL
 (default), the minimum of <code>nrow(data)</code> and <code>40 + clusters * 2</code> is
 used as sample size.</p></dd>
 
 
 <dt>type</dt>
-<dd><p>fixed or fuzzy clustering</p></dd>
+<dd><p>One of <code>c("fixed","fuzzy")</code>, defining the type of clustering.
+Defaults to <code>"fixed"</code>.</p></dd>
 
 
 <dt>cores</dt>
-<dd><p>numbers of cores for computation (cores &gt; 1 implies
-multithreading)</p></dd>
+<dd><p>Number of cores for computation. <code>cores &gt; 1</code> implies
+multithreading. Defaults to 1.</p></dd>
 
 
 <dt>seed</dt>
-<dd><p>random number seed</p></dd>
+<dd><p>Random number seed. Defaults to 1234.</p></dd>
 
 
 <dt>m</dt>
-<dd><p>fuzziness exponent (only for type = "fuzzy")</p></dd>
+<dd><p>Fuzziness exponent, used when <code>type = "fuzzy"</code>. Defaults to 2.</p></dd>
 
 
 <dt>verbose</dt>
@@ -120,19 +123,20 @@ messages. Defaults to 1.</p></dd>
 
 
 <dt>return_results</dt>
-<dd><p>return clustering results (claraclust objects) as a list</p></dd>
+<dd><p>Indicator if clustering results (claraclust objects)
+should be returned as a list. Defaults to FALSE.</p></dd>
 
 
 <dt>...</dt>
-<dd><p>Additional arguments passed to the main clustering algorithm
-(<code>pam</code> or <code><a href="https://emf-creaf.github.io/vegclust/reference/vegclust.html" class="external-link">vegclust</a></code>)</p></dd>
+<dd><p>Additional arguments passed to the main clustering algorithm call
+with <code><a href="fuzzyclara.html">fuzzyclara</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>object of class claraclust</p>
+<p>Object of class claraclust</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
