@@ -121,7 +121,7 @@ compute_distance_matrix <- function(data, metric) {
 #' assignment)
 #' @import vegclust cluster
 perform_sample_clustering <- function(dist, clusters, type, names, m,
-                                      build, ...) {
+                                      build = FALSE, ...) {
 
   # Fixed pam clustering:
   if (type == "fixed") {

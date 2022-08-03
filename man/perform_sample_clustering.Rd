@@ -4,7 +4,7 @@
 \alias{perform_sample_clustering}
 \title{Perform pam or vegclust clustering on a data sample}
 \usage{
-perform_sample_clustering(dist, clusters, type, names, m, build, ...)
+perform_sample_clustering(dist, clusters, type, names, m, build = FALSE, ...)
 }
 \arguments{
 \item{dist}{dissimilarity matrix}

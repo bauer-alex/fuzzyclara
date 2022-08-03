@@ -81,13 +81,15 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
 
   # Creation of plot object:
   if (type == "barplot") {
-    plot <- clara_barplot(x = x, data = data, na.omit = na.omit, ...)
+    plot <- clara_barplot(x = x, data = data, variable = variable,
+                          na.omit = na.omit, ...)
 
   } else if (type == "boxplot") {
-    plot <- clara_boxplot(x = x, data = data, na.omit = na.omit, ...)
+    plot <- clara_boxplot(x = x, data = data, variable = variable,
+                          na.omit = na.omit, ...)
 
   } else if (type == "wordclouds") {
-    plot <- clara_wordcloud(x = x, data = data, ...)
+    plot <- clara_wordcloud(x = x, data = data, variable = variable, ...)
 
   } else if (type == "silhouette") {
     plot <- clara_silhouette(x = x, data = data,
@@ -129,7 +131,7 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
   checkmate::assert_character(x = variable)
   checkmate::assert_character(x = group_by, null.ok = TRUE)
   if (!(variable %in% names(data))) {
-    stop("Dataset does not contain the given variable.")
+    stop("The dataset does not contain the given variable.")
   }
 
   # Remove missing values if specified:
