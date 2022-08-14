@@ -7,13 +7,13 @@
 compute_distance_matrix(data, metric)
 }
 \arguments{
-\item{data}{sample of data.frame to be clustered}
+\item{data}{Sample of data.frame to be clustered}
 
-\item{metric}{predefined dissimilarity metric (euclidean, manhattan) or
+\item{metric}{Predefined dissimilarity metric (euclidean, manhattan) or
 self-defined dissimilarity function}
 }
 \value{
-dissimilarity matrix for data sample
+Dissimilarity matrix for data sample
 }
 \description{
 Function to compute the dissimilarity matrix based on a specified metric

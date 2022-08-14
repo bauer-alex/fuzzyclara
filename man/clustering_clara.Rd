@@ -22,31 +22,31 @@ clustering_clara(
 \arguments{
 \item{data}{data.frame to be clustered}
 
-\item{clusters}{number of clusters}
+\item{clusters}{Number of clusters}
 
-\item{metric}{predefined dissimilarity metric (euclidean, manhattan) or
+\item{metric}{Predefined dissimilarity metric (euclidean, manhattan) or
 self-defined dissimilarity function}
 
-\item{samples}{number of subsamples}
+\item{samples}{Number of subsamples}
 
-\item{sample_size}{number of observations belonging to a sample. If NULL
+\item{sample_size}{Number of observations belonging to a sample. If NULL
 (default), the minimum of \code{nrow(data)} and \code{40 + clusters * 2} is
 used as sample size.}
 
-\item{type}{fixed or fuzzy clustering}
+\item{type}{Fixed or fuzzy clustering}
 
-\item{cores}{numbers of cores for computation (cores > 1 implies
+\item{cores}{Numbers of cores for computation (cores > 1 implies
 multithreading)}
 
-\item{seed}{random number seed}
+\item{seed}{Random number seed}
 
-\item{m}{fuzziness exponent (only for type = "fuzzy")}
+\item{m}{Fuzziness exponent (only for type = "fuzzy")}
 
 \item{verbose}{Can be set to integers between 0 and 2 to control the level of
 detail of the printed diagnostic messages. Higher numbers lead to more detailed
 messages. Defaults to 1.}
 
-\item{build}{additional build algorithm to choose initial medoids (only
+\item{build}{Additional build algorithm to choose initial medoids (only
 relevant for type = "fuzzy". Default FALSE.)}
 
 \item{...}{Additional arguments passed to the main clustering algorithm and
@@ -54,7 +54,7 @@ to proxy::dist for the calculation of the distance matrix
 (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})}
 }
 \value{
-object of class fuzzyclara
+Object of class fuzzyclara
 }
 \description{
 Function to perform clara clustering algorithm in a fixed or fuzzy way.

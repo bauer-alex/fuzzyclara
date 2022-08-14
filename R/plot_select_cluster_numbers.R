@@ -1,6 +1,8 @@
 #' Visualization of the selection criterion for different cluster numbers
 #'
-#' Function to provide graphical visualization for selecting the optimal number of clusters
+#' Function to provide graphical visualization for selecting the optimal number
+#' of clusters
+#'
 #' @param data data.frame to be clustered
 #' @param clusters_range Evaluated range for the number of clusters. Defaults to
 #' \code{2:5}.
@@ -26,10 +28,11 @@
 #' with \code{\link{fuzzyclara}}.
 #'
 #' @return Object of class claraclust
+#'
 #' @import cluster checkmate tibble dplyr tidyselect scales
 #' @importFrom stats as.formula prcomp
 #' @export
-
+#'
 plot_cluster_numbers <- function(data, clusters_range = 2:5,
                                  metric = "euclidean", samples = 10,
                                  sample_size = NULL, type = "fixed", cores = 1,

@@ -1,24 +1,26 @@
-################################################################################
-
 #' Assign a cluster to each observation of the entire dataset
 #'
 #' Function to assign a cluster to each observation of the entire dataset
 #' by selecting the closest medoid
-#' @param data entire data.frame
-#' @param metric predefined dissimilarity metric (euclidean, manhattan) or
+#'
+#' @param data Entire data.frame
+#' @param metric Predefined dissimilarity metric (euclidean, manhattan) or
 #' self-defined dissimilarity function
-#' @param medoids medoids of the obtained clustering solution for the data
+#' @param medoids Medoids of the obtained clustering solution for the data
 #' sample
-#' @param type fixed or fuzzy clustering
-#' @param m fuzziness exponent (only for type = fuzzy)
+#' @param type Fixed or fuzzy clustering
+#' @param m Fuzziness exponent (only for type = fuzzy)
 #' @param return_distMatrix Should the distances to the cluster medoids be
 #' returned?
 #' @param return_data_medoids Should medoid data be returned? (This could be
 #' used for assigning new observations to the clusters.)
-#' @return list with information on cluster results (medoid, cluster
+#'
+#' @return List with information on cluster results (medoid, cluster
 #' assignment, average distance to the closest medoid (weighted
 #' average distance to the closest medoid in case of fuzzy clustering))
+#'
 #' @import proxy
+#'
 assign_cluster <- function(data, metric, medoids, type = "fixed",
                            m = 2, return_distMatrix = FALSE,
                            return_data_medoids = FALSE) {
@@ -97,16 +99,16 @@ assign_cluster <- function(data, metric, medoids, type = "fixed",
 }
 
 
-################################################################################
-
-
 #' Calculate membership score of one observation for each medoid
 #'
 #' Function to calculate a membership score for one observation
 #' for each medoid based on the distance of this observation to all medoids
-#' @param dist_med vector of distances to medoids
-#' @param m fuzziness exponent (only for type = fuzzy)
-#' @return list with membership scores for one observation
+#'
+#' @param dist_med Vector of distances to medoids
+#' @param m Fuzziness exponent (only for type = fuzzy)
+#'
+#' @return List with membership scores for one observation
+#'
 calculate_memb_score <- function(dist_med, m) {
 
   perfect_match <- match(x = 0, table = dist_med)
@@ -127,9 +129,3 @@ calculate_memb_score <- function(dist_med, m) {
   }
   return(list_memb)
 }
-
-
-
-
-
-

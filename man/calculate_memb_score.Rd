@@ -7,12 +7,12 @@
 calculate_memb_score(dist_med, m)
 }
 \arguments{
-\item{dist_med}{vector of distances to medoids}
+\item{dist_med}{Vector of distances to medoids}
 
-\item{m}{fuzziness exponent (only for type = fuzzy)}
+\item{m}{Fuzziness exponent (only for type = fuzzy)}
 }
 \value{
-list with membership scores for one observation
+List with membership scores for one observation
 }
 \description{
 Function to calculate a membership score for one observation

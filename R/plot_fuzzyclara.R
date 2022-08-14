@@ -1,6 +1,7 @@
 #' Visualization of clustering solution by variables
 #'
 #' Function to provide graphical visualization of distribution
+#'
 #' @param x An object of class claraclust
 #' @param data data.frame used for clustering
 #' @param type,variable Type of plot. One of \code{c("barplot","boxplot","wordclouds",
@@ -13,9 +14,11 @@
 #' @param ... Further arguments for internal plot functions.
 #'
 #' @return Clustering plot
+#'
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @importFrom stats as.formula prcomp
 #' @export
+#'
 plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
                             confidence_threshold = 0, na.omit = FALSE, ...){
 
@@ -110,7 +113,6 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
 }
 
 
-
 #' Plot function barplot
 #'
 #' Function to plot a barplot
@@ -123,8 +125,10 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
 #' FALSE.
 #'
 #' @return barplot
+#'
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @export
+#'
 clara_barplot <- function(x, data, variable, group_by = NULL,
                           na.omit = FALSE) {
 
@@ -164,11 +168,14 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
 #' Plot function boxplot
 #'
 #' Function to plot a boxplot
+#'
 #' @inheritParams clara_barplot
 #'
 #' @return boxplot
+#'
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @export
+#'
 clara_boxplot <- function(x, data, variable, group_by = NULL,
                           na.omit = FALSE) {
 
@@ -205,18 +212,20 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
 }
 
 
-
 #' Plot function wordcloud
 #'
 #' Function to plot a wordcloud
+#'
 #' @param x An object of class claraclust
 #' @param data Prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))
 #' @param variable Name of variable to plot
 #' @param seed Random number seed. Defaults to 42.
 #'
 #' @return wordcloud plot
+#'
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @export
+#'
 clara_wordcloud <- function(x, data, variable, seed = 42){
 
   checkmate::assert_character(x = variable)
@@ -253,6 +262,7 @@ clara_wordcloud <- function(x, data, variable, seed = 42){
 #' Plot function PCA
 #'
 #' Function to plot PCA results
+#'
 #' @param x An object of class claraclust
 #' @param data Prepared data.frame (contains cluster variable, observations are
 #' already filtered by threshold (fuzzy))
@@ -271,9 +281,11 @@ clara_wordcloud <- function(x, data, variable, seed = 42){
 #' clusters
 #'
 #' @return PCA plot
+#'
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @importFrom stats as.formula prcomp
 #' @export
+#'
 clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
                       transparent_obs = NULL, alpha_fuzzy = 0.4,
                       focus = FALSE, focus_clusters = NULL){
@@ -354,16 +366,16 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
         shape = group_by, size = 1.5,  legend = "right", ggtheme = theme_bw(),
         xlab = paste0("Dim 1 (", variance_perc[1], "% )" ),
         ylab = paste0("Dim 2 (", variance_perc[2], "% )" )
-        ) + stat_mean(aes(color = cluster), size = 4) + theme_minimal()
-      } else {
-        plot <- ggscatter(
-          individuals_coord, x = "Dim.1", y = "Dim.2",
-          color = "cluster", palette = "npg", ellipse = TRUE, ellipse.type = "convex",
-          size = 1.5,  legend = "right", ggtheme = theme_bw(),
-          xlab = paste0("Dim 1 (", variance_perc[1], "% )" ),
-          ylab = paste0("Dim 2 (", variance_perc[2], "% )" )
-        ) + stat_mean(aes(color = cluster), size = 4) + theme_minimal()
-        }
+      ) + stat_mean(aes(color = cluster), size = 4) + theme_minimal()
+    } else {
+      plot <- ggscatter(
+        individuals_coord, x = "Dim.1", y = "Dim.2",
+        color = "cluster", palette = "npg", ellipse = TRUE, ellipse.type = "convex",
+        size = 1.5,  legend = "right", ggtheme = theme_bw(),
+        xlab = paste0("Dim 1 (", variance_perc[1], "% )" ),
+        ylab = paste0("Dim 2 (", variance_perc[2], "% )" )
+      ) + stat_mean(aes(color = cluster), size = 4) + theme_minimal()
+    }
 
 
     if(x$type == "fuzzy" && plot_all_fuzzy == TRUE && nrow(transparent_obs) != 0){ # add transparent observations (probability below threshold)
@@ -383,28 +395,25 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
               color = cluster, shape = !!ensym(group_by),
               alpha = alpha_fuzzy),
           size = 1.5, show.legend = FALSE)
-        } else {
-          plot <- plot + geom_point(
-            data = coords_transparent,
-            aes(x = Dim.1, y = Dim.2, color = cluster,
-                alpha = alpha_fuzzy),
-            size = 1.5, show.legend = FALSE)
+      } else {
+        plot <- plot + geom_point(
+          data = coords_transparent,
+          aes(x = Dim.1, y = Dim.2, color = cluster,
+              alpha = alpha_fuzzy),
+          size = 1.5, show.legend = FALSE)
+      }
+
     }
-
   }
-  }
-
-
 
   return(plot)
-
-
 }
 
 
 #' Plot function scatterplot
 #'
 #' Function to plot a scatterplot
+#'
 #' @param x An object of class claraclust
 #' @param data Prepared data.frame (contains cluster variable, observations are
 #' already filtered by threshold (fuzzy))
@@ -423,8 +432,10 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
 #' clusters
 #'
 #' @return scatterplot
+#'
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud tidyr
 #' @export
+#'
 clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = FALSE,
                               transparent_obs = NULL, alpha_fuzzy = 0.4,
                               focus = FALSE, focus_clusters = NULL){
@@ -475,17 +486,14 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = FALSE,
     }
   }
 
-
-
   return(plot)
-
-
 }
 
 
 #' Plot function silhouette
 #'
 #' Function to plot a scatterplot
+#'
 #' @param x An object of class claraclust
 #' @param data Prepared data.frame (contains cluster variable, observations are
 #' already filtered by threshold (fuzzy))
@@ -498,8 +506,10 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = FALSE,
 #' @param rel_obs Names of observations > threshold.
 #'
 #' @return silhouette plot
+#'
 #' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
 #' @export
+#'
 clara_silhouette <- function(x, data,
                              metric = "Euclidean",
                              silhouette_subsample = FALSE,
@@ -542,14 +552,11 @@ clara_silhouette <- function(x, data,
 
     }
 
-
   }
 
   plot <- fviz_silhouette(sil) + theme_minimal() +
     scale_fill_npg() + scale_color_npg() +
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-
   return(plot)
-
 }

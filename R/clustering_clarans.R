@@ -8,17 +8,17 @@
 #' in a file \code{clustering_progress.log} (if \code{verbose > 0}).
 #'
 #' @param data data.frame to be clustered
-#' @param clusters number of clusters
-#' @param metric predefined dissimilarity metric (euclidean, manhattan) or
+#' @param clusters Number of clusters
+#' @param metric Predefined dissimilarity metric (euclidean, manhattan) or
 #' self-defined dissimilarity function
-#' @param max_neighbors maximum number of randomized medoid searches with each
+#' @param max_neighbors Maximum number of randomized medoid searches with each
 #' cluster
-#' @param num_local number of clustering iterations
-#' @param type fixed or fuzzy clustering
-#' @param cores numbers of cores for computation (cores > 1 implies
+#' @param num_local Number of clustering iterations
+#' @param type Fixed or fuzzy clustering
+#' @param cores Numbers of cores for computation (cores > 1 implies
 #' multithreading)
-#' @param seed random number seed
-#' @param m fuzziness exponent (only for type = "fuzzy")
+#' @param seed Random number seed
+#' @param m Fuzziness exponent (only for type = "fuzzy")
 #' @param verbose Can be set to integers between 0 and 2 to control the level of
 #' detail of the printed diagnostic messages. Higher numbers lead to more detailed
 #' messages. Defaults to 1.
@@ -26,8 +26,10 @@
 #' to proxy::dist for the calculation of the distance matrix
 #' (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})
 #'
-#' @return object of class fuzzyclara
+#' @return Object of class fuzzyclara
+#'
 #' @import cluster parallel checkmate tibble dplyr tidyselect
+#'
 clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
                                type = "fixed", max_neighbors = 100,
                                num_local = num_local, cores = 1, seed = 1234,
@@ -214,5 +216,3 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
   class(clustering_result) <- c("fuzzyclara", class(clustering_result))
   return(clustering_result)
 }
-
-

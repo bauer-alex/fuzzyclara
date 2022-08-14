@@ -21,24 +21,24 @@ clustering_clarans(
 \arguments{
 \item{data}{data.frame to be clustered}
 
-\item{clusters}{number of clusters}
+\item{clusters}{Number of clusters}
 
-\item{metric}{predefined dissimilarity metric (euclidean, manhattan) or
+\item{metric}{Predefined dissimilarity metric (euclidean, manhattan) or
 self-defined dissimilarity function}
 
-\item{type}{fixed or fuzzy clustering}
+\item{type}{Fixed or fuzzy clustering}
 
-\item{max_neighbors}{maximum number of randomized medoid searches with each
+\item{max_neighbors}{Maximum number of randomized medoid searches with each
 cluster}
 
-\item{num_local}{number of clustering iterations}
+\item{num_local}{Number of clustering iterations}
 
-\item{cores}{numbers of cores for computation (cores > 1 implies
+\item{cores}{Numbers of cores for computation (cores > 1 implies
 multithreading)}
 
-\item{seed}{random number seed}
+\item{seed}{Random number seed}
 
-\item{m}{fuzziness exponent (only for type = "fuzzy")}
+\item{m}{Fuzziness exponent (only for type = "fuzzy")}
 
 \item{verbose}{Can be set to integers between 0 and 2 to control the level of
 detail of the printed diagnostic messages. Higher numbers lead to more detailed
@@ -49,7 +49,7 @@ to proxy::dist for the calculation of the distance matrix
 (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})}
 }
 \value{
-object of class fuzzyclara
+Object of class fuzzyclara
 }
 \description{
 Function to perform clara clustering algorithm in a fixed or fuzzy way.

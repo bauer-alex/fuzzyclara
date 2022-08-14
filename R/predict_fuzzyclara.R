@@ -1,11 +1,15 @@
 #' Prediction of cluster assignments
 #'
 #' Function to predict cluster assignments
+#'
 #' @param object an object of class claraclust
 #' @param newdata data.frame to look variables with which to predict
 #' @param ... further arguments for predict functions
+#'
 #' @return clustering plot tibble
+#'
 #' @export
+#'
 predict.fuzzyclara <- function(object, newdata, ...){
 
   # Input checking:
@@ -46,11 +50,6 @@ predict.fuzzyclara <- function(object, newdata, ...){
     names(assignments) <- c("assignment", "membership_scores",
                             "distance_to_medoids")
   }
+
   return(assignments)
 }
-
-
-
-
-
-

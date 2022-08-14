@@ -23,16 +23,16 @@ clustering_sample(
 
 \item{sample_ids}{ids for the sample's observations}
 
-\item{clusters}{number of clusters}
+\item{clusters}{Number of clusters}
 
-\item{metric}{predefined dissimilarity metric (euclidean, manhattan) or
+\item{metric}{Predefined dissimilarity metric (euclidean, manhattan) or
 self-defined dissimilarity function}
 
-\item{sample_size}{number of observations belonging to a sample}
+\item{sample_size}{Number of observations belonging to a sample}
 
-\item{type}{fixed or fuzzy clustering}
+\item{type}{Fixed or fuzzy clustering}
 
-\item{m}{fuzziness exponent (only for type = fuzzy)}
+\item{m}{Fuzziness exponent (only for type = fuzzy)}
 
 \item{verbose}{Can be set to integers between 0 and 2 to control the level of
 detail of the printed diagnostic messages. Higher numbers lead to more detailed
@@ -41,14 +41,14 @@ messages. Defaults to 1.}
 \item{verbose_toLogFile}{If TRUE, the diagnostic messages are printed to
 a log file \code{clustering_progress.log}. Defaults to FALSE.}
 
-\item{build}{additional build algorithm to choose initial medoids (only
+\item{build}{Additional build algorithm to choose initial medoids (only
 relevant for type = "fuzzy". Default FALSE.)}
 
 \item{...}{Additional arguments passed to the main clustering algorithm
 (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})}
 }
 \value{
-clustering solution for data sample
+Clustering solution for data sample
 }
 \description{
 Function to perform clara clustering algorithm in a fixed or fuzzy way.

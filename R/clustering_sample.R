@@ -3,25 +3,29 @@
 #' Function to perform clara clustering algorithm in a fixed or fuzzy way.
 #' The function can either be performed using a common dissimilarity metric or
 #' a self-defined distance function.
+#'
 #' @param data data.frame to be clustered
 #' @param sample_ids ids for the sample's observations
-#' @param clusters number of clusters
-#' @param metric predefined dissimilarity metric (euclidean, manhattan) or
+#' @param clusters Number of clusters
+#' @param metric Predefined dissimilarity metric (euclidean, manhattan) or
 #' self-defined dissimilarity function
-#' @param sample_size number of observations belonging to a sample
-#' @param type fixed or fuzzy clustering
-#' @param m fuzziness exponent (only for type = fuzzy)
+#' @param sample_size Number of observations belonging to a sample
+#' @param type Fixed or fuzzy clustering
+#' @param m Fuzziness exponent (only for type = fuzzy)
 #' @param verbose Can be set to integers between 0 and 2 to control the level of
 #' detail of the printed diagnostic messages. Higher numbers lead to more detailed
 #' messages. Defaults to 1.
 #' @param verbose_toLogFile If TRUE, the diagnostic messages are printed to
 #' a log file \code{clustering_progress.log}. Defaults to FALSE.
-#' @param build additional build algorithm to choose initial medoids (only
+#' @param build Additional build algorithm to choose initial medoids (only
 #' relevant for type = "fuzzy". Default FALSE.)
 #' @param ... Additional arguments passed to the main clustering algorithm
 #' (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})
-#' @return clustering solution for data sample
+#'
+#' @return Clustering solution for data sample
+#'
 #' @import dplyr cluster
+#'
 clustering_sample <- function(data, sample_ids, clusters = 5,
                               metric = "euclidean", sample_size = NULL,
                               type = "fixed", m = 2, verbose = 1,
@@ -79,16 +83,18 @@ clustering_sample <- function(data, sample_ids, clusters = 5,
 }
 
 
-################################################################################
-
 #' Compute the dissimilarity matrix for a data sample
 #'
 #' Function to compute the dissimilarity matrix based on a specified metric
-#' @param data sample of data.frame to be clustered
-#' @param metric predefined dissimilarity metric (euclidean, manhattan) or
+#'
+#' @param data Sample of data.frame to be clustered
+#' @param metric Predefined dissimilarity metric (euclidean, manhattan) or
 #' self-defined dissimilarity function
-#' @return dissimilarity matrix for data sample
+#'
+#' @return Dissimilarity matrix for data sample
+#'
 #' @import proxy
+#'
 compute_distance_matrix <- function(data, metric) {
 
   # Deletion of column "name":
@@ -103,23 +109,26 @@ compute_distance_matrix <- function(data, metric) {
   return(distance)
 }
 
-################################################################################
 
 #' Perform pam or vegclust clustering on a data sample
 #'
 #' Function to perform pam in a fixed or fuzzy way on a data sample
-#' @param dist dissimilarity matrix
-#' @param clusters number of clusters
-#' @param type fixed or fuzzy clustering
-#' @param names vector of names for observations
-#' @param m fuzziness exponent (only for type = fuzzy)
-#' @param build additional build algorithm to choose initial medoids (only
+#'
+#' @param dist Dissimilarity matrix
+#' @param clusters Number of clusters
+#' @param type Fixed or fuzzy clustering
+#' @param names Vector of names for observations
+#' @param m Fuzziness exponent (only for type = fuzzy)
+#' @param build Additional build algorithm to choose initial medoids (only
 #' relevant for type = "fuzzy". Default FALSE.)
 #' @param ... Additional arguments passed to the main clustering algorithm
 #' (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})
-#' @return list with information on cluster results (medoid and cluster
+#'
+#' @return List with information on cluster results (medoid and cluster
 #' assignment)
+#'
 #' @import vegclust cluster
+#'
 perform_sample_clustering <- function(dist, clusters, type, names, m,
                                       build = FALSE, ...) {
 
@@ -162,10 +171,3 @@ perform_sample_clustering <- function(dist, clusters, type, names, m,
   clustering_result <- list("medoids" = medoids, "clustering" = clustering)
   return(clustering_result)
 }
-
-################################################################################
-
-
-
-
-

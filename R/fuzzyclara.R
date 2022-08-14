@@ -8,37 +8,40 @@
 #' in a file \code{clustering_progress.log} (if \code{verbose > 0}).
 #'
 #' @param data data.frame to be clustered
-#' @param clusters number of clusters
-#' @param metric predefined dissimilarity metric (euclidean, manhattan) or
+#' @param clusters Number of clusters
+#' @param metric Predefined dissimilarity metric (euclidean, manhattan) or
 #' self-defined dissimilarity function
-#' @param algorithm \code{clara} or \code{clarans}
-#' @param samples number of subsamples (only for clara clustering)
-#' @param sample_size number of observations belonging to a sample. If NULL
+#' @param algorithm One of \code{c("clara","clarans")}
+#' @param samples Number of subsamples (only for clara clustering)
+#' @param sample_size Number of observations belonging to a sample. If NULL
 #' (default), the minimum of \code{nrow(data)} and \code{40 + clusters * 2} is
 #' used as sample size. (only for clara clustering)
-#' @param max_neighbors maximum number of randomized medoid searches with each
+#' @param max_neighbors Maximum number of randomized medoid searches with each
 #' cluster (only for clarans clustering)
-#' @param num_local number of clustering iterations (only for clarans
+#' @param num_local Number of clustering iterations (only for clarans
 #' clustering)
-#' @param type \code{fixed} or \code{fuzzy} clustering
-#' @param m fuzziness exponent (only for type = "fuzzy")
-#' @param cores numbers of cores for computation (cores > 1 implies
+#' @param type One of \code{c("fixed","fuzzy")}, specifying the type of
+#' clustering to be performed.
+#' @param m Fuzziness exponent (only for \code{type = "fuzzy"})
+#' @param cores Numbers of cores for computation (cores > 1 implies
 #' multithreading)
-#' @param seed random number seed
+#' @param seed Random number seed
 #' @param verbose Can be set to integers between 0 and 2 to control the level of
 #' detail of the printed diagnostic messages. Higher numbers lead to more detailed
 #' messages. Defaults to 1.
-#' @param scale scale numeric variables before distance matrix calculation?
+#' @param scale Scale numeric variables before distance matrix calculation?
 #' Default TRUE
-#' @param build additional build algorithm to choose initial medoids (only
+#' @param build Additional build algorithm to choose initial medoids (only
 #' relevant for type = "fuzzy". Default FALSE.)
 #' @param ... Additional arguments passed to the main clustering algorithm and
 #' to proxy::dist for the calculation of the distance matrix
 #' (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})
 #'
-#' @return object of class claraclust
+#' @return Object of class claraclust
+#'
 #' @import cluster parallel checkmate tibble dplyr tidyselect
 #' @export
+#'
 fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
                        algorithm = "clara", samples = 10, sample_size = NULL,
                        max_neighbors = 100, num_local = 10, type = "fixed",
@@ -104,10 +107,3 @@ fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
   # Return of clustering solution:
   return(result)
 }
-
-
-
-
-
-
-

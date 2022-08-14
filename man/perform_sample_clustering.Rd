@@ -7,24 +7,24 @@
 perform_sample_clustering(dist, clusters, type, names, m, build = FALSE, ...)
 }
 \arguments{
-\item{dist}{dissimilarity matrix}
+\item{dist}{Dissimilarity matrix}
 
-\item{clusters}{number of clusters}
+\item{clusters}{Number of clusters}
 
-\item{type}{fixed or fuzzy clustering}
+\item{type}{Fixed or fuzzy clustering}
 
-\item{names}{vector of names for observations}
+\item{names}{Vector of names for observations}
 
-\item{m}{fuzziness exponent (only for type = fuzzy)}
+\item{m}{Fuzziness exponent (only for type = fuzzy)}
 
-\item{build}{additional build algorithm to choose initial medoids (only
+\item{build}{Additional build algorithm to choose initial medoids (only
 relevant for type = "fuzzy". Default FALSE.)}
 
 \item{...}{Additional arguments passed to the main clustering algorithm
 (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})}
 }
 \value{
-list with information on cluster results (medoid and cluster
+List with information on cluster results (medoid and cluster
 assignment)
 }
 \description{

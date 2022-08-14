@@ -59,5 +59,6 @@ with \code{\link{fuzzyclara}}.}
 Object of class claraclust
 }
 \description{
-Function to provide graphical visualization for selecting the optimal number of clusters
+Function to provide graphical visualization for selecting the optimal number
+of clusters
 }

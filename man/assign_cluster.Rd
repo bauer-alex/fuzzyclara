@@ -15,17 +15,17 @@ assign_cluster(
 )
 }
 \arguments{
-\item{data}{entire data.frame}
+\item{data}{Entire data.frame}
 
-\item{metric}{predefined dissimilarity metric (euclidean, manhattan) or
+\item{metric}{Predefined dissimilarity metric (euclidean, manhattan) or
 self-defined dissimilarity function}
 
-\item{medoids}{medoids of the obtained clustering solution for the data
+\item{medoids}{Medoids of the obtained clustering solution for the data
 sample}
 
-\item{type}{fixed or fuzzy clustering}
+\item{type}{Fixed or fuzzy clustering}
 
-\item{m}{fuzziness exponent (only for type = fuzzy)}
+\item{m}{Fuzziness exponent (only for type = fuzzy)}
 
 \item{return_distMatrix}{Should the distances to the cluster medoids be
 returned?}
@@ -34,7 +34,7 @@ returned?}
 used for assigning new observations to the clusters.)}
 }
 \value{
-list with information on cluster results (medoid, cluster
+List with information on cluster results (medoid, cluster
 assignment, average distance to the closest medoid (weighted
 average distance to the closest medoid in case of fuzzy clustering))
 }
