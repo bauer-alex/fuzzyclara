@@ -7,22 +7,12 @@
 #' If the clustering is run on mulitple cores, the verbose messages are printed
 #' in a file \code{clustering_progress.log} (if \code{verbose > 0}).
 #'
+#' @inheritParams fuzzyclara
 #' @param data data.frame to be clustered
-#' @param clusters Number of clusters
-#' @param metric Predefined dissimilarity metric (euclidean, manhattan) or
-#' self-defined dissimilarity function
 #' @param samples Number of subsamples
 #' @param sample_size Number of observations belonging to a sample. If NULL
 #' (default), the minimum of \code{nrow(data)} and \code{40 + clusters * 2} is
 #' used as sample size.
-#' @param type Fixed or fuzzy clustering
-#' @param cores Numbers of cores for computation (cores > 1 implies
-#' multithreading)
-#' @param seed Random number seed
-#' @param m Fuzziness exponent (only for type = "fuzzy")
-#' @param verbose Can be set to integers between 0 and 2 to control the level of
-#' detail of the printed diagnostic messages. Higher numbers lead to more detailed
-#' messages. Defaults to 1.
 #' @param build Additional build algorithm to choose initial medoids (only
 #' relevant for type = "fuzzy". Default FALSE.)
 #' @param ... Additional arguments passed to the main clustering algorithm and
@@ -37,6 +27,18 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                              samples = 10, sample_size = NULL, type = "fixed",
                              cores = 1, seed = 1234, m = 2, verbose = 1,
                              build = FALSE, ...) {
+
+  checkmate::assert_data_frame(data)
+  checkmate::assert_number(clusters, lower = 2)
+  checkmate::assert_number(samples, lower = 1)
+  checkmate::assert_number(sample_size, lower = 1, null.ok = TRUE)
+  checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
+  checkmate::assert_number(cores, lower = 1)
+  checkmate::assert_number(seed)
+  # TODO how to check 'm'?
+  checkmate::assert_choice(verbose, choices = 0:2)
+  checkmate::assert_logical(build, len = 1)
+
 
   # Setting a seed for random processes:
   set.seed(seed)

@@ -8,27 +8,30 @@
 #' in a file \code{clustering_progress.log} (if \code{verbose > 0}).
 #'
 #' @param data data.frame to be clustered
-#' @param clusters Number of clusters
-#' @param metric Predefined dissimilarity metric (euclidean, manhattan) or
-#' self-defined dissimilarity function
+#' @param clusters Number of clusters. Defaults to 5.
+#' @param metric A character specifying a predefined dissimilarity metric (like
+#' \code{"euclidean"} or \code{"manhattan"}) or a self-defined dissimilarity
+#' function. Defaults to \code{"euclidean"}. Will be passed as argument
+#' \code{method} to \code{\link[proxy]{dist}}, so check \code{?proxy::dist} for
+#' full details.
 #' @param algorithm One of \code{c("clara","clarans")}
-#' @param samples Number of subsamples (only for clara clustering)
+#' @param samples Number of subsamples (only if \code{algorithm = "clara"})
 #' @param sample_size Number of observations belonging to a sample. If NULL
 #' (default), the minimum of \code{nrow(data)} and \code{40 + clusters * 2} is
-#' used as sample size. (only for clara clustering)
+#' used as sample size. (only if \code{algorithm = "clara"})
 #' @param max_neighbors Maximum number of randomized medoid searches with each
-#' cluster (only for clarans clustering)
+#' cluster (only if \code{algorithm = "clarans"})
 #' @param num_local Number of clustering iterations (only for clarans
 #' clustering)
 #' @param type One of \code{c("fixed","fuzzy")}, specifying the type of
 #' clustering to be performed.
-#' @param m Fuzziness exponent (only for \code{type = "fuzzy"})
+#' @param m Fuzziness exponent (only for \code{type = "fuzzy"}). Defaults to 2.
 #' @param cores Numbers of cores for computation (cores > 1 implies
 #' multithreading)
 #' @param seed Random number seed
 #' @param verbose Can be set to integers between 0 and 2 to control the level of
-#' detail of the printed diagnostic messages. Higher numbers lead to more detailed
-#' messages. Defaults to 1.
+#' detail of the printed diagnostic messages. Higher numbers lead to more
+#' detailed messages. Defaults to 1.
 #' @param scale Scale numeric variables before distance matrix calculation?
 #' Default TRUE
 #' @param build Additional build algorithm to choose initial medoids (only
@@ -48,17 +51,21 @@ fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
                        cores = 1, seed = 1234, m = 2, verbose = 1,
                        scale = TRUE, build = FALSE, ...) {
 
-  # Input checking:
   checkmate::assert(checkmate::check_data_frame(data),
-                    checkmate::check_matrix(data), combine = "or")
-  checkmate::assert_numeric(x = clusters, lower = 1, upper = nrow(data))
+                    checkmate::check_matrix(data), combine = "or") # TODO should a matrix be possible here? The documentation above only talks about a data.frame.
+  checkmate::assert_numeric(x = clusters, lower = 2, upper = nrow(data))
   checkmate::assert_numeric(x = samples, lower = 1)
   checkmate::assert_numeric(x = sample_size, lower = clusters, null.ok = TRUE)
   checkmate::assert_numeric(x = max_neighbors, lower = 1)
   checkmate::assert_numeric(x = num_local, lower = 1)
   checkmate::assert_choice(x = algorithm, choices = c("clara", "clarans"))
   checkmate::assert_choice(x = type, choices = c("fixed", "fuzzy"))
-  checkmate::assert_numeric(x = cores, lower = 1)
+  checkmate::assert_number(x = cores, lower = 1)
+  checkmate::assert_number(seed)
+  checkmate::assert_choice(verbose, choices = 0:2)
+  checkmate::assert_logical(scale, len = 1)
+  checkmate::assert_logical(build, len = 1)
+
 
   # pam requires the number of clusters to be smaller than the number of
   # observations -> another check of sample_size

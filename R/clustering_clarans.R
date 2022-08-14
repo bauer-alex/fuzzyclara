@@ -7,33 +7,34 @@
 #' If the clustering is run on mulitple cores, the verbose messages are printed
 #' in a file \code{clustering_progress.log} (if \code{verbose > 0}).
 #'
+#' @inheritParams fuzzyclara
 #' @param data data.frame to be clustered
-#' @param clusters Number of clusters
-#' @param metric Predefined dissimilarity metric (euclidean, manhattan) or
-#' self-defined dissimilarity function
 #' @param max_neighbors Maximum number of randomized medoid searches with each
 #' cluster
 #' @param num_local Number of clustering iterations
-#' @param type Fixed or fuzzy clustering
-#' @param cores Numbers of cores for computation (cores > 1 implies
-#' multithreading)
-#' @param seed Random number seed
-#' @param m Fuzziness exponent (only for type = "fuzzy")
-#' @param verbose Can be set to integers between 0 and 2 to control the level of
-#' detail of the printed diagnostic messages. Higher numbers lead to more detailed
-#' messages. Defaults to 1.
 #' @param ... Additional arguments passed to the main clustering algorithm and
 #' to proxy::dist for the calculation of the distance matrix
 #' (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})
 #'
 #' @return Object of class fuzzyclara
 #'
-#' @import cluster parallel checkmate tibble dplyr tidyselect
+#' @import checkmate cluster dplyr parallel tibble tidyselect
 #'
 clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
                                type = "fixed", max_neighbors = 100,
-                               num_local = num_local, cores = 1, seed = 1234,
+                               num_local = num_local, cores = 1, seed = 1234, # TODO 'num_local = num_local'?!
                                m = 2, verbose = 1, ...) {
+
+  checkmate::assert_data_frame(data)
+  checkmate::assert_number(clusters, lower = 2)
+  checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
+  checkmate::assert_number(max_neighbors, lower = 1)
+  checkmate::assert_number(num_local, lower = 1)
+  checkmate::assert_number(cores, lower = 1)
+  checkmate::assert_number(seed)
+  # TODO how to check 'm'?
+  checkmate::assert_choice(verbose, choices = 0:2)
+
 
   # Setting a seed for random processes:
   set.seed(seed)

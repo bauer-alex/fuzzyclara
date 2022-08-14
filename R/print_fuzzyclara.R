@@ -7,8 +7,12 @@
 #'
 #' @return printed output
 #'
+#' @import checkmate
 #' @export
 print.fuzzyclara <- function(x, ...) {
+
+  checkmate::assert_class(x, classes = "claraclust")
+
 
   cat("Clustering results\n\n")
   cat("Medoids\n")

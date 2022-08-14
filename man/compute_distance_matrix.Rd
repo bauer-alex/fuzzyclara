@@ -4,13 +4,16 @@
 \alias{compute_distance_matrix}
 \title{Compute the dissimilarity matrix for a data sample}
 \usage{
-compute_distance_matrix(data, metric)
+compute_distance_matrix(data, metric = "euclidean")
 }
 \arguments{
 \item{data}{Sample of data.frame to be clustered}
 
-\item{metric}{Predefined dissimilarity metric (euclidean, manhattan) or
-self-defined dissimilarity function}
+\item{metric}{A character specifying a predefined dissimilarity metric (like
+\code{"euclidean"} or \code{"manhattan"}) or a self-defined dissimilarity
+function. Defaults to \code{"euclidean"}. Will be passed as argument
+\code{method} to \code{\link[proxy]{dist}}, so check \code{?proxy::dist} for
+full details.}
 }
 \value{
 Dissimilarity matrix for data sample

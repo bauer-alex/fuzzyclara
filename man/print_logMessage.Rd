@@ -13,8 +13,8 @@ print_logMessage(message, verbose_toLogFile = FALSE, reset_logFile = FALSE)
 a log file \code{clustering_progress.log}. Defaults to FALSE.}
 
 \item{reset_logFile}{If TRUE, the log file \code{clustering_progress.log} is
-newly created and a potential previous version of it is deleted. Defaults to
-FALSE.}
+newly created in the current working directory, and a potential previous
+version of it is deleted. Defaults to FALSE.}
 }
 \description{
 Print diagnostic messages to console or log file

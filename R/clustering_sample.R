@@ -4,17 +4,10 @@
 #' The function can either be performed using a common dissimilarity metric or
 #' a self-defined distance function.
 #'
+#' @inheritParams fuzzyclara
 #' @param data data.frame to be clustered
 #' @param sample_ids ids for the sample's observations
-#' @param clusters Number of clusters
-#' @param metric Predefined dissimilarity metric (euclidean, manhattan) or
-#' self-defined dissimilarity function
 #' @param sample_size Number of observations belonging to a sample
-#' @param type Fixed or fuzzy clustering
-#' @param m Fuzziness exponent (only for type = fuzzy)
-#' @param verbose Can be set to integers between 0 and 2 to control the level of
-#' detail of the printed diagnostic messages. Higher numbers lead to more detailed
-#' messages. Defaults to 1.
 #' @param verbose_toLogFile If TRUE, the diagnostic messages are printed to
 #' a log file \code{clustering_progress.log}. Defaults to FALSE.
 #' @param build Additional build algorithm to choose initial medoids (only
@@ -24,12 +17,23 @@
 #'
 #' @return Clustering solution for data sample
 #'
-#' @import dplyr cluster
+#' @import checkmate cluster dplyr
 #'
 clustering_sample <- function(data, sample_ids, clusters = 5,
                               metric = "euclidean", sample_size = NULL,
                               type = "fixed", m = 2, verbose = 1,
                               verbose_toLogFile = FALSE, build = FALSE, ...) {
+
+  checkmate::assert_data_frame(data)
+  # TODO how to check 'sample_ids'?
+  checkmate::assert_number(clusters, lower = 2)
+  checkmate::assert_number(sample_size, null.ok = TRUE)
+  checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
+  # TODO how to check 'm'?
+  checkmate::assert_choice(verbose, choices = 0:2)
+  checkmate::assert_logical(verbose_toLogFile, len = 1)
+  checkmate::assert_logical(build, len = 1)
+
 
   # Reduction of data to sample observations:
   data_sample <- data %>% dplyr::slice(sample_ids)
@@ -87,15 +91,17 @@ clustering_sample <- function(data, sample_ids, clusters = 5,
 #'
 #' Function to compute the dissimilarity matrix based on a specified metric
 #'
+#' @inheritParams fuzzyclara
 #' @param data Sample of data.frame to be clustered
-#' @param metric Predefined dissimilarity metric (euclidean, manhattan) or
-#' self-defined dissimilarity function
 #'
 #' @return Dissimilarity matrix for data sample
 #'
-#' @import proxy
+#' @import checkmate proxy
 #'
-compute_distance_matrix <- function(data, metric) {
+compute_distance_matrix <- function(data, metric = "euclidean") {
+
+  checkmate::assert_data_frame(data)
+
 
   # Deletion of column "name":
   data <- data %>% dplyr::select(-Name)
@@ -106,6 +112,7 @@ compute_distance_matrix <- function(data, metric) {
   if(!(sum(is.na(distance)) + sum(is.infinite(distance)) == 0)){
     stop("The distance matrix contains NA or infinite values. Please specify a suitable distance metric.")
   }
+
   return(distance)
 }
 
@@ -127,10 +134,18 @@ compute_distance_matrix <- function(data, metric) {
 #' @return List with information on cluster results (medoid and cluster
 #' assignment)
 #'
-#' @import vegclust cluster
+#' @import checkmate cluster vegclust
 #'
 perform_sample_clustering <- function(dist, clusters, type, names, m,
                                       build = FALSE, ...) {
+
+  # TODO how to check 'dist'?
+  checkmate::assert_number(clusters, len = 1)
+  checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
+  # TODO how to check 'names'?
+  # TODO how to check 'm'?
+  checkmate::assert_logical(build, len = 1)
+
 
   # Fixed pam clustering:
   if (type == "fixed") {

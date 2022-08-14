@@ -15,22 +15,21 @@
 #'
 #' @return Clustering plot
 #'
-#' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
+#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggsci ggwordcloud
 #' @importFrom stats as.formula prcomp
 #' @export
 #'
 plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
                             confidence_threshold = 0, na.omit = FALSE, ...){
 
-  # Input checking:
-  checkmate::assert_class(x = x, class = "fuzzyclara")
+  checkmate::assert_class(x, class = "fuzzyclara")
   checkmate::assert(checkmate::check_data_frame(data),
-                    checkmate::check_matrix(data), combine = "or")
-  checkmate::assert_numeric(x = confidence_threshold, lower = 0, upper = 1)
-  checkmate::assert_choice(x = type,
+                    checkmate::check_matrix(data), combine = "or") # TODO should a matrix be possible here? The documentation above only talks about a data.frame.
+  checkmate::assert_number(confidence_threshold, lower = 0, upper = 1)
+  checkmate::assert_choice(type,
                            choices = c("boxplot","wordclouds", "silhouette",
                                        "pca", "scatterplot"), null.ok = TRUE)
-  checkmate::assert_character(x = variable, null.ok = TRUE)
+  checkmate::assert_character(variable, null.ok = TRUE)
 
 
   # Convertion of matrix to data.frame:
@@ -126,17 +125,18 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
 #'
 #' @return barplot
 #'
-#' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
+#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggsci ggwordcloud
 #' @export
 #'
 clara_barplot <- function(x, data, variable, group_by = NULL,
                           na.omit = FALSE) {
 
-  checkmate::assert_character(x = variable)
-  checkmate::assert_character(x = group_by, null.ok = TRUE)
-  if (!(variable %in% names(data))) {
-    stop("The dataset does not contain the given variable.")
-  }
+  checkmate::assert_class(x, classes = "claraclust")
+  checkmate::assert_data_frame(data)
+  checkmate::assert_choice(variable, choices = names(data))
+  checkmate::assert_character(group_by, null.ok = TRUE)
+  checkmate::assert_logical(na.omit, len = 1)
+
 
   # Remove missing values if specified:
   if (na.omit == TRUE) {
@@ -173,17 +173,18 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
 #'
 #' @return boxplot
 #'
-#' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
+#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggsci ggwordcloud
 #' @export
 #'
 clara_boxplot <- function(x, data, variable, group_by = NULL,
                           na.omit = FALSE) {
 
-  checkmate::assert_character(x = variable)
-  checkmate::assert_character(x = group_by, null.ok = TRUE)
-  if (!(variable %in% names(data))) {
-    stop("Dataset does not contain the given variable.")
-  }
+  checkmate::assert_class(x, classes = "claraclust")
+  checkmate::assert_data_frame(data)
+  checkmate::assert_choice(variable, choices = names(data))
+  checkmate::assert_character(group_by, null.ok = TRUE)
+  checkmate::assert_logical(na.omit, len = 1)
+
 
   # Remove missing values if specified:
   if (na.omit == TRUE) {
@@ -223,15 +224,16 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
 #'
 #' @return wordcloud plot
 #'
-#' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
+#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggsci ggwordcloud
 #' @export
 #'
 clara_wordcloud <- function(x, data, variable, seed = 42){
 
-  checkmate::assert_character(x = variable)
-  if (!(variable %in% names(data))) {
-    stop("Dataset does not contain the given variable.")
-  }
+  checkmate::assert_class(x, classes = "claraclust")
+  checkmate::assert_data_frame(data)
+  checkmate::assert_choice(variable, choices = names(data))
+  checkmate::assert_number(seed)
+
 
   data$var <- data[, variable] # dplyr::count() doesn't work with !!ensym(variable)
 
@@ -282,7 +284,7 @@ clara_wordcloud <- function(x, data, variable, seed = 42){
 #'
 #' @return PCA plot
 #'
-#' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
+#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggsci ggwordcloud
 #' @importFrom stats as.formula prcomp
 #' @export
 #'
@@ -290,7 +292,15 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
                       transparent_obs = NULL, alpha_fuzzy = 0.4,
                       focus = FALSE, focus_clusters = NULL){
 
-  checkmate::assert_character(x = group_by, null.ok = TRUE)
+  checkmate::assert_class(x, classes = "claraclust")
+  checkmate::assert_data_frame(data)
+  checkmate::assert_character(group_by, null.ok = TRUE)
+  checkmate::assert_logical(plot_all_fuzzy, len = 1)
+  checkmate::assert_data_frame(transparent_obs, null.ok = TRUE)
+  checkmate::assert_number(alpha_fuzzy, lower = 0, upper = 1)
+  checkmate::assert_logical(focus, len = 1)
+  # TODO how to check 'focus_clusters'?
+
 
   if(x$type == "fuzzy" & focus == TRUE){ # for ficus = TRUE, perform PCA on whole dataset
     data <- rbind(data, transparent_obs)
@@ -433,12 +443,23 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
 #'
 #' @return scatterplot
 #'
-#' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud tidyr
+#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggsci ggwordcloud tidyr
 #' @export
 #'
 clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = FALSE,
                               transparent_obs = NULL, alpha_fuzzy = 0.4,
                               focus = FALSE, focus_clusters = NULL){
+
+  checkmate::assert_class(x, classes = "claraclust")
+  checkmate::assert_data_frame(data)
+  checkmate::assert_character(x_var, len = 1)
+  checkmate::assert_character(y_var, len = 1)
+  checkmate::assert_logical(plot_all_fuzzy, len = 1)
+  checkmate::assert_data_frame(transparent_obs, null.ok = TRUE)
+  checkmate::assert_number(alpha_fuzzy, lower = 0, upper = 1)
+  checkmate::assert_logical(focus, len = 1)
+  # TODO how to check 'focus_cluster'?
+
 
   if (((!(!is.null(x_var) & !is.null(y_var)) ) | !(class(data[, x_var]) == "numeric" & class(data[, y_var]) == "numeric"))) {
     stop("Please specify the variables correctly. Both variable and group_by should contain the names of metric variables.")
@@ -503,11 +524,11 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = FALSE,
 #' plot instead of all samples? Defaults to FALSE.
 #' @param scale_sil Scale numeric variables for silhouette plot? Defaults to
 #' TRUE. Irrelevant if \code{silhouette_subsample} is TRUE.
-#' @param rel_obs Names of observations > threshold.
+#' @param rel_obs Optional names of observations > threshold.
 #'
 #' @return silhouette plot
 #'
-#' @import ggplot2 dplyr cluster factoextra ggpubr ggsci ggwordcloud
+#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggsci ggwordcloud
 #' @export
 #'
 clara_silhouette <- function(x, data,
@@ -515,6 +536,14 @@ clara_silhouette <- function(x, data,
                              silhouette_subsample = FALSE,
                              scale_sil = TRUE,
                              rel_obs = NULL){
+
+  checkmate::assert_class(x, classes = "claraclust")
+  checkmate::assert_data_frame(data)
+  # TODO how to check 'metric'? At least specify 'metric' a bit more in the above documentation. Similar to the proxy::dist metric?
+  checkmate::assert_logical(silhouette_subsample, len = 1)
+  checkmate::assert_logical(scale_sil, len = 1)
+  # TODO how to check 'rel_obs'?
+
 
   if(scale_sil == TRUE){
     ind <- unlist(lapply(data, is.numeric), use.names = TRUE)

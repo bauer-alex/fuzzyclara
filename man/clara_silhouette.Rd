@@ -28,7 +28,7 @@ plot instead of all samples? Defaults to FALSE.}
 \item{scale_sil}{Scale numeric variables for silhouette plot? Defaults to
 TRUE. Irrelevant if \code{silhouette_subsample} is TRUE.}
 
-\item{rel_obs}{Names of observations > threshold.}
+\item{rel_obs}{Optional names of observations > threshold.}
 }
 \value{
 silhouette plot

@@ -17,21 +17,25 @@ assign_cluster(
 \arguments{
 \item{data}{Entire data.frame}
 
-\item{metric}{Predefined dissimilarity metric (euclidean, manhattan) or
-self-defined dissimilarity function}
+\item{metric}{A character specifying a predefined dissimilarity metric (like
+\code{"euclidean"} or \code{"manhattan"}) or a self-defined dissimilarity
+function. Defaults to \code{"euclidean"}. Will be passed as argument
+\code{method} to \code{\link[proxy]{dist}}, so check \code{?proxy::dist} for
+full details.}
 
 \item{medoids}{Medoids of the obtained clustering solution for the data
 sample}
 
-\item{type}{Fixed or fuzzy clustering}
+\item{type}{One of \code{c("fixed","fuzzy")}, specifying the type of
+clustering to be performed.}
 
-\item{m}{Fuzziness exponent (only for type = fuzzy)}
+\item{m}{Fuzziness exponent (only for \code{type = "fuzzy"}). Defaults to 2.}
 
-\item{return_distMatrix}{Should the distances to the cluster medoids be
-returned?}
+\item{return_distMatrix}{Indicator if the distances to the cluster medoids
+should be returned. Defaults to FALSE.}
 
-\item{return_data_medoids}{Should medoid data be returned? (This could be
-used for assigning new observations to the clusters.)}
+\item{return_data_medoids}{Indicator if the medoid data should be returned.
+Defaults to FALSE.}
 }
 \value{
 List with information on cluster results (medoid, cluster

@@ -21,12 +21,16 @@ clustering_clarans(
 \arguments{
 \item{data}{data.frame to be clustered}
 
-\item{clusters}{Number of clusters}
+\item{clusters}{Number of clusters. Defaults to 5.}
 
-\item{metric}{Predefined dissimilarity metric (euclidean, manhattan) or
-self-defined dissimilarity function}
+\item{metric}{A character specifying a predefined dissimilarity metric (like
+\code{"euclidean"} or \code{"manhattan"}) or a self-defined dissimilarity
+function. Defaults to \code{"euclidean"}. Will be passed as argument
+\code{method} to \code{\link[proxy]{dist}}, so check \code{?proxy::dist} for
+full details.}
 
-\item{type}{Fixed or fuzzy clustering}
+\item{type}{One of \code{c("fixed","fuzzy")}, specifying the type of
+clustering to be performed.}
 
 \item{max_neighbors}{Maximum number of randomized medoid searches with each
 cluster}
@@ -38,11 +42,11 @@ multithreading)}
 
 \item{seed}{Random number seed}
 
-\item{m}{Fuzziness exponent (only for type = "fuzzy")}
+\item{m}{Fuzziness exponent (only for \code{type = "fuzzy"}). Defaults to 2.}
 
 \item{verbose}{Can be set to integers between 0 and 2 to control the level of
-detail of the printed diagnostic messages. Higher numbers lead to more detailed
-messages. Defaults to 1.}
+detail of the printed diagnostic messages. Higher numbers lead to more
+detailed messages. Defaults to 1.}
 
 \item{...}{Additional arguments passed to the main clustering algorithm and
 to proxy::dist for the calculation of the distance matrix

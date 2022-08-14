@@ -3,22 +3,17 @@
 #' Function to provide graphical visualization for selecting the optimal number
 #' of clusters
 #'
+#' @inheritParams fuzzyclara
 #' @param data data.frame to be clustered
 #' @param clusters_range Evaluated range for the number of clusters. Defaults to
 #' \code{2:5}.
-#' @param metric Predefined dissimilarity metric (one of \code{c("euclidean",
-#' "manhattan")}) or self-defined dissimilarity function. Defaults to
-#' \code{"euclidean"}.
 #' @param samples Number of subsamples
 #' @param sample_size Number of observations belonging to a sample. If NULL
 #' (default), the minimum of \code{nrow(data)} and \code{40 + clusters * 2} is
 #' used as sample size.
-#' @param type One of \code{c("fixed","fuzzy")}, defining the type of clustering.
-#' Defaults to \code{"fixed"}.
 #' @param cores Number of cores for computation. \code{cores > 1} implies
 #' multithreading. Defaults to 1.
 #' @param seed Random number seed. Defaults to 1234.
-#' @param m Fuzziness exponent, used when \code{type = "fuzzy"}. Defaults to 2.
 #' @param verbose Can be set to integers between 0 and 2 to control the level of
 #' detail of the printed diagnostic messages. Higher numbers lead to more detailed
 #' messages. Defaults to 1.
@@ -29,7 +24,7 @@
 #'
 #' @return Object of class claraclust
 #'
-#' @import cluster checkmate tibble dplyr tidyselect scales
+#' @import checkmate cluster dplyr tibble tidyselect scales
 #' @importFrom stats as.formula prcomp
 #' @export
 #'
@@ -39,8 +34,17 @@ plot_cluster_numbers <- function(data, clusters_range = 2:5,
                                  seed = 1234, m = 2, verbose = 1,
                                  return_results = FALSE, ...) {
 
-  # Input checking:
-  checkmate::assert_numeric(x = clusters_range, lower = 1, upper = nrow(data))
+  checkmate::assert_data_frame(data)
+  checkmate::assert_numeric(clusters_range, lower = 1, upper = nrow(data))
+  checkmate::assert_number(samples, lower = 1)
+  checkmate::assert_number(sample_size, lower = 1, null.ok = TRUE)
+  checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
+  checkmate::assert_number(cores, lower = 1)
+  checkmate::assert_number(seed)
+  # TODO how to check 'm'?
+  checkmate::assert_choice(verbose, choices = 0:2)
+  checkmate::assert_logical(return_results, len = 1)
+
 
   # Create data.frame with criterion results:
   criterion_df <- data.frame(cluster_number = clusters_range,

@@ -3,17 +3,14 @@
 #' Function to assign a cluster to each observation of the entire dataset
 #' by selecting the closest medoid
 #'
+#' @inheritParams fuzzyclara
 #' @param data Entire data.frame
-#' @param metric Predefined dissimilarity metric (euclidean, manhattan) or
-#' self-defined dissimilarity function
 #' @param medoids Medoids of the obtained clustering solution for the data
 #' sample
-#' @param type Fixed or fuzzy clustering
-#' @param m Fuzziness exponent (only for type = fuzzy)
-#' @param return_distMatrix Should the distances to the cluster medoids be
-#' returned?
-#' @param return_data_medoids Should medoid data be returned? (This could be
-#' used for assigning new observations to the clusters.)
+#' @param return_distMatrix Indicator if the distances to the cluster medoids
+#' should be returned. Defaults to FALSE.
+#' @param return_data_medoids Indicator if the medoid data should be returned.
+#' Defaults to FALSE.
 #'
 #' @return List with information on cluster results (medoid, cluster
 #' assignment, average distance to the closest medoid (weighted
@@ -24,6 +21,14 @@
 assign_cluster <- function(data, metric, medoids, type = "fixed",
                            m = 2, return_distMatrix = FALSE,
                            return_data_medoids = FALSE) {
+
+  checkmate::assert_data_frame(data)
+  # TODO what check to run on 'medoids'? The argument specification in the documentation above should also be more specific
+  checkmate::assert_choice(type, choices = c("fixed", "fuzzy"))
+  # TODO what check to run on 'm'? Real number with minimum 1? The argument specification in the documentation above should also be more specific
+  checkmate::assert_logical(return_distMatrix, len = 1)
+  checkmate::assert_logical(return_data_medoids, len = 1)
+
 
   # Extraction of obtained medoids of the data:
   data_medoids <- data %>% filter(Name %in% medoids)
@@ -105,11 +110,16 @@ assign_cluster <- function(data, metric, medoids, type = "fixed",
 #' for each medoid based on the distance of this observation to all medoids
 #'
 #' @param dist_med Vector of distances to medoids
-#' @param m Fuzziness exponent (only for type = fuzzy)
+#' @param m Fuzziness exponent
 #'
 #' @return List with membership scores for one observation
 #'
+#' @import checkmate
+#'
 calculate_memb_score <- function(dist_med, m) {
+
+  # TODO what checkmate checks to run on 'dist_med' and 'm'? The documentation above should also be more specific.
+
 
   perfect_match <- match(x = 0, table = dist_med)
   list_memb <- as.list(rep(x = 0, times = length(dist_med)))
