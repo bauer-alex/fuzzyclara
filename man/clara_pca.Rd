@@ -16,7 +16,7 @@ clara_pca(
 )
 }
 \arguments{
-\item{x}{An object of class claraclust}
+\item{x}{An object of class "fuzzyclara"}
 
 \item{data}{Prepared data.frame (contains cluster variable, observations are
 already filtered by threshold (fuzzy))}

@@ -4,7 +4,7 @@
 \alias{calculate_memb_score}
 \title{Calculate membership score of one observation for each medoid}
 \usage{
-calculate_memb_score(dist_med, m)
+calculate_memb_score(dist_med, m = 2)
 }
 \arguments{
 \item{dist_med}{Vector of distances to medoids}

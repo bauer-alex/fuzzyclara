@@ -2,7 +2,7 @@
 #'
 #' Function to predict cluster assignments
 #'
-#' @param object an object of class claraclust
+#' @param object an object of class "fuzzyclara"
 #' @param newdata data.frame to look variables with which to predict
 #' @param ... further arguments for predict functions
 #'

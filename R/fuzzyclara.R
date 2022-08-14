@@ -41,7 +41,7 @@
 #' to proxy::dist for the calculation of the distance matrix
 #' (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})
 #'
-#' @return Object of class claraclust
+#' @return Object of class "fuzzyclara"
 #'
 #' @import cluster parallel checkmate tibble dplyr tidyselect
 #' @export
@@ -54,7 +54,7 @@ fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
 
   checkmate::assert(checkmate::check_data_frame(data),
                     checkmate::check_matrix(data), combine = "or") # TODO should a matrix be possible here? The documentation above only talks about a data.frame.
-  checkmate::assert_numeric(clusters, lower = 2, upper = nrow(data))
+  checkmate::assert_numeric(clusters, lower = 1, upper = nrow(data))
   checkmate::assert_numeric(samples, lower = 1)
   checkmate::assert_numeric(sample_size, lower = clusters, null.ok = TRUE)
   checkmate::assert_numeric(max_neighbors, lower = 1)

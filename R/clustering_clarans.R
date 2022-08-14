@@ -26,7 +26,7 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
                                m = 2, verbose = 1, ...) {
 
   checkmate::assert_data_frame(data)
-  checkmate::assert_number(clusters, lower = 2)
+  checkmate::assert_number(clusters, lower = 1)
   checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
   checkmate::assert_number(max_neighbors, lower = 1)
   checkmate::assert_number(num_local, lower = 1)

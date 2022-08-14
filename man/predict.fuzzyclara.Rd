@@ -7,7 +7,7 @@
 \method{predict}{fuzzyclara}(object, newdata, ...)
 }
 \arguments{
-\item{object}{an object of class claraclust}
+\item{object}{an object of class "fuzzyclara"}
 
 \item{newdata}{data.frame to look variables with which to predict}
 

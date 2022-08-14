@@ -14,12 +14,12 @@
 #' @param verbose Can be set to integers between 0 and 2 to control the level of
 #' detail of the printed diagnostic messages. Higher numbers lead to more detailed
 #' messages. Defaults to 1.
-#' @param return_results Indicator if clustering results (claraclust objects)
+#' @param return_results Indicator if clustering results ("fuzzyclara" objects)
 #' should be returned as a list. Defaults to FALSE.
 #' @param ... Additional arguments passed to the main clustering algorithm call
 #' with \code{\link{fuzzyclara}}.
 #'
-#' @return Object of class claraclust
+#' @return Object of class "fuzzyclara"
 #'
 #' @import checkmate cluster dplyr tibble tidyselect scales
 #' @importFrom stats as.formula prcomp

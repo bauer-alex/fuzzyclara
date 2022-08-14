@@ -1,8 +1,8 @@
-#' Print output of claraclust object
+#' Print output of "fuzzyclara" object
 #'
 #' Function to provide graphical visualization of distribution
 #'
-#' @param x an object of class claraclust
+#' @param x an object of class "fuzzyclara"
 #' @param ... additional arguments
 #'
 #' @return printed output
@@ -11,7 +11,7 @@
 #' @export
 print.fuzzyclara <- function(x, ...) {
 
-  checkmate::assert_class(x, classes = "claraclust")
+  checkmate::assert_class(x, classes = "fuzzyclara")
 
 
   cat("Clustering results\n\n")

@@ -2,7 +2,7 @@
 #'
 #' Function to provide graphical visualization of distribution
 #'
-#' @param x An object of class claraclust
+#' @param x An object of class "fuzzyclara"
 #' @param data data.frame used for clustering
 #' @param type,variable Type of plot. One of \code{c("barplot","boxplot","wordclouds",
 #' "silhouette","pca","scatterplot")}. Defaults to NULL, which either plots
@@ -115,7 +115,7 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
 #' Plot function barplot
 #'
 #' Function to plot a barplot
-#' @param x An object of class claraclust
+#' @param x An object of class "fuzzyclara"
 #' @param data Prepared data.frame (contains cluster variable, observations are
 #' already filtered by threshold (fuzzy))
 #' @param variable Name of variable to plot
@@ -131,7 +131,7 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
 clara_barplot <- function(x, data, variable, group_by = NULL,
                           na.omit = FALSE) {
 
-  checkmate::assert_class(x, classes = "claraclust")
+  checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
   checkmate::assert_choice(variable, choices = names(data))
   checkmate::assert_character(group_by, null.ok = TRUE)
@@ -179,7 +179,7 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
 clara_boxplot <- function(x, data, variable, group_by = NULL,
                           na.omit = FALSE) {
 
-  checkmate::assert_class(x, classes = "claraclust")
+  checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
   checkmate::assert_choice(variable, choices = names(data))
   checkmate::assert_character(group_by, null.ok = TRUE)
@@ -217,7 +217,7 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
 #'
 #' Function to plot a wordcloud
 #'
-#' @param x An object of class claraclust
+#' @param x An object of class "fuzzyclara"
 #' @param data Prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))
 #' @param variable Name of variable to plot
 #' @param seed Random number seed. Defaults to 42.
@@ -229,7 +229,7 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
 #'
 clara_wordcloud <- function(x, data, variable, seed = 42){
 
-  checkmate::assert_class(x, classes = "claraclust")
+  checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
   checkmate::assert_choice(variable, choices = names(data))
   checkmate::assert_number(seed)
@@ -265,7 +265,7 @@ clara_wordcloud <- function(x, data, variable, seed = 42){
 #'
 #' Function to plot PCA results
 #'
-#' @param x An object of class claraclust
+#' @param x An object of class "fuzzyclara"
 #' @param data Prepared data.frame (contains cluster variable, observations are
 #' already filtered by threshold (fuzzy))
 #' @param group_by Optional grouping variable
@@ -292,7 +292,7 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
                       transparent_obs = NULL, alpha_fuzzy = 0.4,
                       focus = FALSE, focus_clusters = NULL){
 
-  checkmate::assert_class(x, classes = "claraclust")
+  checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
   checkmate::assert_character(group_by, null.ok = TRUE)
   checkmate::assert_logical(plot_all_fuzzy, len = 1)
@@ -425,7 +425,7 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
 #'
 #' Function to plot a scatterplot
 #'
-#' @param x An object of class claraclust
+#' @param x An object of class "fuzzyclara"
 #' @param data Prepared data.frame (contains cluster variable, observations are
 #' already filtered by threshold (fuzzy))
 #' @param x_var,y_var Names of x and y variable
@@ -451,7 +451,7 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = FALSE,
                               transparent_obs = NULL, alpha_fuzzy = 0.4,
                               focus = FALSE, focus_clusters = NULL){
 
-  checkmate::assert_class(x, classes = "claraclust")
+  checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
   checkmate::assert_character(x_var, len = 1)
   checkmate::assert_character(y_var, len = 1)
@@ -516,12 +516,12 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = FALSE,
 #'
 #' Function to plot a scatterplot
 #'
-#' @param x An object of class claraclust
+#' @param x An object of class "fuzzyclara"
 #' @param data Prepared data.frame (contains cluster variable, observations are
 #' already filtered by threshold (fuzzy))
 #' @param metric Distance metric for silhouette plot. Defaults to
 #' \code{"Euclidean"}. Irrelevant if \code{silhouette_subsample} is TRUE.
-#' @param silhouette_subsample Use the subsample from claraclust for silhouette
+#' @param silhouette_subsample Use the subsample from 'x' for silhouette
 #' plot instead of all samples? Defaults to FALSE.
 #' @param scale_sil Scale numeric variables for silhouette plot? Defaults to
 #' TRUE. Irrelevant if \code{silhouette_subsample} is TRUE.
@@ -538,7 +538,7 @@ clara_silhouette <- function(x, data,
                              scale_sil = TRUE,
                              rel_obs = NULL){
 
-  checkmate::assert_class(x, classes = "claraclust")
+  checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
   # TODO how to check 'metric'? At least specify 'metric' a bit more in the above documentation. Similar to the proxy::dist metric?
   checkmate::assert_logical(silhouette_subsample, len = 1)
@@ -557,7 +557,7 @@ clara_silhouette <- function(x, data,
 
     sil <- silhouette(as.numeric(data$cluster), dist(select(data, -cluster), method = metric))
 
-  } else { # use only subsamples from claraclust in order to not calculate the distance matrix between all samples
+  } else { # use only subsamples from 'x' in order to not calculate the distance matrix between all samples
 
     if(x$type == "fixed"){ # fixed clustering
 

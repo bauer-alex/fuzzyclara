@@ -2,12 +2,12 @@
 % Please edit documentation in R/print_fuzzyclara.R
 \name{print.fuzzyclara}
 \alias{print.fuzzyclara}
-\title{Print output of claraclust object}
+\title{Print output of "fuzzyclara" object}
 \usage{
 \method{print}{fuzzyclara}(x, ...)
 }
 \arguments{
-\item{x}{an object of class claraclust}
+\item{x}{an object of class "fuzzyclara"}
 
 \item{...}{additional arguments}
 }

@@ -52,14 +52,14 @@ a numeric of minimum 1. Defaults to 2.}
 detail of the printed diagnostic messages. Higher numbers lead to more detailed
 messages. Defaults to 1.}
 
-\item{return_results}{Indicator if clustering results (claraclust objects)
+\item{return_results}{Indicator if clustering results ("fuzzyclara" objects)
 should be returned as a list. Defaults to FALSE.}
 
 \item{...}{Additional arguments passed to the main clustering algorithm call
 with \code{\link{fuzzyclara}}.}
 }
 \value{
-Object of class claraclust
+Object of class "fuzzyclara"
 }
 \description{
 Function to provide graphical visualization for selecting the optimal number

@@ -26,7 +26,7 @@ clustering_sample <- function(data, sample_ids, clusters = 5,
 
   checkmate::assert_data_frame(data)
   # TODO how to check 'sample_ids'?
-  checkmate::assert_number(clusters, lower = 2)
+  checkmate::assert_number(clusters, lower = 1)
   checkmate::assert_number(sample_size, null.ok = TRUE)
   checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
   checkmate::assert_number(m, lower = 1)
@@ -136,11 +136,11 @@ compute_distance_matrix <- function(data, metric = "euclidean") {
 #'
 #' @import checkmate cluster vegclust
 #'
-perform_sample_clustering <- function(dist, clusters, type, names, m,
+perform_sample_clustering <- function(dist, clusters, type, names, m = 2,
                                       build = FALSE, ...) {
 
   # TODO how to check 'dist'?
-  checkmate::assert_number(clusters, len = 1)
+  checkmate::assert_number(clusters)
   checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
   # TODO how to check 'names'?
   checkmate::assert_number(m, lower = 1)

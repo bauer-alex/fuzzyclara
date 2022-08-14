@@ -74,7 +74,7 @@ to proxy::dist for the calculation of the distance matrix
 (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})}
 }
 \value{
-Object of class claraclust
+Object of class "fuzzyclara"
 }
 \description{
 Function to perform a cluster analysis in a fixed or fuzzy way. The

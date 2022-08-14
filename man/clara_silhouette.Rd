@@ -14,7 +14,7 @@ clara_silhouette(
 )
 }
 \arguments{
-\item{x}{An object of class claraclust}
+\item{x}{An object of class "fuzzyclara"}
 
 \item{data}{Prepared data.frame (contains cluster variable, observations are
 already filtered by threshold (fuzzy))}
@@ -22,7 +22,7 @@ already filtered by threshold (fuzzy))}
 \item{metric}{Distance metric for silhouette plot. Defaults to
 \code{"Euclidean"}. Irrelevant if \code{silhouette_subsample} is TRUE.}
 
-\item{silhouette_subsample}{Use the subsample from claraclust for silhouette
+\item{silhouette_subsample}{Use the subsample from 'x' for silhouette
 plot instead of all samples? Defaults to FALSE.}
 
 \item{scale_sil}{Scale numeric variables for silhouette plot? Defaults to

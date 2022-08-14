@@ -15,7 +15,7 @@
 )
 }
 \arguments{
-\item{x}{An object of class claraclust}
+\item{x}{An object of class "fuzzyclara"}
 
 \item{data}{data.frame used for clustering}
 

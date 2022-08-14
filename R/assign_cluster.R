@@ -116,7 +116,7 @@ assign_cluster <- function(data, metric, medoids, type = "fixed",
 #'
 #' @import checkmate
 #'
-calculate_memb_score <- function(dist_med, m) {
+calculate_memb_score <- function(dist_med, m = 2) {
 
   # TODO what checkmate checks to run on 'dist_med'? The documentation above should also be more specific.
   checkmate::assert_number(m, lower = 1)

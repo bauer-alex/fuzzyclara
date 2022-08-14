@@ -29,7 +29,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                              build = FALSE, ...) {
 
   checkmate::assert_data_frame(data)
-  checkmate::assert_number(clusters, lower = 2)
+  checkmate::assert_number(clusters, lower = 1)
   checkmate::assert_number(samples, lower = 1)
   checkmate::assert_number(sample_size, lower = 1, null.ok = TRUE)
   checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
