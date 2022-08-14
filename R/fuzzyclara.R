@@ -25,10 +25,11 @@
 #' clustering)
 #' @param type One of \code{c("fixed","fuzzy")}, specifying the type of
 #' clustering to be performed.
-#' @param m Fuzziness exponent (only for \code{type = "fuzzy"}). Defaults to 2.
-#' @param cores Numbers of cores for computation (cores > 1 implies
-#' multithreading)
-#' @param seed Random number seed
+#' @param m Fuzziness exponent (only for \code{type = "fuzzy"}), which has to be
+#' a numeric of minimum 1. Defaults to 2.
+#' @param cores Numbers of cores for computation. \code{cores > 1} implies
+#' a parallel call. Defaults to 1.
+#' @param seed Random number seed. Defaults to 1234.
 #' @param verbose Can be set to integers between 0 and 2 to control the level of
 #' detail of the printed diagnostic messages. Higher numbers lead to more
 #' detailed messages. Defaults to 1.
@@ -48,19 +49,20 @@
 fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
                        algorithm = "clara", samples = 10, sample_size = NULL,
                        max_neighbors = 100, num_local = 10, type = "fixed",
-                       cores = 1, seed = 1234, m = 2, verbose = 1,
+                       cores = 1, seed = 1234, m = 2, verbose = 1, # TODO alle seeds auf default 42 aendern? Waere etwas interessanter als 1234. ;)
                        scale = TRUE, build = FALSE, ...) {
 
   checkmate::assert(checkmate::check_data_frame(data),
                     checkmate::check_matrix(data), combine = "or") # TODO should a matrix be possible here? The documentation above only talks about a data.frame.
-  checkmate::assert_numeric(x = clusters, lower = 2, upper = nrow(data))
-  checkmate::assert_numeric(x = samples, lower = 1)
-  checkmate::assert_numeric(x = sample_size, lower = clusters, null.ok = TRUE)
-  checkmate::assert_numeric(x = max_neighbors, lower = 1)
-  checkmate::assert_numeric(x = num_local, lower = 1)
-  checkmate::assert_choice(x = algorithm, choices = c("clara", "clarans"))
-  checkmate::assert_choice(x = type, choices = c("fixed", "fuzzy"))
-  checkmate::assert_number(x = cores, lower = 1)
+  checkmate::assert_numeric(clusters, lower = 2, upper = nrow(data))
+  checkmate::assert_numeric(samples, lower = 1)
+  checkmate::assert_numeric(sample_size, lower = clusters, null.ok = TRUE)
+  checkmate::assert_numeric(max_neighbors, lower = 1)
+  checkmate::assert_numeric(num_local, lower = 1)
+  checkmate::assert_choice(algorithm, choices = c("clara", "clarans"))
+  checkmate::assert_choice(type, choices = c("fixed", "fuzzy"))
+  checkmate::assert_number(m, lower = 1)
+  checkmate::assert_number(cores, lower = 1)
   checkmate::assert_number(seed)
   checkmate::assert_choice(verbose, choices = 0:2)
   checkmate::assert_logical(scale, len = 1)

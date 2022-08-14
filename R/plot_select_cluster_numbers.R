@@ -11,9 +11,6 @@
 #' @param sample_size Number of observations belonging to a sample. If NULL
 #' (default), the minimum of \code{nrow(data)} and \code{40 + clusters * 2} is
 #' used as sample size.
-#' @param cores Number of cores for computation. \code{cores > 1} implies
-#' multithreading. Defaults to 1.
-#' @param seed Random number seed. Defaults to 1234.
 #' @param verbose Can be set to integers between 0 and 2 to control the level of
 #' detail of the printed diagnostic messages. Higher numbers lead to more detailed
 #' messages. Defaults to 1.
@@ -41,45 +38,42 @@ plot_cluster_numbers <- function(data, clusters_range = 2:5,
   checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
   checkmate::assert_number(cores, lower = 1)
   checkmate::assert_number(seed)
-  # TODO how to check 'm'?
+  checkmate::assert_number(m, lower = 1)
   checkmate::assert_choice(verbose, choices = 0:2)
   checkmate::assert_logical(return_results, len = 1)
 
 
   # Create data.frame with criterion results:
   criterion_df <- data.frame(cluster_number = clusters_range,
-                      criterion = rep(0, length(clusters_range)))
+                             criterion = rep(0, length(clusters_range)))
 
 
   # Create list for results
-  if(return_results == TRUE){
+  if (return_results == TRUE) {
     results <- list()
   }
 
   # Extract and append criterion value for each cluster number:
-  for(i in clusters_range){
+  for (i in clusters_range) {
     y <- fuzzyclara(data, clusters = i, metric = metric,
                     sample_size = sample_size, samples = samples,
                     type = type, seed = seed, m = m, verbose = verbose, cores = cores,
                     ...)
 
-    if(return_results == TRUE){
+    if (return_results == TRUE) {
       results[[length(results) + 1]] <- y
     }
 
     if (type == "fixed") {
       criterion_df[criterion_df$cluster_number == i,]["criterion"] <- y$avg_min_dist
-    } else {
+    } else { # type = "fuzzy"
       criterion_df[criterion_df$cluster_number == i,]["criterion"] <- y$avg_weighted_dist
     }
   }
 
 
-  if (type == "fuzzy") {
-    ylab_text <- "Minimal Weighted \nAverage Distance"
-  } else {
-    ylab_text <- "Minimal Average Distance"
-  }
+  ylab_text <- ifelse(type == "fixed", "Minimal Average Distance",
+                      "Minimal Weighted \nAverage Distance") # for type = "fuzzy"
 
   plot <- ggplot(criterion_df) +
     geom_line(aes(x = cluster_number, y = criterion), size = 1,
@@ -104,5 +98,4 @@ plot_cluster_numbers <- function(data, clusters_range = 2:5,
     names(res) <- c("plot", "cluster_results")
     return(res)
   }
-
 }

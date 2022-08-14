@@ -25,7 +25,7 @@ assign_cluster <- function(data, metric, medoids, type = "fixed",
   checkmate::assert_data_frame(data)
   # TODO what check to run on 'medoids'? The argument specification in the documentation above should also be more specific
   checkmate::assert_choice(type, choices = c("fixed", "fuzzy"))
-  # TODO what check to run on 'm'? Real number with minimum 1? The argument specification in the documentation above should also be more specific
+  checkmate::assert_number(m, lower = 1)
   checkmate::assert_logical(return_distMatrix, len = 1)
   checkmate::assert_logical(return_data_medoids, len = 1)
 
@@ -61,8 +61,8 @@ assign_cluster <- function(data, metric, medoids, type = "fixed",
   # Return of clustering information:
   dist_dat <- as.data.frame(dist_dat[1:nrow(dist_dat),]) # conversion from 'crossdist' to 'matrix'
   colnames(dist_dat) <- paste0("Distance_to_Cluster", 1:ncol(dist_dat))
-  assignment_dat <- data.frame("assignment" = cluster_assignments,
-                               "distance"   = distances)
+  assignment_dat     <- data.frame("assignment" = cluster_assignments,
+                                   "distance"   = distances)
   assignment_dat$Distance_to_Clusters <- dist_dat
   if (type == "fuzzy") {
     assignment_dat$membership <- memb_scores
@@ -74,28 +74,27 @@ assign_cluster <- function(data, metric, medoids, type = "fixed",
   average_dist <- mean(distance)
   clustering_result <- list("medoids" = medoids, "clustering" = assignment)
 
-  # Computation of average distance for fixed clustering:
-  if (type == "fixed") {
+  # Compute distance:
+  if (type == "fixed") { # average distance for fixed clustering
     clustering_result[["avg_min_dist"]] <- average_dist
-  }
 
-  # Computation of weighted average distance for fuzzy clustering:
-  if (type == "fuzzy") {
+  } else { # type = "fuzzy": weighted average distance for fuzzy clustering
+
     # Computation of membership scores:
     clustering_result[["avg_weighted_dist"]] <- average_dist
-    membership <- as.data.frame(assignment_dat$membership)
+    membership            <- as.data.frame(assignment_dat$membership)
     row.names(membership) <- data$Name
     clustering_result[["membership_scores"]] <- membership
   }
 
-  if (return_distMatrix == TRUE) {
+  if (return_distMatrix) {
     distances_to_medoids <- round(as.data.frame(assignment_dat$Distance_to_Clusters), 2)
     row.names(distances_to_medoids) <- data$Name
     clustering_result[["distance_to_medoids"]] <- distances_to_medoids
   }
 
-  if (return_data_medoids == TRUE) {
-    row.names(data_medoids) <- data_medoids[, 1]
+  if (return_data_medoids) {
+    row.names(data_medoids)             <- data_medoids[, 1]
     clustering_result[["data_medoids"]] <- data_medoids[, -1]
   }
 
@@ -110,7 +109,8 @@ assign_cluster <- function(data, metric, medoids, type = "fixed",
 #' for each medoid based on the distance of this observation to all medoids
 #'
 #' @param dist_med Vector of distances to medoids
-#' @param m Fuzziness exponent
+#' @param m Fuzziness exponent, which has to be a numeric of minimum 1. Defaults
+#' to 2.
 #'
 #' @return List with membership scores for one observation
 #'
@@ -118,11 +118,12 @@ assign_cluster <- function(data, metric, medoids, type = "fixed",
 #'
 calculate_memb_score <- function(dist_med, m) {
 
-  # TODO what checkmate checks to run on 'dist_med' and 'm'? The documentation above should also be more specific.
+  # TODO what checkmate checks to run on 'dist_med'? The documentation above should also be more specific.
+  checkmate::assert_number(m, lower = 1)
 
 
-  perfect_match <- match(x = 0, table = dist_med)
-  list_memb <- as.list(rep(x = 0, times = length(dist_med)))
+  perfect_match    <- match(x = 0, table = dist_med)
+  list_memb        <- as.list(rep(x = 0, times = length(dist_med)))
   names(list_memb) <- paste0("Cluster_", 1:length(dist_med))
 
   if (!is.na(perfect_match)) {
@@ -130,10 +131,10 @@ calculate_memb_score <- function(dist_med, m) {
 
   } else {
     for (i in 1:length(dist_med)) {
-      dist_proportion <- dist_med[i] / dist_med
-      dist_proportion_exp <- dist_proportion ^ (1 / (m - 1))
+      dist_proportion         <- dist_med[i] / dist_med
+      dist_proportion_exp     <- dist_proportion ^ (1 / (m - 1))
       dist_proportion_exp_inv <- 1 / sum(dist_proportion_exp)
-      list_memb[[i]] <- dist_proportion_exp_inv
+      list_memb[[i]]          <- dist_proportion_exp_inv
     }
 
   }

@@ -303,7 +303,7 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
 
 
   if(x$type == "fuzzy" & focus == TRUE){ # for ficus = TRUE, perform PCA on whole dataset
-    data <- rbind(data, transparent_obs)
+    data         <- rbind(data, transparent_obs)
     data$cluster <- NULL
   }
 
@@ -319,14 +319,14 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
 
 
   # Compute the eigenvalues
-  eigenvalue <- round(get_eigenvalue(pca_result), 1)
+  eigenvalue    <- round(get_eigenvalue(pca_result), 1)
   variance_perc <- eigenvalue$variance.percent
 
 
   if(x$type == "fuzzy" & focus == TRUE){
     # convert data into long format containing information on membership scores
     individuals_coord <- cbind(individuals_coord, x$membership_scores)
-    data_long <- individuals_coord %>%
+    data_long         <- individuals_coord %>%
       tidyr::gather("cluster", "prob", colnames(x$membership_scores))
 
     # select only clusters given by focus_clusters
@@ -351,7 +351,8 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
       ) + theme_minimal() +
         facet_wrap(~cluster) +
         guides(color = "none", alpha = guide_legend(title = "membership \n probability"))
-    } else {
+
+    } else { # group_by = NULL
       plot <- ggscatter(
         data_long, x = "Dim.1", y = "Dim.2",
         color = "cluster", palette = "npg", # ellipse = TRUE, ellipse.type = "convex",
@@ -465,19 +466,19 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = FALSE,
     stop("Please specify the variables correctly. Both variable and group_by should contain the names of metric variables.")
   }
 
-  if(x$type == "fuzzy" & focus == TRUE){
-    data <- rbind(data, transparent_obs)
+  if (x$type == "fuzzy" & focus == TRUE) {
+    data         <- rbind(data, transparent_obs)
     data$cluster <- NULL
 
     # convert data into long format containing information on membership scores
-    data <- cbind(data, x$membership_scores)
+    data      <- cbind(data, x$membership_scores)
     data_long <- data %>%
       tidyr::gather("cluster", "prob", colnames(x$membership_scores))
 
     # select only clusters given by focus_clusters
-    if(!is.null(focus_clusters)){
+    if (!is.null(focus_clusters)) {
       clusters_select <- paste0("Cluster", focus_clusters)
-      if(!all(clusters_select %in% data_long$cluster)){
+      if (!all(clusters_select %in% data_long$cluster)) {
         stop("clusters specified by focus_clusters aren't found in the data.")
       }
 
@@ -486,7 +487,7 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = FALSE,
     }
 
     plot <- data_long %>%
-      ggplot(aes(x = !!ensym(x_var), y = !!ensym(y_var), alpha = prob, color = cluster))+
+      ggplot(aes(x = !!ensym(x_var), y = !!ensym(y_var), alpha = prob, color = cluster)) +
       geom_point() +
       theme_minimal()  +
       scale_color_npg() +
@@ -563,7 +564,7 @@ clara_silhouette <- function(x, data,
       data_sub <- data[x$subsample_ids, ]
       sil <- silhouette(as.numeric(data_sub$cluster), x$dist_matrix)
 
-    } else{ # fuzzy clustering -> data is already filtered by threshold. Distance matrix has to be filtered too
+    } else{ # x$type = "fuzzy" -> data is already filtered by threshold. Distance matrix has to be filtered too
 
       # considered observations: part of subsample and rel_obs
       rel_obs_sil <- intersect(rel_obs, rownames(x$distance_to_medoids)[x$subsample_ids])
@@ -571,7 +572,7 @@ clara_silhouette <- function(x, data,
       data_sub <- data[rel_obs_sil,]
 
       # get corresponding distance matrix:
-      dist_matrix <- as.matrix(x$dist_matrix)
+      dist_matrix           <- as.matrix(x$dist_matrix)
       rownames(dist_matrix) <- rownames(x$distance_to_medoids)[x$subsample_ids]
       colnames(dist_matrix) <- rownames(x$distance_to_medoids)[x$subsample_ids]
 

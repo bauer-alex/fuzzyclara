@@ -32,7 +32,7 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
   checkmate::assert_number(num_local, lower = 1)
   checkmate::assert_number(cores, lower = 1)
   checkmate::assert_number(seed)
-  # TODO how to check 'm'?
+  checkmate::assert_number(m, lower = 1)
   checkmate::assert_choice(verbose, choices = 0:2)
 
 
@@ -207,6 +207,7 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
   clustering_result[["type"]] <- type
   clustering_results[["metric"]] <- metric
 
+  # TODO Kann das weg?
   #if (return_distMatrix) {
   #  distances_to_medoids <- round(as.data.frame(assignment_dat$Distance_to_Clusters), 2)
   #  row.names(distances_to_medoids) <- data$Name

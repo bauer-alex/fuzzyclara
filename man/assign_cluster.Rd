@@ -29,7 +29,8 @@ sample}
 \item{type}{One of \code{c("fixed","fuzzy")}, specifying the type of
 clustering to be performed.}
 
-\item{m}{Fuzziness exponent (only for \code{type = "fuzzy"}). Defaults to 2.}
+\item{m}{Fuzziness exponent (only for \code{type = "fuzzy"}), which has to be
+a numeric of minimum 1. Defaults to 2.}
 
 \item{return_distMatrix}{Indicator if the distances to the cluster medoids
 should be returned. Defaults to FALSE.}

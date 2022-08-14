@@ -37,12 +37,13 @@ cluster}
 
 \item{num_local}{Number of clustering iterations}
 
-\item{cores}{Numbers of cores for computation (cores > 1 implies
-multithreading)}
+\item{cores}{Numbers of cores for computation. \code{cores > 1} implies
+a parallel call. Defaults to 1.}
 
-\item{seed}{Random number seed}
+\item{seed}{Random number seed. Defaults to 1234.}
 
-\item{m}{Fuzziness exponent (only for \code{type = "fuzzy"}). Defaults to 2.}
+\item{m}{Fuzziness exponent (only for \code{type = "fuzzy"}), which has to be
+a numeric of minimum 1. Defaults to 2.}
 
 \item{verbose}{Can be set to integers between 0 and 2 to control the level of
 detail of the printed diagnostic messages. Higher numbers lead to more

@@ -35,7 +35,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
   checkmate::assert_number(cores, lower = 1)
   checkmate::assert_number(seed)
-  # TODO how to check 'm'?
+  checkmate::assert_number(m, lower = 1)
   checkmate::assert_choice(verbose, choices = 0:2)
   checkmate::assert_logical(build, len = 1)
 
@@ -50,6 +50,9 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
 
   # Warning if sample size is larger than number of observations:
   if (sample_size >= nrow(data)) {
+    # TODO Koennte man diesen ganzen Part loeschen und dafuer oben per checkmate
+    #      sicherstellen, dass sample_size <= nrow(data) ist? Oder hat das hier
+    #      trotzdem seinen Sinn?
     sample_size <- nrow(data)
     samples <- 1
     sample_ids <- list(1:nrow(data))
@@ -87,13 +90,15 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                                       type = type, verbose = verbose,
                                       build = build, ...)
     })
-  }
-  else {
-    # multi-core
+
+  } else { # cores > 1, i.e. multi-core computation
+
     print_logMessage(paste0("Run clustering on ", cores, " cores."),
                      verbose_toLogFile = TRUE, reset_logFile = TRUE)
+
     # Windows:
     if (Sys.info()['sysname'] == "Windows") {
+
       local_cluster <- makePSOCKcluster(rep("localhost", cores))
       clusterExport(cl = local_cluster,
                     varlist = c("clustering_sample", "compute_distance_matrix",
@@ -115,10 +120,9 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
         return(clustering)
       })
       stopCluster(local_cluster)
-    }
 
-    # Other OS:
-    else {
+    } else { # other OS than Windows
+
       clustering_results_list <- mclapply(X = 1:samples, FUN = function(i) {
         if (verbose >= 1) {
           print_logMessage(paste0("--- Performing calculations for subsample ",i),

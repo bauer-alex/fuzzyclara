@@ -36,7 +36,8 @@ full details.}
 \item{type}{One of \code{c("fixed","fuzzy")}, specifying the type of
 clustering to be performed.}
 
-\item{m}{Fuzziness exponent (only for \code{type = "fuzzy"}). Defaults to 2.}
+\item{m}{Fuzziness exponent (only for \code{type = "fuzzy"}), which has to be
+a numeric of minimum 1. Defaults to 2.}
 
 \item{verbose}{Can be set to integers between 0 and 2 to control the level of
 detail of the printed diagnostic messages. Higher numbers lead to more
