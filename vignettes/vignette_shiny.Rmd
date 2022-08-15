@@ -1,6 +1,6 @@
 ---
 title: "Functionality of fuzzyclara package (interactive)"
-author: "Maximilian Weigert, Asmik Nalmpatian, Jana Gauß, Alexander Bauer"
+author: "Maximilian Weigert, Asmik Nalmpatian, Jana Gauss, Alexander Bauer"
 date: "`r format(Sys.time(), '%d.%B %Y')`"
 output:
   html_document:
