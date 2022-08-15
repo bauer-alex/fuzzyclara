@@ -69,7 +69,7 @@
 <script src="vignette_shiny_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Functionality of fuzzyclara package (interactive)</h1>
-                        <h4 data-toc-skip class="author">Maximilian Weigert, Asmik Nalmpatian, Jana Gauß, Alexander Bauer</h4>
+                        <h4 data-toc-skip class="author">Maximilian Weigert, Asmik Nalmpatian, Jana Gauss, Alexander Bauer</h4>
             
             <h4 data-toc-skip class="date">15.August 2022</h4>
       
@@ -230,7 +230,7 @@
 <span>                       verbose         <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">cc_number</span></span></code></pre></div>
 <p><img src="vignette_shiny_files/figure-html/optimal%20number%20clusters-1.png" width="576"></p>
-<iframe data-deferred-src="app2d4d000a8b987033340d84b0eca6a0cf/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
+<iframe data-deferred-src="app189df8edc8f61b45a94c8b3a5761e10e/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
 </div>
 </div>
 <div class="section level2">
@@ -262,7 +262,7 @@
 <div class="sourceCode" id="section-cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, variable <span class="op">=</span> <span class="st">"Assault"</span><span class="op">)</span> </span></code></pre></div>
 <p><img src="vignette_shiny_files/figure-html/unnamed-chunk-1-1.png" width="576"></p>
-<iframe data-deferred-src="app8a5133a0f5904c415d99ed08bd1dabdf/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
+<iframe data-deferred-src="app48f172cecd02d2f2c82a5b9dba7b8d20/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
 </div>
 <div class="section level3">
 <h3 id="section-barplot">Barplot<a class="anchor" aria-label="anchor" href="#section-barplot"></a>
@@ -270,7 +270,7 @@
 <div class="sourceCode" id="section-cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, variable <span class="op">=</span> <span class="st">"Area"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette_shiny_files/figure-html/unnamed-chunk-3-1.png" width="576"></p>
-<iframe data-deferred-src="appc532e5fb88c9bc3f47e9276f362bb883/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
+<iframe data-deferred-src="app69a284c1ccaf0df0a525108eeb9d6930/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
 </div>
 <div class="section level3">
 <h3 id="section-wordcloud">Wordcloud<a class="anchor" aria-label="anchor" href="#section-wordcloud"></a>
@@ -288,7 +288,7 @@
 <span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## `geom_smooth()` using formula 'y ~ x'</span></span></code></pre>
 <p><img src="vignette_shiny_files/figure-html/unnamed-chunk-6-1.png" width="576"></p>
-<iframe data-deferred-src="appc997205225f72d1428350db5942c565e/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
+<iframe data-deferred-src="app78171655c481d6d88bde8d045f44815a/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
 <div class="sourceCode" id="section-cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
 <span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span>, </span>
@@ -302,7 +302,7 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span>
 <span>     group_by <span class="op">=</span> <span class="st">"Area"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette_shiny_files/figure-html/unnamed-chunk-9-1.png" width="576"></p>
-<iframe data-deferred-src="app1edbaeb83f840eb83a7707aa9921e727/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
+<iframe data-deferred-src="app0c796fd2295aad6e8004906ed5543859/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
 <div class="sourceCode" id="section-cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span>
 <span>     focus <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
@@ -328,7 +328,7 @@
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Maximilian Weigert, Alexander Bauer, Gauß Jana.</p>
+<p>Developed by Maximilian Weigert, Alexander Bauer, Gauss Jana.</p>
 </div>
 
 <div class="pkgdown-footer-right">
