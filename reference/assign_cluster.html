@@ -72,42 +72,47 @@ by selecting the closest medoid</p>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>data</dt>
-<dd><p>entire data.frame</p></dd>
+<dd><p>Entire data.frame</p></dd>
 
 
 <dt>metric</dt>
-<dd><p>predefined dissimilarity metric (euclidean, manhattan) or
-self-defined dissimilarity function</p></dd>
+<dd><p>A character specifying a predefined dissimilarity metric (like
+<code>"euclidean"</code> or <code>"manhattan"</code>) or a self-defined dissimilarity
+function. Defaults to <code>"euclidean"</code>. Will be passed as argument
+<code>method</code> to <code>dist</code>, so check <code>?proxy::dist</code> for
+full details.</p></dd>
 
 
 <dt>medoids</dt>
-<dd><p>medoids of the obtained clustering solution for the data
+<dd><p>Medoids of the obtained clustering solution for the data
 sample</p></dd>
 
 
 <dt>type</dt>
-<dd><p>fixed or fuzzy clustering</p></dd>
+<dd><p>One of <code>c("fixed","fuzzy")</code>, specifying the type of
+clustering to be performed.</p></dd>
 
 
 <dt>m</dt>
-<dd><p>fuzziness exponent (only for type = fuzzy)</p></dd>
+<dd><p>Fuzziness exponent (only for <code>type = "fuzzy"</code>), which has to be
+a numeric of minimum 1. Defaults to 2.</p></dd>
 
 
 <dt>return_distMatrix</dt>
-<dd><p>Should the distances to the cluster medoids be
-returned?</p></dd>
+<dd><p>Indicator if the distances to the cluster medoids
+should be returned. Defaults to FALSE.</p></dd>
 
 
 <dt>return_data_medoids</dt>
-<dd><p>Should medoid data be returned? (This could be
-used for assigning new observations to the clusters.)</p></dd>
+<dd><p>Indicator if the medoid data should be returned.
+Defaults to FALSE.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>list with information on cluster results (medoid, cluster
+<p>List with information on cluster results (medoid, cluster
 assignment, average distance to the closest medoid (weighted
 average distance to the closest medoid in case of fuzzy clustering))</p>
     </div>

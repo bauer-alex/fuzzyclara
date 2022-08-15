@@ -84,49 +84,54 @@ a self-defined distance function.</p>
 
 
 <dt>clusters</dt>
-<dd><p>number of clusters</p></dd>
+<dd><p>Number of clusters. Defaults to 5.</p></dd>
 
 
 <dt>metric</dt>
-<dd><p>predefined dissimilarity metric (euclidean, manhattan) or
-self-defined dissimilarity function</p></dd>
+<dd><p>A character specifying a predefined dissimilarity metric (like
+<code>"euclidean"</code> or <code>"manhattan"</code>) or a self-defined dissimilarity
+function. Defaults to <code>"euclidean"</code>. Will be passed as argument
+<code>method</code> to <code>dist</code>, so check <code>?proxy::dist</code> for
+full details.</p></dd>
 
 
 <dt>samples</dt>
-<dd><p>number of subsamples</p></dd>
+<dd><p>Number of subsamples</p></dd>
 
 
 <dt>sample_size</dt>
-<dd><p>number of observations belonging to a sample. If NULL
+<dd><p>Number of observations belonging to a sample. If NULL
 (default), the minimum of <code>nrow(data)</code> and <code>40 + clusters * 2</code> is
 used as sample size.</p></dd>
 
 
 <dt>type</dt>
-<dd><p>fixed or fuzzy clustering</p></dd>
+<dd><p>One of <code>c("fixed","fuzzy")</code>, specifying the type of
+clustering to be performed.</p></dd>
 
 
 <dt>cores</dt>
-<dd><p>numbers of cores for computation (cores &gt; 1 implies
-multithreading)</p></dd>
+<dd><p>Numbers of cores for computation. <code>cores &gt; 1</code> implies
+a parallel call. Defaults to 1.</p></dd>
 
 
 <dt>seed</dt>
-<dd><p>random number seed</p></dd>
+<dd><p>Random number seed. Defaults to 1234.</p></dd>
 
 
 <dt>m</dt>
-<dd><p>fuzziness exponent (only for type = "fuzzy")</p></dd>
+<dd><p>Fuzziness exponent (only for <code>type = "fuzzy"</code>), which has to be
+a numeric of minimum 1. Defaults to 2.</p></dd>
 
 
 <dt>verbose</dt>
 <dd><p>Can be set to integers between 0 and 2 to control the level of
-detail of the printed diagnostic messages. Higher numbers lead to more detailed
-messages. Defaults to 1.</p></dd>
+detail of the printed diagnostic messages. Higher numbers lead to more
+detailed messages. Defaults to 1.</p></dd>
 
 
 <dt>build</dt>
-<dd><p>additional build algorithm to choose initial medoids (only
+<dd><p>Additional build algorithm to choose initial medoids (only
 relevant for type = "fuzzy". Default FALSE.)</p></dd>
 
 
@@ -140,7 +145,7 @@ to proxy::dist for the calculation of the distance matrix
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>object of class fuzzyclara</p>
+<p>Object of class fuzzyclara</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

@@ -87,30 +87,35 @@ a self-defined distance function.</p>
 
 
 <dt>clusters</dt>
-<dd><p>number of clusters</p></dd>
+<dd><p>Number of clusters. Defaults to 5.</p></dd>
 
 
 <dt>metric</dt>
-<dd><p>predefined dissimilarity metric (euclidean, manhattan) or
-self-defined dissimilarity function</p></dd>
+<dd><p>A character specifying a predefined dissimilarity metric (like
+<code>"euclidean"</code> or <code>"manhattan"</code>) or a self-defined dissimilarity
+function. Defaults to <code>"euclidean"</code>. Will be passed as argument
+<code>method</code> to <code>dist</code>, so check <code>?proxy::dist</code> for
+full details.</p></dd>
 
 
 <dt>sample_size</dt>
-<dd><p>number of observations belonging to a sample</p></dd>
+<dd><p>Number of observations belonging to a sample</p></dd>
 
 
 <dt>type</dt>
-<dd><p>fixed or fuzzy clustering</p></dd>
+<dd><p>One of <code>c("fixed","fuzzy")</code>, specifying the type of
+clustering to be performed.</p></dd>
 
 
 <dt>m</dt>
-<dd><p>fuzziness exponent (only for type = fuzzy)</p></dd>
+<dd><p>Fuzziness exponent (only for <code>type = "fuzzy"</code>), which has to be
+a numeric of minimum 1. Defaults to 2.</p></dd>
 
 
 <dt>verbose</dt>
 <dd><p>Can be set to integers between 0 and 2 to control the level of
-detail of the printed diagnostic messages. Higher numbers lead to more detailed
-messages. Defaults to 1.</p></dd>
+detail of the printed diagnostic messages. Higher numbers lead to more
+detailed messages. Defaults to 1.</p></dd>
 
 
 <dt>verbose_toLogFile</dt>
@@ -119,7 +124,7 @@ a log file <code>clustering_progress.log</code>. Defaults to FALSE.</p></dd>
 
 
 <dt>build</dt>
-<dd><p>additional build algorithm to choose initial medoids (only
+<dd><p>Additional build algorithm to choose initial medoids (only
 relevant for type = "fuzzy". Default FALSE.)</p></dd>
 
 
@@ -132,7 +137,7 @@ relevant for type = "fuzzy". Default FALSE.)</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>clustering solution for data sample</p>
+<p>Clustering solution for data sample</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

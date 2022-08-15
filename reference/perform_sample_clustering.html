@@ -55,33 +55,41 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">perform_sample_clustering</span><span class="op">(</span><span class="va">dist</span>, <span class="va">clusters</span>, <span class="va">type</span>, <span class="va">names</span>, <span class="va">m</span>, build <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">perform_sample_clustering</span><span class="op">(</span></span>
+<span>  <span class="va">dist</span>,</span>
+<span>  <span class="va">clusters</span>,</span>
+<span>  <span class="va">type</span>,</span>
+<span>  <span class="va">names</span>,</span>
+<span>  m <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  build <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>dist</dt>
-<dd><p>dissimilarity matrix</p></dd>
+<dd><p>Dissimilarity matrix</p></dd>
 
 
 <dt>clusters</dt>
-<dd><p>number of clusters</p></dd>
+<dd><p>Number of clusters</p></dd>
 
 
 <dt>type</dt>
-<dd><p>fixed or fuzzy clustering</p></dd>
+<dd><p>Fixed or fuzzy clustering</p></dd>
 
 
 <dt>names</dt>
-<dd><p>vector of names for observations</p></dd>
+<dd><p>Vector of names for observations</p></dd>
 
 
 <dt>m</dt>
-<dd><p>fuzziness exponent (only for type = fuzzy)</p></dd>
+<dd><p>Fuzziness exponent (only for type = fuzzy)</p></dd>
 
 
 <dt>build</dt>
-<dd><p>additional build algorithm to choose initial medoids (only
+<dd><p>Additional build algorithm to choose initial medoids (only
 relevant for type = "fuzzy". Default FALSE.)</p></dd>
 
 
@@ -94,7 +102,7 @@ relevant for type = "fuzzy". Default FALSE.)</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>list with information on cluster results (medoid and cluster
+<p>List with information on cluster results (medoid and cluster
 assignment)</p>
     </div>
 
