@@ -50,7 +50,6 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   # Define default sample size if no sample size is specified:
   if (is.null(sample_size)) {
     sample_size <- min(nrow(data), (40 + clusters * 2))
-    print(sample_size)
   }
 
   # Warning if sample size is larger than number of observations:

@@ -56,6 +56,56 @@ test_that("fuzzyclara_fixed_clara", { # fixed clustering
 })
 
 
+test_that("fuzzyclara_fixed_clarans", { # fixed clarans clustering
+
+  data(USArrests)
+
+  # fixed clustering
+  n_clusters <- 3
+  cc_fixed   <- fuzzyclara(data        = USArrests,
+                           clusters    = n_clusters,
+                           metric      = "euclidean",
+                           algorithm   = "clarans",
+                           num_local   = 2,
+                           max_neighbors = 20,
+                           type        = "fixed",
+                           seed        = 3526,
+                           verbose     = 2)
+
+  invisible(capture.output(print(cc_fixed)))
+
+  # check whole object
+  expect_s3_class(cc_fixed, "fuzzyclara")
+  expect_s3_class(cc_fixed, "list")
+
+  expect_length(cc_fixed, 9)
+
+
+  # check final cluster distance matrix
+  expect_s3_class(cc_fixed$distance_to_medoids, "data.frame")
+  expect_identical(dim(cc_fixed$distance_to_medoids),
+                   as.integer(c(nrow(USArrests), n_clusters)))
+
+
+  # data as matrix
+  n_clusters <- 3
+  cc_fixed   <- fuzzyclara(data        = as.matrix(USArrests),
+                           clusters    = n_clusters,
+                           metric      = "euclidean",
+                           algorithm   = "clarans",
+                           num_local   = 2,
+                           max_neighbors = 20,
+                           type        = "fixed",
+                           seed        = 3526,
+                           verbose     = 0)
+
+  # check whole object
+  expect_s3_class(cc_fixed, "fuzzyclara")
+  expect_s3_class(cc_fixed, "list")
+
+})
+
+
 test_that("fuzzyclara_fuzzy_clara", { # fuzzy clustering
 
   data(USArrests)
@@ -100,7 +150,7 @@ test_that("fuzzyclara_fuzzy_clara_build", { # fuzzy clustering with build algori
                           clusters    = n_clusters,
                           metric      = "euclidean",
                           samples     = 1,
-                          sample_size = 20,
+                          sample_size = NULL,
                           type        = "fuzzy",
                           m = 3,
                           build = TRUE,
@@ -114,6 +164,41 @@ test_that("fuzzyclara_fuzzy_clara_build", { # fuzzy clustering with build algori
   expect_s3_class(cc_fuzzy, "list")
 
   expect_length(cc_fuzzy, 13)
+
+
+  # check membership scores
+  expect_s3_class(cc_fuzzy$membership_scores, "data.frame")
+  expect_identical(dim(cc_fuzzy$membership_scores),
+                   as.integer(c(nrow(USArrests), n_clusters)))
+
+
+})
+
+
+test_that("fuzzyclara_fuzzy_clarans", { # fuzzy clustering
+
+  data(USArrests)
+
+  # fuzzy clustering
+  n_clusters <- 3
+  cc_fuzzy  <- fuzzyclara(data        = USArrests,
+                          clusters    = n_clusters,
+                          metric      = "euclidean",
+                          algorithm   = "clarans",
+                          num_local   = 2,
+                          max_neighbors = 20,
+                          type        = "fuzzy",
+                          m = 3,
+                          seed        = 3526,
+                          verbose     = 0)
+
+  invisible(capture.output(print(cc_fuzzy)))
+
+  # check whole object
+  expect_s3_class(cc_fuzzy, "fuzzyclara")
+  expect_s3_class(cc_fuzzy, "list")
+
+  expect_length(cc_fuzzy, 10)
 
 
   # check membership scores

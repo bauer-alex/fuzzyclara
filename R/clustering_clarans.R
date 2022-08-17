@@ -235,7 +235,8 @@ clustering_local <- function(data, sample_local, clusters = 5,
     # Create clustering output based on the best medoids:
     clustering_results <- assign_cluster(data = data, medoids = medoids_current,
                                          metric = metric, type = type,
-                                         m = m, return_data_medoids = TRUE)
+                                         m = m, return_data_medoids = TRUE,
+                                         return_distMatrix = TRUE)
 
     # Return of clustering results:
     return(clustering_results)
