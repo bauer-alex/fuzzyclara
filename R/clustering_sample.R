@@ -28,6 +28,9 @@ clustering_sample <- function(data, sample_ids, clusters = 5,
   # TODO how to check 'sample_ids'?
   checkmate::assert_number(clusters, lower = 1)
   checkmate::assert_number(sample_size, null.ok = TRUE)
+  if (!is.null(sample_size)) {
+    checkmate::assert_true(sample_size <= nrow(data))
+  }
   checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
   checkmate::assert_number(m, lower = 1)
   checkmate::assert_choice(verbose, choices = 0:2)
@@ -59,8 +62,10 @@ clustering_sample <- function(data, sample_ids, clusters = 5,
                      verbose_toLogFile = verbose_toLogFile)
   }
   clustering_results_sample <- perform_sample_clustering(dist = dist_matrix,
+                                                         data = data_sample,
                                                          clusters = clusters,
                                                          type = type,
+                                                         metric = metric,
                                                          names = data_sample$Name,
                                                          m = m,
                                                          build = build,
@@ -76,7 +81,7 @@ clustering_sample <- function(data, sample_ids, clusters = 5,
                                        medoids = clustering_results_sample$medoid,
                                        metric = metric, type = type, m = m)
 
-  # add information about subsample, distance matrix, clustering of subsample for silhouette plot
+  # Add information about subsample, distance matrix, clustering of subsample for silhouette plot
   clustering_results[["subsample_ids"]] <- sample_ids
   clustering_results[["dist_matrix"]] <- dist_matrix
   clustering_results[["subsample_clustering"]] <- clustering_results[["clustering"]][sample_ids]
@@ -120,8 +125,10 @@ compute_distance_matrix <- function(data, metric = "euclidean") {
 #' Perform pam or vegclust clustering on a data sample
 #'
 #' Function to perform pam in a fixed or fuzzy way on a data sample
-#'
+
+#' @inheritParams fuzzyclara
 #' @param dist Dissimilarity matrix
+#' @param data Data sample
 #' @param clusters Number of clusters
 #' @param type Fixed or fuzzy clustering
 #' @param names Vector of names for observations
@@ -136,10 +143,10 @@ compute_distance_matrix <- function(data, metric = "euclidean") {
 #'
 #' @import checkmate cluster vegclust
 #'
-perform_sample_clustering <- function(dist, clusters, type, names, m = 2,
-                                      build = FALSE, ...) {
+perform_sample_clustering <- function(dist, data, clusters, type, metric,
+                                      names, m = 2, build = FALSE, ...) {
 
-  # TODO how to check 'dist'?
+  checkmate::assert_class(dist, classes = "dist")
   checkmate::assert_number(clusters)
   checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
   # TODO how to check 'names'?
@@ -162,20 +169,32 @@ perform_sample_clustering <- function(dist, clusters, type, names, m = 2,
 
       # Select first medoid as the one which has the smallest cost
       starting_medoids    <- c()
-      starting_medoids[1] <- which.min(rowSums(dist))
+      starting_medoids[1] <- names[which.min(rowSums.dist(dist))]
 
-      # Select other medoids according to minimizing costs:
-      # TODO
+      # Select other medoids according to minimal costs:
+      for (i in 2:clusters) {
+        # Search for cost-minimizing next medoid:
+        non_medoids <- names[!names %in% starting_medoids]
+        costs <- lapply(X = non_medoids, FUN = function(non_medoid) {
+          medoids <- c(starting_medoids, non_medoid)
+          cost <- assign_cluster(data = data, medoids = medoids,
+                                 metric = metric, type = "fuzzy",
+                                 m = m)$avg_weighted_dist
+          return(cost)
+        })
+        starting_medoids <- c(starting_medoids, non_medoids[which.min(costs)])
+      }
+
+      starting_medoids <- which(names %in% starting_medoids)
+      fuzzy_sample <- my_vegclustdist(x = dist, mobileMemb = starting_medoids,
+                                      method = "FCMdd", m = m, ...)
     }
-
 
     if (build == FALSE) {
       fuzzy_sample <- my_vegclustdist(x = dist, mobileMemb = clusters,
                                       method = "FCMdd", m = m, ...)
     }
-    else {
-      # TODO
-    }
+
     medoids          <- names[as.numeric(fuzzy_sample$mobileCenters)]
     dist_to_clusters <- fuzzy_sample$dist2clusters
     clustering_df    <- apply(X = dist_to_clusters, MARGIN = 1, FUN = which.min)
@@ -186,3 +205,9 @@ perform_sample_clustering <- function(dist, clusters, type, names, m = 2,
   clustering_result <- list("medoids" = medoids, "clustering" = clustering)
   return(clustering_result)
 }
+
+
+
+
+
+

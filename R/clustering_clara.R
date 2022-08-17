@@ -32,6 +32,10 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   checkmate::assert_number(clusters, lower = 1)
   checkmate::assert_number(samples, lower = 1)
   checkmate::assert_number(sample_size, lower = 1, null.ok = TRUE)
+  checkmate::assert_number(sample_size, null.ok = TRUE)
+  if (!is.null(sample_size)) {
+    checkmate::assert_true(sample_size <= nrow(data))
+  }
   checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
   checkmate::assert_number(cores, lower = 1)
   checkmate::assert_number(seed)
@@ -46,18 +50,16 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   # Define default sample size if no sample size is specified:
   if (is.null(sample_size)) {
     sample_size <- min(nrow(data), (40 + clusters * 2))
+    print(sample_size)
   }
 
   # Warning if sample size is larger than number of observations:
-  if (sample_size >= nrow(data)) {
-    # TODO Koennte man diesen ganzen Part loeschen und dafuer oben per checkmate
-    #      sicherstellen, dass sample_size <= nrow(data) ist? Oder hat das hier
-    #      trotzdem seinen Sinn?
+  if (sample_size == nrow(data)) {
     sample_size <- nrow(data)
     samples <- 1
     sample_ids <- list(1:nrow(data))
-    warning("The specified sample size is larger than the number of
-    observations. PAM clustering is performed on the entire dataset.")
+    warning("The specified sample size is equal to the number of
+    observations in the data. PAM clustering is performed on the entire data.")
   }
   else {
     # Random generation of subsamples of size sample_size:
@@ -195,3 +197,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   class(best_solution) <- c("fuzzyclara", class(best_solution))
   return(best_solution)
 }
+
+
+
+

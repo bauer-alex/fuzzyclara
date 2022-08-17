@@ -24,6 +24,14 @@ test_that("clustering_sample", { # clustering_sample function
                                 metric = "euclidean",
                                 type = "fuzzy")
 
+  # fuzzy clustering with build algorithm
+  cc_fuzzy_build <- clustering_sample(data = data,
+                                      clusters = 3,
+                                      sample_ids = 1:10,
+                                      metric = "euclidean",
+                                      type = "fuzzy",
+                                      build = TRUE)
+
   # check whole object
   expect_class(cc_fuzzy, "list")
   expect_length(cc_fuzzy, 7)
@@ -77,7 +85,10 @@ test_that("perform_sample_clustering", {
   dist_mat <- compute_distance_matrix(data[1:10,], metric = "Euclidean")
 
   # fixed
-  clust <- perform_sample_clustering(dist = dist_mat, clusters = 3, type = "fixed", names = data[1:10,]$Name)
+  clust <- perform_sample_clustering(dist = dist_mat, data = data,
+                                     clusters = 3, type = "fixed",
+                                     names = data[1:10,]$Name,
+                                     metric = "Euclidean")
 
   # check whole object
   expect_class(clust, "list")
@@ -85,7 +96,10 @@ test_that("perform_sample_clustering", {
 
 
   # fuzzy
-  clust <- perform_sample_clustering(dist = dist_mat, clusters = 3, type = "fuzzy", names = data[1:10,]$Name, m = 3)
+  clust <- perform_sample_clustering(dist = dist_mat, data = data,
+                                     clusters = 3, type = "fuzzy",
+                                     names = data[1:10,]$Name, m = 3,
+                                     metric = "Euclidean")
 
   # check whole object
   expect_class(clust, "list")

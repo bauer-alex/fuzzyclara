@@ -6,8 +6,10 @@
 \usage{
 perform_sample_clustering(
   dist,
+  data,
   clusters,
   type,
+  metric,
   names,
   m = 2,
   build = FALSE,
@@ -17,9 +19,17 @@ perform_sample_clustering(
 \arguments{
 \item{dist}{Dissimilarity matrix}
 
+\item{data}{Data sample}
+
 \item{clusters}{Number of clusters}
 
 \item{type}{Fixed or fuzzy clustering}
+
+\item{metric}{A character specifying a predefined dissimilarity metric (like
+\code{"euclidean"} or \code{"manhattan"}) or a self-defined dissimilarity
+function. Defaults to \code{"euclidean"}. Will be passed as argument
+\code{method} to \code{\link[proxy]{dist}}, so check \code{?proxy::dist} for
+full details.}
 
 \item{names}{Vector of names for observations}
 

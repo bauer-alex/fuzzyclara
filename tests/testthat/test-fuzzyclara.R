@@ -43,12 +43,12 @@ test_that("fuzzyclara_fixed_clara", { # fixed clustering
   expect_s3_class(cc_fixed, "fuzzyclara")
   expect_s3_class(cc_fixed, "list")
 
-  # warning if sampe size > n_obs
+  # warning if sample size > n_obs
   expect_warning(fuzzyclara(data        = as.matrix(USArrests),
                             clusters    = n_clusters,
                             metric      = "euclidean",
                             samples     = 1,
-                            sample_size = 100,
+                            sample_size = nrow(USArrests),
                             type        = "fixed",
                             seed        = 3526,
                             verbose     = 0))
@@ -88,6 +88,42 @@ test_that("fuzzyclara_fuzzy_clara", { # fuzzy clustering
 
 
 })
+
+
+test_that("fuzzyclara_fuzzy_clara_build", { # fuzzy clustering with build algorithm
+
+  data(USArrests)
+
+  # fuzzy clustering
+  n_clusters <- 3
+  cc_fuzzy  <- fuzzyclara(data        = USArrests,
+                          clusters    = n_clusters,
+                          metric      = "euclidean",
+                          samples     = 1,
+                          sample_size = 20,
+                          type        = "fuzzy",
+                          m = 3,
+                          build = TRUE,
+                          seed        = 3526,
+                          verbose     = 0)
+
+  invisible(capture.output(print(cc_fuzzy)))
+
+  # check whole object
+  expect_s3_class(cc_fuzzy, "fuzzyclara")
+  expect_s3_class(cc_fuzzy, "list")
+
+  expect_length(cc_fuzzy, 13)
+
+
+  # check membership scores
+  expect_s3_class(cc_fuzzy$membership_scores, "data.frame")
+  expect_identical(dim(cc_fuzzy$membership_scores),
+                   as.integer(c(nrow(USArrests), n_clusters)))
+
+
+})
+
 
 
 test_that("fuzzyclara_fuzzy_pam", { # use pam clustering if m = 1 or clusters = 1
