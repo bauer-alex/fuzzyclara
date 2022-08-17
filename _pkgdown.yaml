@@ -14,6 +14,7 @@ reference:
       - clustering_clara
       - clustering_clarans
       - clustering_sample
+      - clustering_local
   - title: "Helper functions for cluster analysis"
     desc: "Functions to support the computation of the cluster analysis"
     contents:
