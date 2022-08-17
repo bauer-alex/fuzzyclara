@@ -57,8 +57,10 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">perform_sample_clustering</span><span class="op">(</span></span>
 <span>  <span class="va">dist</span>,</span>
+<span>  <span class="va">data</span>,</span>
 <span>  <span class="va">clusters</span>,</span>
 <span>  <span class="va">type</span>,</span>
+<span>  <span class="va">metric</span>,</span>
 <span>  <span class="va">names</span>,</span>
 <span>  m <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  build <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -72,12 +74,24 @@
 <dd><p>Dissimilarity matrix</p></dd>
 
 
+<dt>data</dt>
+<dd><p>Data sample</p></dd>
+
+
 <dt>clusters</dt>
 <dd><p>Number of clusters</p></dd>
 
 
 <dt>type</dt>
 <dd><p>Fixed or fuzzy clustering</p></dd>
+
+
+<dt>metric</dt>
+<dd><p>A character specifying a predefined dissimilarity metric (like
+<code>"euclidean"</code> or <code>"manhattan"</code>) or a self-defined dissimilarity
+function. Defaults to <code>"euclidean"</code>. Will be passed as argument
+<code>method</code> to <code>dist</code>, so check <code>?proxy::dist</code> for
+full details.</p></dd>
 
 
 <dt>names</dt>
