@@ -66,13 +66,12 @@ a self-defined distance function.</p>
 <span>  clusters <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  metric <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"fixed"</span>,</span>
+<span>  num_local <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  max_neighbors <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>  num_local <span class="op">=</span> <span class="va">num_local</span>,</span>
 <span>  cores <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">1234</span>,</span>
 <span>  m <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  verbose <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -99,13 +98,14 @@ full details.</p></dd>
 clustering to be performed.</p></dd>
 
 
+<dt>num_local</dt>
+<dd><p>Number of clustering iterations
+(<code>pam</code> or <code><a href="https://emf-creaf.github.io/vegclust/reference/vegclust.html" class="external-link">vegclust</a></code>)</p></dd>
+
+
 <dt>max_neighbors</dt>
 <dd><p>Maximum number of randomized medoid searches with each
 cluster</p></dd>
-
-
-<dt>num_local</dt>
-<dd><p>Number of clustering iterations</p></dd>
 
 
 <dt>cores</dt>
@@ -126,12 +126,6 @@ a numeric of minimum 1. Defaults to 2.</p></dd>
 <dd><p>Can be set to integers between 0 and 2 to control the level of
 detail of the printed diagnostic messages. Higher numbers lead to more
 detailed messages. Defaults to 1.</p></dd>
-
-
-<dt>...</dt>
-<dd><p>Additional arguments passed to the main clustering algorithm and
-to proxy::dist for the calculation of the distance matrix
-(<code>pam</code> or <code><a href="https://emf-creaf.github.io/vegclust/reference/vegclust.html" class="external-link">vegclust</a></code>)</p></dd>
 
 </dl></div>
     <div class="section level2">
