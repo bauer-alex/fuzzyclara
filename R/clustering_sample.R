@@ -81,7 +81,8 @@ clustering_sample <- function(data, sample_ids, clusters = 5,
                                        medoids = clustering_results_sample$medoid,
                                        metric = metric, type = type, m = m)
 
-  # Add information about subsample, distance matrix, clustering of subsample for silhouette plot
+  # Add information about subsample, distance matrix, clustering of subsample
+  # for silhouette plot:
   clustering_results[["subsample_ids"]] <- sample_ids
   clustering_results[["dist_matrix"]] <- dist_matrix
   clustering_results[["subsample_clustering"]] <- clustering_results[["clustering"]][sample_ids]

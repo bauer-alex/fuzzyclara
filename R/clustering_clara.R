@@ -85,12 +85,13 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   # Calculation of clustering results for each sample:
   if (cores == 1) { # single core
     clustering_results_list <- lapply(X = 1:samples, FUN = function(i) {
-      if (verbose >= 1) { message("--- Performing calculations for subsample ",i) }
+      if (verbose >= 1) { message("--- Performing calculations for subsample ", i) }
       clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
                                       clusters = clusters, metric = metric,
                                       m = m, sample_size = sample_size,
                                       type = type, verbose = verbose,
                                       build = build, ...)
+      return(clustering)
     })
 
   } else { # cores > 1, i.e. multi-core computation
@@ -106,7 +107,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                     varlist = c("clustering_sample", "compute_distance_matrix",
                                 "perform_sample_clustering",
                                 "assign_cluster", "calculate_memb_score"),
-                    envir = environment(claraclust))
+                    envir = environment(fuzzyclara))
       clustering_results_list <- parLapply(cl = local_cluster, X = 1:samples,
                                            fun = function(i) {
         if (verbose >= 1) {
