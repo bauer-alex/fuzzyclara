@@ -21,7 +21,7 @@
 clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
                                type = "fixed", num_local = 5,
                                max_neighbors = 100, cores = 1, seed = 1234,
-                               m = 2, verbose = 1) {
+                               m = 2, verbose = 1, ...) {
 
   checkmate::assert_data_frame(data)
   checkmate::assert_number(clusters, lower = 1)
@@ -66,6 +66,51 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
                                      type = type, verbose = verbose)
       return(clustering)
     })
+
+  } else { # cores > 1, i.e. multi-core computation
+
+    print_logMessage(paste0("Run clustering on ", cores, " cores."),
+                     verbose_toLogFile = TRUE, reset_logFile = TRUE)
+
+    # Windows:
+    if (Sys.info()['sysname'] == "Windows") {
+
+      local_cluster <- makePSOCKcluster(rep("localhost", cores))
+      clusterExport(cl = local_cluster,
+                    varlist = c("clustering_local",
+                                "assign_cluster", "calculate_memb_score"),
+                    envir = environment(fuzzyclara))
+      clustering_results_list <- parLapply(cl = local_cluster, X = 1:num_local,
+                                           fun = function(i) {
+        if (verbose >= 1) {
+          print_logMessage(paste0("--- Performing calculations for subsample ",i),
+                           verbose_toLogFile = TRUE)
+        }
+        clustering <- clustering_local(data = data,
+                                       sample_local = samples_local[[i]],
+                                       clusters = clusters, metric = metric,
+                                       m = m, max_neighbors = max_neighbors,
+                                       type = type, verbose = verbose,
+                                       verbose_toLogFile = TRUE)
+        return(clustering)
+      })
+      stopCluster(local_cluster)
+
+    } else { # other OS than Windows
+
+      clustering_results_list <- mclapply(X = 1:num_local, FUN = function(i) {
+        if (verbose >= 1) {
+          print_logMessage(paste0("--- Performing calculations for subsample ",i),
+                           verbose_toLogFile = TRUE)
+        }
+        clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
+                                        clusters = clusters, metric = metric,
+                                        m = m, max_neighbors = max_neighbors,
+                                        type = type, verbose = verbose,
+                                        verbose_toLogFile = TRUE)
+        return(clustering)
+      }, mc.cores = cores, mc.set.seed = seed)
+    }
   }
 
   # Selection of best clustering solution (according to smallest average
@@ -78,7 +123,6 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
     }
     return(dist)
   })
-  print(min_distance_list)
   min_distance <- which.min(min_distance_list)
   best_solution <- clustering_results_list[[min_distance]]
   best_solution[["type"]] <- type
@@ -120,7 +164,7 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
 clustering_local <- function(data, sample_local, clusters = 5,
                              metric = "euclidean", max_neighbors = 100,
                              type = "fixed", m = 2, verbose = 1,
-                             verbose_toLogFile = FALSE) {
+                             verbose_toLogFile = FALSE, ...) {
 
     checkmate::assert_data_frame(data)
     # TODO how to check 'samples_local'?

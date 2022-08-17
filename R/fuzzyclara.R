@@ -21,8 +21,8 @@
 #' used as sample size. (only if \code{algorithm = "clara"})
 #' @param max_neighbors Maximum number of randomized medoid searches with each
 #' cluster (only if \code{algorithm = "clarans"})
-#' @param num_local Number of clustering iterations (only for clarans
-#' clustering)
+#' @param num_local Number of clustering iterations (only if
+#' \code{algorithm = "clarans"})
 #' @param type One of \code{c("fixed","fuzzy")}, specifying the type of
 #' clustering to be performed.
 #' @param m Fuzziness exponent (only for \code{type = "fuzzy"}), which has to be

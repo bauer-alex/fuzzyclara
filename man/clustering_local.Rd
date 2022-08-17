@@ -13,7 +13,8 @@ clustering_local(
   type = "fixed",
   m = 2,
   verbose = 1,
-  verbose_toLogFile = FALSE
+  verbose_toLogFile = FALSE,
+  ...
 )
 }
 \arguments{

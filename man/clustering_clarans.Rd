@@ -14,7 +14,8 @@ clustering_clarans(
   cores = 1,
   seed = 1234,
   m = 2,
-  verbose = 1
+  verbose = 1,
+  ...
 )
 }
 \arguments{
@@ -48,6 +49,10 @@ a numeric of minimum 1. Defaults to 2.}
 \item{verbose}{Can be set to integers between 0 and 2 to control the level of
 detail of the printed diagnostic messages. Higher numbers lead to more
 detailed messages. Defaults to 1.}
+
+\item{...}{Additional arguments passed to the main clustering algorithm and
+to proxy::dist for the calculation of the distance matrix
+(\code{\link{pam}} or \code{\link[vegclust]{vegclust}})}
 }
 \value{
 Object of class fuzzyclara

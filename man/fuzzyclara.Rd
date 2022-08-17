@@ -45,8 +45,8 @@ used as sample size. (only if \code{algorithm = "clara"})}
 \item{max_neighbors}{Maximum number of randomized medoid searches with each
 cluster (only if \code{algorithm = "clarans"})}
 
-\item{num_local}{Number of clustering iterations (only for clarans
-clustering)}
+\item{num_local}{Number of clustering iterations (only if
+\code{algorithm = "clarans"})}
 
 \item{type}{One of \code{c("fixed","fuzzy")}, specifying the type of
 clustering to be performed.}
