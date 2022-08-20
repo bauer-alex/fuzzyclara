@@ -27,6 +27,8 @@ full details.}
 \item{medoids}{Medoids of the obtained clustering solution for the data
 sample}
 
+\item{dist_matrix}{Optional dissimilarity matrix (defaults to NULL)}
+
 \item{type}{One of \code{c("fixed","fuzzy")}, specifying the type of
 clustering to be performed.}
 

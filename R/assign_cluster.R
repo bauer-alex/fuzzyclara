@@ -7,7 +7,7 @@
 #' @param data Entire data.frame
 #' @param medoids Medoids of the obtained clustering solution for the data
 #' sample
-#* @param dist_matrix Optional dissimilarity matrix (defaults to NULL)
+#' @param dist_matrix Optional dissimilarity matrix (defaults to NULL)
 #' @param return_distMatrix Indicator if the distances to the cluster medoids
 #' should be returned. Defaults to FALSE.
 #' @param return_data_medoids Indicator if the medoid data should be returned.
