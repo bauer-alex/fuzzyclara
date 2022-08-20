@@ -145,7 +145,8 @@ compute_distance_matrix <- function(data, metric = "euclidean") {
 #' @import checkmate cluster vegclust
 #'
 perform_sample_clustering <- function(dist, data, clusters, type, metric,
-                                      names, m = 2, build = FALSE, ...) {
+                                      names, m = 2, build = FALSE,
+                                      verbose = 1, ...) {
 
   checkmate::assert_class(dist, classes = "dist")
   checkmate::assert_number(clusters)
@@ -158,7 +159,7 @@ perform_sample_clustering <- function(dist, data, clusters, type, metric,
   # Fixed pam clustering:
   if (type == "fixed") {
     pam_sample <- pam(x = dist, k = clusters, diss = TRUE, ...)
-    medoids    <- names[as.numeric(pam_sample$medoids)]
+    medoids    <- pam_sample$medoids
     clustering <- pam_sample$clustering
   }
 
@@ -168,9 +169,16 @@ perform_sample_clustering <- function(dist, data, clusters, type, metric,
     # Additional build algorithm if specified:
     if (build == TRUE) {
 
+      dist <- as.matrix(dist)
+
+      if (verbose >= 2) {
+        print_logMessage("Select starting medoids...",
+                         verbose_toLogFile = verbose_toLogFile)
+      }
+
       # Select first medoid as the one which has the smallest cost
       starting_medoids    <- c()
-      starting_medoids[1] <- names[which.min(rowSums.dist(dist))]
+      starting_medoids[1] <- names[which.min(rowSums(dist))]
 
       # Select other medoids according to minimal costs:
       for (i in 2:clusters) {
@@ -179,19 +187,22 @@ perform_sample_clustering <- function(dist, data, clusters, type, metric,
         costs <- lapply(X = non_medoids, FUN = function(non_medoid) {
           medoids <- c(starting_medoids, non_medoid)
           cost <- assign_cluster(data = data, medoids = medoids,
-                                 metric = metric, type = "fuzzy",
-                                 m = m)$avg_weighted_dist
+                                 metric = metric, dist_matrix = dist,
+                                 type = "fuzzy", m = m)$avg_weighted_dist
           return(cost)
         })
         starting_medoids <- c(starting_medoids, non_medoids[which.min(costs)])
       }
 
       starting_medoids <- which(names %in% starting_medoids)
+      dist <- proxy::as.dist(dist)
+      attributes(dist)[["Labels"]] <- as.character(1:nrow(data))
       fuzzy_sample <- my_vegclustdist(x = dist, mobileMemb = starting_medoids,
                                       method = "FCMdd", m = m, ...)
     }
 
     if (build == FALSE) {
+      attributes(dist)[["Labels"]] <- as.character(1:nrow(data))
       fuzzy_sample <- my_vegclustdist(x = dist, mobileMemb = clusters,
                                       method = "FCMdd", m = m, ...)
     }

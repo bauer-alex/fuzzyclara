@@ -2,6 +2,7 @@ test_that("clustering_sample", { # clustering_sample function
 
   data(USArrests)
   data <- USArrests %>% tibble::rownames_to_column(var = "Name")
+  row.names(data) <- data$Name
 
 
   # fixed clustering
@@ -9,8 +10,7 @@ test_that("clustering_sample", { # clustering_sample function
                                 clusters = 3,
                                 sample_ids = 1:10,
                                 metric = "euclidean",
-                                type = "fixed",
-                                verbose = 2)
+                                type = "fixed")
 
   # check whole object
   expect_class(cc_fixed, "list")
@@ -81,11 +81,12 @@ test_that("perform_sample_clustering", {
 
   data(USArrests)
   data <- USArrests %>% tibble::rownames_to_column(var = "Name")
+  row.names(data) <- data$Name
 
   dist_mat <- compute_distance_matrix(data[1:10,], metric = "Euclidean")
 
   # fixed
-  clust <- perform_sample_clustering(dist = dist_mat, data = data,
+  clust <- perform_sample_clustering(dist = dist_mat, data = data[1:10,],
                                      clusters = 3, type = "fixed",
                                      names = data[1:10,]$Name,
                                      metric = "Euclidean")
@@ -96,7 +97,7 @@ test_that("perform_sample_clustering", {
 
 
   # fuzzy
-  clust <- perform_sample_clustering(dist = dist_mat, data = data,
+  clust <- perform_sample_clustering(dist = dist_mat, data = data[1:10, ],
                                      clusters = 3, type = "fuzzy",
                                      names = data[1:10,]$Name, m = 3,
                                      metric = "Euclidean")

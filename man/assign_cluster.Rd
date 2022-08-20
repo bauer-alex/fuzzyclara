@@ -8,6 +8,7 @@ assign_cluster(
   data,
   metric,
   medoids,
+  dist_matrix = NULL,
   type = "fixed",
   m = 2,
   return_distMatrix = FALSE,

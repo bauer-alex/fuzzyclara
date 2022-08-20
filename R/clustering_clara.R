@@ -80,6 +80,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
 
   # Adding row.names to column:
   data <- data %>% tibble::rownames_to_column(var = "Name")
+  row.names(data) <- data$Name
 
   # Calculation of clustering results for each sample:
   if (cores == 1) { # single core

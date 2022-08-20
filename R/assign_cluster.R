@@ -7,6 +7,7 @@
 #' @param data Entire data.frame
 #' @param medoids Medoids of the obtained clustering solution for the data
 #' sample
+#* @param dist_matrix Optional dissimilarity matrix (defaults to NULL)
 #' @param return_distMatrix Indicator if the distances to the cluster medoids
 #' should be returned. Defaults to FALSE.
 #' @param return_data_medoids Indicator if the medoid data should be returned.
@@ -18,31 +19,38 @@
 #'
 #' @import proxy
 #'
-assign_cluster <- function(data, metric, medoids, type = "fixed",
-                           m = 2, return_distMatrix = FALSE,
+assign_cluster <- function(data, metric, medoids, dist_matrix = NULL,
+                           type = "fixed", m = 2, return_distMatrix = FALSE,
                            return_data_medoids = FALSE) {
 
   checkmate::assert_data_frame(data)
   # TODO what check to run on 'medoids'? The argument specification in the documentation above should also be more specific
   checkmate::assert_choice(type, choices = c("fixed", "fuzzy"))
+  checkmate::assert_matrix(dist_matrix, null.ok = TRUE)
   checkmate::assert_number(m, lower = 1)
   checkmate::assert_logical(return_distMatrix, len = 1)
   checkmate::assert_logical(return_data_medoids, len = 1)
 
+  # Calculate distance matrix between all observation and the medoids
+  # (if not already given to the function):
+  if (is.null(dist_matrix)) {
+    # Extraction of obtained medoids of the data:
+    data_medoids <- data %>% filter(Name %in% medoids)
 
-  # Extraction of obtained medoids of the data:
-  data_medoids <- data %>% filter(Name %in% medoids)
-
-  # Calculate the distances to the cluster medoids:
-  dist_dat <- proxy::dist(x = data[, -1], y = data_medoids[, -1],
-                          method = metric)
+    # Calculate the distances to the cluster medoids:
+    dist <- proxy::dist(x = data[, -1], y = data_medoids[, -1],
+                        method = metric)
+  }
+  else {
+    dist <- dist_matrix[, medoids]
+  }
 
   # Assignment to the medoid with minimum distance:
-  cluster_assignments <- apply(dist_dat, 1, which.min)
+  cluster_assignments <- apply(dist, 1, which.min)
 
   # Computation of membership scores in case of fuzzy clustering:
   if (type == "fuzzy") {
-    memb_scores_list <- apply(dist_dat, 1, function(x) {
+    memb_scores_list <- apply(dist, 1, function(x) {
       data.frame(t(as.numeric(calculate_memb_score(dist_med = x, m = m))))
     })
     memb_scores <- dplyr::bind_rows(memb_scores_list)
@@ -52,14 +60,14 @@ assign_cluster <- function(data, metric, medoids, type = "fixed",
   # Computation of distance for fixed and fuzzy clustering:
   if (type == "fixed") {
     # Minimum distance:
-    distances <- apply(dist_dat, 1, min)
+    distances <- apply(dist, 1, min)
   } else { # type = "fuzzy"
     # Weighted distance (membership scores as weights):
-    distances <- rowSums(dist_dat * memb_scores)
+    distances <- rowSums(dist * memb_scores)
   }
 
   # Return of clustering information:
-  dist_dat <- as.data.frame(dist_dat[1:nrow(dist_dat),]) # conversion from 'crossdist' to 'matrix'
+  dist_dat <- as.data.frame(dist[1:nrow(dist),])
   colnames(dist_dat) <- paste0("Distance_to_Cluster", 1:ncol(dist_dat))
   assignment_dat     <- data.frame("assignment" = cluster_assignments,
                                    "distance"   = distances)

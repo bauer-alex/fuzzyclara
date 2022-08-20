@@ -13,6 +13,7 @@ perform_sample_clustering(
   names,
   m = 2,
   build = FALSE,
+  verbose = 1,
   ...
 )
 }
@@ -37,6 +38,10 @@ full details.}
 
 \item{build}{Additional build algorithm to choose initial medoids (only
 relevant for type = "fuzzy". Default FALSE.)}
+
+\item{verbose}{Can be set to integers between 0 and 2 to control the level of
+detail of the printed diagnostic messages. Higher numbers lead to more
+detailed messages. Defaults to 1.}
 
 \item{...}{Additional arguments passed to the main clustering algorithm
 (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})}

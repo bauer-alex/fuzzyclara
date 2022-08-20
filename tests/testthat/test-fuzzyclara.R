@@ -11,7 +11,7 @@ test_that("fuzzyclara_fixed_clara", { # fixed clustering
                            sample_size = NULL,
                            type        = "fixed",
                            seed        = 3526,
-                           verbose     = 2)
+                           verbose     = 0)
 
   invisible(capture.output(print(cc_fixed)))
 
@@ -70,7 +70,7 @@ test_that("fuzzyclara_fixed_clarans", { # fixed clarans clustering
                            max_neighbors = 20,
                            type        = "fixed",
                            seed        = 3526,
-                           verbose     = 2)
+                           verbose     = 0)
 
   invisible(capture.output(print(cc_fixed)))
 

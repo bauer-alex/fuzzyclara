@@ -2,6 +2,7 @@ test_that("assign_cluster", {
 
   data(USArrests)
   data <- USArrests %>% tibble::rownames_to_column(var = "Name")
+  row.names(data) <- data$Name
 
   # fixed
   result <- assign_cluster(data = data,
@@ -24,6 +25,19 @@ test_that("assign_cluster", {
   expect_class(result, "list")
   expect_length(result, 5)
   expect_identical(dim(result$membership_scores), as.integer(c(nrow(data), 3)))
+
+  # with distance matrix
+  dist <- as.matrix(proxy::dist(data[, -1]))
+  result <- assign_cluster(data = data, dist_matrix = dist,
+                           medoids = c("Alabama", "Alaska", "Arizona"),
+                           metric = "Euclidean", type = "fuzzy", m = 3,
+                           return_distMatrix = TRUE)
+
+  # check whole object
+  expect_class(result, "list")
+  expect_length(result, 5)
+  expect_identical(dim(result$membership_scores), as.integer(c(nrow(data), 3)))
+
 })
 
 
