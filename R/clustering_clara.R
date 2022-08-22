@@ -110,18 +110,18 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                     envir = environment(fuzzyclara))
       clustering_results_list <- parLapply(cl = local_cluster, X = 1:samples,
                                            fun = function(i) {
-        if (verbose >= 1) {
-          print_logMessage(paste0("--- Performing calculations for subsample ",i),
-                           verbose_toLogFile = TRUE)
-        }
-        clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
-                                        clusters = clusters, metric = metric,
-                                        m = m, sample_size = sample_size,
-                                        type = type, verbose = verbose,
-                                        verbose_toLogFile = TRUE,
-                                        build = build, ...)
-        return(clustering)
-      })
+                                             if (verbose >= 1) {
+                                               print_logMessage(paste0("--- Performing calculations for subsample ",i),
+                                                                verbose_toLogFile = TRUE)
+                                             }
+                                             clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
+                                                                             clusters = clusters, metric = metric,
+                                                                             m = m, sample_size = sample_size,
+                                                                             type = type, verbose = verbose,
+                                                                             verbose_toLogFile = TRUE,
+                                                                             build = build, ...)
+                                             return(clustering)
+                                           })
       stopCluster(local_cluster)
 
     } else { # other OS than Windows

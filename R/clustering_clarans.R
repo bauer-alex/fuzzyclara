@@ -82,18 +82,18 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
                     envir = environment(fuzzyclara))
       clustering_results_list <- parLapply(cl = local_cluster, X = 1:num_local,
                                            fun = function(i) {
-        if (verbose >= 1) {
-          print_logMessage(paste0("--- Performing calculations for subsample ",i),
-                           verbose_toLogFile = TRUE)
-        }
-        clustering <- clustering_local(data = data,
-                                       sample_local = samples_local[[i]],
-                                       clusters = clusters, metric = metric,
-                                       m = m, max_neighbors = max_neighbors,
-                                       type = type, verbose = verbose,
-                                       verbose_toLogFile = TRUE)
-        return(clustering)
-      })
+                                             if (verbose >= 1) {
+                                               print_logMessage(paste0("--- Performing calculations for subsample ",i),
+                                                                verbose_toLogFile = TRUE)
+                                             }
+                                             clustering <- clustering_local(data = data,
+                                                                            sample_local = samples_local[[i]],
+                                                                            clusters = clusters, metric = metric,
+                                                                            m = m, max_neighbors = max_neighbors,
+                                                                            type = type, verbose = verbose,
+                                                                            verbose_toLogFile = TRUE)
+                                             return(clustering)
+                                           })
       stopCluster(local_cluster)
 
     } else { # other OS than Windows
@@ -166,83 +166,78 @@ clustering_local <- function(data, sample_local, clusters = 5,
                              type = "fixed", m = 2, verbose = 1,
                              verbose_toLogFile = FALSE, ...) {
 
-    checkmate::assert_data_frame(data)
-    # TODO how to check 'samples_local'?
-    checkmate::assert_number(clusters, lower = 1)
-    checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
-    checkmate::assert_number(m, lower = 1)
-    checkmate::assert_choice(verbose, choices = 0:2)
-    checkmate::assert_logical(verbose_toLogFile, len = 1)
+  checkmate::assert_data_frame(data)
+  # TODO how to check 'samples_local'?
+  checkmate::assert_number(clusters, lower = 1)
+  checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
+  checkmate::assert_number(m, lower = 1)
+  checkmate::assert_choice(verbose, choices = 0:2)
+  checkmate::assert_logical(verbose_toLogFile, len = 1)
 
-    # Extract name of metric:
-    if (class(metric) == "function") {
-      name_metric <- deparse(substitute(metric))
+  # Extract name of metric:
+  if (class(metric) == "function") {
+    name_metric <- deparse(substitute(metric))
 
-    } else { # 'metric' is no function, but a character name
-      name_metric <- metric
-    }
-
-    # Compute average distance for clustering based on starting medoids:
-    medoids_current <- sample_local$start
-    if (type == "fixed") {
-      cost_current <- assign_cluster(data = data, medoids = medoids_current,
-                                     metric = metric, type = type,
-                                     m = m)$avg_min_dist
-    }
-    else {
-      cost_current <- assign_cluster(data = data, medoids = medoids_current,
-                                     metric = metric, type = type,
-                                     m = m)$avg_weighted_dist
-    }
-
-    # Iterative swap of medoids and non-medoids:
-    neighbor <- 1
-    while (neighbor <= max_neighbors) {
-
-      # Change medoid and non-medoid:
-      medoids <- medoids_current
-      med <- sample_local$medoids[neighbor]
-      non_med <- data$Name[sample_local$non_medoids[neighbor]]
-
-      # Stop if the selected non-medoid is actually a medoid:
-      if (non_med %in% medoids_current) {
-        neighbor <- neighbor + 1
-      }
-
-      else {
-        # Compute average distance based on new medoids:
-        medoids[med] <- non_med
-
-        # Change current local clustering solution if costs are lower:
-        if (type == "fixed") {
-          cost <- assign_cluster(data = data, medoids = medoids,
-                                 metric = metric, type = type,
-                                 m = m)$avg_min_dist
-        }
-        else {
-          cost <- assign_cluster(data = data, medoids = medoids,
-                                 metric = metric, type = type,
-                                 m = m)$avg_weighted_dist
-        }
-        if (cost < cost_current) {
-          cost_current <- cost
-          medoids_current <- medoids
-        }
-        neighbor <- neighbor + 1
-      }
-    }
-
-    # Create clustering output based on the best medoids:
-    clustering_results <- assign_cluster(data = data, medoids = medoids_current,
-                                         metric = metric, type = type,
-                                         m = m, return_data_medoids = TRUE,
-                                         return_distMatrix = TRUE)
-
-    # Return of clustering results:
-    return(clustering_results)
+  } else { # 'metric' is no function, but a character name
+    name_metric <- metric
   }
 
+  # Compute average distance for clustering based on starting medoids:
+  medoids_current <- sample_local$start
+  if (type == "fixed") {
+    cost_current <- assign_cluster(data = data, medoids = medoids_current,
+                                   metric = metric, type = type,
+                                   m = m)$avg_min_dist
+  }
+  else {
+    cost_current <- assign_cluster(data = data, medoids = medoids_current,
+                                   metric = metric, type = type,
+                                   m = m)$avg_weighted_dist
+  }
 
+  # Iterative swap of medoids and non-medoids:
+  neighbor <- 1
+  while (neighbor <= max_neighbors) {
 
+    # Change medoid and non-medoid:
+    medoids <- medoids_current
+    med <- sample_local$medoids[neighbor]
+    non_med <- data$Name[sample_local$non_medoids[neighbor]]
 
+    # Stop if the selected non-medoid is actually a medoid:
+    if (non_med %in% medoids_current) {
+      neighbor <- neighbor + 1
+    }
 
+    else {
+      # Compute average distance based on new medoids:
+      medoids[med] <- non_med
+
+      # Change current local clustering solution if costs are lower:
+      if (type == "fixed") {
+        cost <- assign_cluster(data = data, medoids = medoids,
+                               metric = metric, type = type,
+                               m = m)$avg_min_dist
+      }
+      else {
+        cost <- assign_cluster(data = data, medoids = medoids,
+                               metric = metric, type = type,
+                               m = m)$avg_weighted_dist
+      }
+      if (cost < cost_current) {
+        cost_current <- cost
+        medoids_current <- medoids
+      }
+      neighbor <- neighbor + 1
+    }
+  }
+
+  # Create clustering output based on the best medoids:
+  clustering_results <- assign_cluster(data = data, medoids = medoids_current,
+                                       metric = metric, type = type,
+                                       m = m, return_data_medoids = TRUE,
+                                       return_distMatrix = TRUE)
+
+  # Return of clustering results:
+  return(clustering_results)
+}
