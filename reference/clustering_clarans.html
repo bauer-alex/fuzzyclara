@@ -100,13 +100,13 @@ clustering to be performed.</p></dd>
 
 
 <dt>num_local</dt>
-<dd><p>Number of clustering iterations
+<dd><p>Number of clustering iterations. Defaults to 5.
 (<code>pam</code> or <code><a href="https://emf-creaf.github.io/vegclust/reference/vegclust.html" class="external-link">vegclust</a></code>)</p></dd>
 
 
 <dt>max_neighbors</dt>
 <dd><p>Maximum number of randomized medoid searches with each
-cluster</p></dd>
+cluster. Defaults to 100.</p></dd>
 
 
 <dt>cores</dt>
@@ -145,6 +145,10 @@ to proxy::dist for the calculation of the distance matrix
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>If the clustering is run on mulitple cores, the verbose messages are printed
 in a file <code>clustering_progress.log</code> (if <code>verbose &gt; 0</code>).</p>
+    </div>
+    <div class="section level2">
+    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
+    <p>TODO add CLARANS paper</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
