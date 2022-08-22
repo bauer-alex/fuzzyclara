@@ -10,8 +10,8 @@
 #' @inheritParams fuzzyclara
 #' @param data data.frame to be clustered
 #' @param max_neighbors Maximum number of randomized medoid searches with each
-#' cluster
-#' @param num_local Number of clustering iterations
+#' cluster. Defaults to 100.
+#' @param num_local Number of clustering iterations. Defaults to 5.
 #' (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})
 #'
 #' @return Object of class fuzzyclara
@@ -44,13 +44,19 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
   # Randomly draw pairs of medoids and non-medoids as well as starting medoids
   # for each local iteration:
   samples_local <- lapply(X = 1:num_local, FUN = function(i) {
-    sample_med <- sample(x = 1:clusters, size = max_neighbors, replace = TRUE)
-    sample_non_med <- sample(x = 1:nrow(data), size = max_neighbors,
-                             replace = TRUE)
-    starting_medoids <- sample(x = data$Name[1:nrow(data)], size = clusters,
+
+    sample_med       <- sample(x       = 1:clusters,
+                               size    = max_neighbors,
+                               replace = TRUE)
+    sample_non_med   <- sample(x       = 1:nrow(data),
+                               size    = max_neighbors,
+                               replace = TRUE)
+    starting_medoids <- sample(x       = data$Name[1:nrow(data)],
+                               size    = clusters,
                                replace = FALSE)
-    sample <- list("medoids" = sample_med, "non_medoids" = sample_non_med,
-                   "start" = starting_medoids)
+    sample <- list("medoids"     = sample_med,
+                   "non_medoids" = sample_non_med,
+                   "start"       = starting_medoids)
     return(sample)
   })
   # Sample definition is performed before parallelized computations in order
@@ -125,7 +131,7 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
     }
     return(dist)
   })
-  min_distance <- which.min(min_distance_list)
+  min_distance  <- which.min(min_distance_list)
   best_solution <- clustering_results_list[[min_distance]]
   best_solution[["type"]] <- type
   if (type == "fixed") {
@@ -133,10 +139,11 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
   }
   best_solution[["fuzzyness"]] <- m
   best_solution[["algorithm"]] <- "clarans"
-  best_solution[["metric"]] <- metric
+  best_solution[["metric"]]    <- metric
 
   # Return of clustering solution based on the best local iteration:
   class(best_solution) <- c("fuzzyclara", class(best_solution))
+
   return(best_solution)
 }
 
@@ -192,8 +199,8 @@ clustering_local <- function(data, sample_local, clusters = 5,
     cost_current <- assign_cluster(data = data, medoids = medoids_current,
                                    metric = metric, type = type,
                                    m = m)$avg_min_dist
-  }
-  else {
+
+  } else { # type == "fuzzy"
     cost_current <- assign_cluster(data = data, medoids = medoids_current,
                                    metric = metric, type = type,
                                    m = m)$avg_weighted_dist
@@ -205,15 +212,15 @@ clustering_local <- function(data, sample_local, clusters = 5,
 
     # Change medoid and non-medoid:
     medoids <- medoids_current
-    med <- sample_local$medoids[neighbor]
+    med     <- sample_local$medoids[neighbor]
     non_med <- data$Name[sample_local$non_medoids[neighbor]]
 
     # Stop if the selected non-medoid is actually a medoid:
     if (non_med %in% medoids_current) {
       neighbor <- neighbor + 1
-    }
 
-    else {
+    } else {
+
       # Compute average distance based on new medoids:
       medoids[med] <- non_med
 
@@ -222,16 +229,18 @@ clustering_local <- function(data, sample_local, clusters = 5,
         cost <- assign_cluster(data = data, medoids = medoids,
                                metric = metric, type = type,
                                m = m)$avg_min_dist
-      }
-      else {
+
+      } else {
         cost <- assign_cluster(data = data, medoids = medoids,
                                metric = metric, type = type,
                                m = m)$avg_weighted_dist
       }
+
       if (cost < cost_current) {
-        cost_current <- cost
+        cost_current    <- cost
         medoids_current <- medoids
       }
+
       neighbor <- neighbor + 1
     }
   }

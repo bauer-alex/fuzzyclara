@@ -32,11 +32,11 @@ full details.}
 \item{type}{One of \code{c("fixed","fuzzy")}, specifying the type of
 clustering to be performed.}
 
-\item{num_local}{Number of clustering iterations
+\item{num_local}{Number of clustering iterations. Defaults to 5.
 (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})}
 
 \item{max_neighbors}{Maximum number of randomized medoid searches with each
-cluster}
+cluster. Defaults to 100.}
 
 \item{cores}{Numbers of cores for computation. \code{cores > 1} implies
 a parallel call. Defaults to 1.}
