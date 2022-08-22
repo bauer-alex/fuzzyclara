@@ -48,6 +48,7 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
     sample_med       <- sample(x       = 1:clusters,
                                size    = max_neighbors,
                                replace = TRUE)
+    # TODO shouldn't this sample over 1:(nrow(data) - clusters), as an index among all non-medoid points? Otherwise the index of a medoid could be drawn.
     sample_non_med   <- sample(x       = 1:nrow(data),
                                size    = max_neighbors,
                                replace = TRUE)
@@ -195,16 +196,10 @@ clustering_local <- function(data, sample_local, clusters = 5,
 
   # Compute average distance for clustering based on starting medoids:
   medoids_current <- sample_local$start
-  if (type == "fixed") {
-    cost_current <- assign_cluster(data = data, medoids = medoids_current,
-                                   metric = metric, type = type,
-                                   m = m)$avg_min_dist
-
-  } else { # type == "fuzzy"
-    cost_current <- assign_cluster(data = data, medoids = medoids_current,
-                                   metric = metric, type = type,
-                                   m = m)$avg_weighted_dist
-  }
+  cost_obj        <- assign_cluster(data = data, medoids = medoids_current,
+                                    metric = metric, type = type, m = m)
+  cost_current    <- ifelse(type == "fixed", cost_obj$avg_min_dist,
+                            cost_obj$avg_weighted_dist) # for type == "fuzzy"
 
   # Iterative swap of medoids and non-medoids:
   neighbor <- 1
@@ -216,6 +211,8 @@ clustering_local <- function(data, sample_local, clusters = 5,
     non_med <- data$Name[sample_local$non_medoids[neighbor]]
 
     # Stop if the selected non-medoid is actually a medoid:
+    # TODO As noted in the above 'TODO' note, sample_local$non_medoids should be designed to ensure that it doesn't contain the indices of current medoids.
+    #      Currently, we waste an actual iteration if we are 'unlucky' and draw a medoid.
     if (non_med %in% medoids_current) {
       neighbor <- neighbor + 1
 
@@ -225,16 +222,11 @@ clustering_local <- function(data, sample_local, clusters = 5,
       medoids[med] <- non_med
 
       # Change current local clustering solution if costs are lower:
-      if (type == "fixed") {
-        cost <- assign_cluster(data = data, medoids = medoids,
-                               metric = metric, type = type,
-                               m = m)$avg_min_dist
-
-      } else {
-        cost <- assign_cluster(data = data, medoids = medoids,
-                               metric = metric, type = type,
-                               m = m)$avg_weighted_dist
-      }
+      cost_obj <- assign_cluster(data = data, medoids = medoids,
+                                 metric = metric, type = type,
+                                 m = m)
+      cost     <- ifelse(type == "fixed", cost_obj$avg_min_dist,
+                         cost_obj$avg_weighted_dist) # for type == "fuzzy"
 
       if (cost < cost_current) {
         cost_current    <- cost
