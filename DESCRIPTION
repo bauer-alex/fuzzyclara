@@ -4,7 +4,8 @@ Version: 0.1
 Authors@R: c(
     person(given = "Maximilian", family = "Weigert", email = "maximilian.weigert@stat.uni-muenchen.de", role = c("aut","cre"), comment = c(ORCID = "0000-0003-4400-134X")),
     person(given = "Alexander",  family = "Bauer",   email = "alexander.bauer@stat.uni-muenchen.de", role = "aut", comment = c(ORCID = "0000-0003-3495-5131")),
-    person(given = "Gauss",       family = "Jana",    role = "aut"))
+    person(given = "Jana",       family = "Gauss",   role = "aut"),
+    person(given = "Asmik",      family = "Nalmpatian", role = "ctb"))
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 URL: https://MaxWeigert.github.io/fuzzyclara/

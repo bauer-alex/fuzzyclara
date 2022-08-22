@@ -15,9 +15,8 @@ Efficient and fuzzy clustering based on the CLARA algorithm
 
 -   Authors: [Maximilian
     Weigert](https://www.en.stablab.stat.uni-muenchen.de/people/doktoranden/weigert/index.html),
-    [Alexander
-    Bauer](https://www.en.stablab.stat.uni-muenchen.de/people/doktoranden/bauer1/index.html),
-    Jana Gauß
+    [Alexander Bauer](https://github.com/bauer-alex/), Jana Gauss
+-   Contributors: Asmik Nalmpatian
 -   Version: 0.1
 
 ## Aim of this Package
