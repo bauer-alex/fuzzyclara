@@ -66,3 +66,6 @@ a self-defined distance function.
 If the clustering is run on mulitple cores, the verbose messages are printed
 in a file \code{clustering_progress.log} (if \code{verbose > 0}).
 }
+\references{
+TODO add CLARANS paper
+}

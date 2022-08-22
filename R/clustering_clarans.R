@@ -18,6 +18,8 @@
 #'
 #' @import checkmate cluster dplyr parallel tibble tidyselect
 #'
+#' @references TODO add CLARANS paper
+#'
 clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
                                type = "fixed", num_local = 5,
                                max_neighbors = 100, cores = 1, seed = 1234,
@@ -160,6 +162,8 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
 #' @return Clustering solution for data sample
 #'
 #' @import checkmate cluster dplyr
+#'
+#' @references TODO add CLARANS paper
 #'
 clustering_local <- function(data, sample_local, clusters = 5,
                              metric = "euclidean", max_neighbors = 100,

@@ -46,6 +46,8 @@
 #' @import cluster parallel checkmate tibble dplyr tidyselect
 #' @export
 #'
+#' @references TODO add CLARA and CLARANS papers, and maybe something else?
+#'
 fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
                        algorithm = "clara", samples = 10, sample_size = NULL,
                        max_neighbors = 100, num_local = 10, type = "fixed",

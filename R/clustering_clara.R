@@ -23,6 +23,8 @@
 #'
 #' @import cluster parallel checkmate tibble dplyr tidyselect
 #'
+#' @references TODO add CLARA paper
+#'
 clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                              samples = 10, sample_size = NULL, type = "fixed",
                              cores = 1, seed = 1234, m = 2, verbose = 1,
