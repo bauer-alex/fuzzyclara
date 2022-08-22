@@ -3,7 +3,7 @@
 #' Function to provide graphical visualization of distribution
 #'
 #' @param x An object of class "fuzzyclara"
-#' @param data data.frame used for clustering
+#' @param data data.frame or matrix used for clustering
 #' @param type,variable Type of plot. One of \code{c("barplot","boxplot","wordclouds",
 #' "silhouette","pca","scatterplot")}. Defaults to NULL, which either plots
 #' a barplot or a boxplot, depending on the class of \code{variable}.
@@ -24,7 +24,7 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
 
   checkmate::assert_class(x, class = "fuzzyclara")
   checkmate::assert(checkmate::check_data_frame(data),
-                    checkmate::check_matrix(data), combine = "or") # TODO should a matrix be possible here? The documentation above only talks about a data.frame.
+                    checkmate::check_matrix(data), combine = "or")
   checkmate::assert_number(confidence_threshold, lower = 0, upper = 1)
   checkmate::assert_choice(type,
                            choices = c("boxplot","wordclouds", "silhouette",
@@ -299,10 +299,10 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
   checkmate::assert_data_frame(transparent_obs, null.ok = TRUE)
   checkmate::assert_number(alpha_fuzzy, lower = 0, upper = 1)
   checkmate::assert_logical(focus, len = 1)
-  # TODO how to check 'focus_clusters'?
+  # TODO how to check 'focus_clusters'? Edit Jana: in line 336, an error is thrown if the specified clusters aren't found in the data. I think this is enough.
 
 
-  if(x$type == "fuzzy" & focus == TRUE){ # for ficus = TRUE, perform PCA on whole dataset
+  if(x$type == "fuzzy" & focus == TRUE){ # for focus = TRUE, perform PCA on whole dataset
     data         <- rbind(data, transparent_obs)
     data$cluster <- NULL
   }
@@ -459,7 +459,7 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = FALSE,
   checkmate::assert_data_frame(transparent_obs, null.ok = TRUE)
   checkmate::assert_number(alpha_fuzzy, lower = 0, upper = 1)
   checkmate::assert_logical(focus, len = 1)
-  # TODO how to check 'focus_cluster'?
+  # TODO how to check 'focus_cluster'? Edit Jana: in line 482, an error is thrown if the specified clusters aren't found in the data. I think this is enough.
 
 
   if (((!(!is.null(x_var) & !is.null(y_var)) ) | !(class(data[, x_var]) == "numeric" & class(data[, y_var]) == "numeric"))) {
@@ -519,8 +519,9 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = FALSE,
 #' @param x An object of class "fuzzyclara"
 #' @param data Prepared data.frame (contains cluster variable, observations are
 #' already filtered by threshold (fuzzy))
-#' @param metric Distance metric for silhouette plot. Defaults to
-#' \code{"Euclidean"}. Irrelevant if \code{silhouette_subsample} is TRUE.
+#' @param metric  A character specifying a predefined dissimilarity metric (like
+#' \code{"euclidean"} or \code{"manhattan"}) or a self-defined dissimilarity
+#' function. Defaults to \code{"euclidean"}. Irrelevant if \code{silhouette_subsample} is TRUE.
 #' @param silhouette_subsample Use the subsample from 'x' for silhouette
 #' plot instead of all samples? Defaults to FALSE.
 #' @param scale_sil Scale numeric variables for silhouette plot? Defaults to
@@ -533,17 +534,17 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = FALSE,
 #' @export
 #'
 clara_silhouette <- function(x, data,
-                             metric = "Euclidean",
+                             metric = "euclidean",
                              silhouette_subsample = FALSE,
                              scale_sil = TRUE,
                              rel_obs = NULL){
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
-  # TODO how to check 'metric'? At least specify 'metric' a bit more in the above documentation. Similar to the proxy::dist metric?
+  # TODO how to check 'metric'? (Edit Jana: in fuzzycara we don't check it either) At least specify 'metric' a bit more in the above documentation -> DONE. Similar to the proxy::dist metric? (Jana: Yes)
   checkmate::assert_logical(silhouette_subsample, len = 1)
   checkmate::assert_logical(scale_sil, len = 1)
-  # TODO how to check 'rel_obs'?
+  # TODO how to check 'rel_obs'? (Edit Jana: rel_obs is created in plot.fuzzyclara, so maybe not necessary to check?)
 
 
   if(scale_sil == TRUE){
@@ -558,6 +559,8 @@ clara_silhouette <- function(x, data,
     sil <- silhouette(as.numeric(data$cluster), dist(select(data, -cluster), method = metric))
 
   } else { # use only subsamples from 'x' in order to not calculate the distance matrix between all samples
+
+    checkmate::assert_true(x$algorithm == "clara") # because for clarans, no distance matrix is calculated
 
     if(x$type == "fixed"){ # fixed clustering
 

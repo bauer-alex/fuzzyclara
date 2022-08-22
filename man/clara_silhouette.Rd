@@ -7,7 +7,7 @@
 clara_silhouette(
   x,
   data,
-  metric = "Euclidean",
+  metric = "euclidean",
   silhouette_subsample = FALSE,
   scale_sil = TRUE,
   rel_obs = NULL
@@ -19,8 +19,9 @@ clara_silhouette(
 \item{data}{Prepared data.frame (contains cluster variable, observations are
 already filtered by threshold (fuzzy))}
 
-\item{metric}{Distance metric for silhouette plot. Defaults to
-\code{"Euclidean"}. Irrelevant if \code{silhouette_subsample} is TRUE.}
+\item{metric}{A character specifying a predefined dissimilarity metric (like
+\code{"euclidean"} or \code{"manhattan"}) or a self-defined dissimilarity
+function. Defaults to \code{"euclidean"}. Irrelevant if \code{silhouette_subsample} is TRUE.}
 
 \item{silhouette_subsample}{Use the subsample from 'x' for silhouette
 plot instead of all samples? Defaults to FALSE.}

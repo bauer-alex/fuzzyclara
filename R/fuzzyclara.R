@@ -7,7 +7,7 @@
 #' If the clustering is run on mulitple cores, the verbose messages are printed
 #' in a file \code{clustering_progress.log} (if \code{verbose > 0}).
 #'
-#' @param data data.frame to be clustered
+#' @param data data.frame or matrix to be clustered
 #' @param clusters Number of clusters. Defaults to 5.
 #' @param metric A character specifying a predefined dissimilarity metric (like
 #' \code{"euclidean"} or \code{"manhattan"}) or a self-defined dissimilarity
@@ -55,7 +55,7 @@ fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
                        scale = TRUE, build = FALSE, ...) {
 
   checkmate::assert(checkmate::check_data_frame(data),
-                    checkmate::check_matrix(data), combine = "or") # TODO should a matrix be possible here? The documentation above only talks about a data.frame.
+                    checkmate::check_matrix(data), combine = "or")
   checkmate::assert_numeric(clusters, lower = 1, upper = nrow(data))
   checkmate::assert_numeric(samples, lower = 1)
   checkmate::assert_numeric(sample_size, lower = clusters, null.ok = TRUE)

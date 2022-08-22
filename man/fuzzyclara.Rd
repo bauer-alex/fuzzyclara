@@ -24,7 +24,7 @@ fuzzyclara(
 )
 }
 \arguments{
-\item{data}{data.frame to be clustered}
+\item{data}{data.frame or matrix to be clustered}
 
 \item{clusters}{Number of clusters. Defaults to 5.}
 

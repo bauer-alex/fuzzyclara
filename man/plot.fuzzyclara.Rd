@@ -17,7 +17,7 @@
 \arguments{
 \item{x}{An object of class "fuzzyclara"}
 
-\item{data}{data.frame used for clustering}
+\item{data}{data.frame or matrix used for clustering}
 
 \item{type, variable}{Type of plot. One of \code{c("barplot","boxplot","wordclouds",
 "silhouette","pca","scatterplot")}. Defaults to NULL, which either plots
