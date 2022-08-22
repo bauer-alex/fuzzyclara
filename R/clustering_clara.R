@@ -1,7 +1,7 @@
-#' Perform clara clustering algorithm
+#' Perform CLARA clustering algorithm
 #'
-#' Function to perform clara clustering algorithm in a fixed or fuzzy way.
-#' The function can either be performed using a common dissimilarity metric or
+#' Function to perform a CLARA clustering in a fixed or fuzzy way.
+#' The function can either be called using a common dissimilarity metric or
 #' a self-defined distance function.
 #'
 #' If the clustering is run on mulitple cores, the verbose messages are printed
@@ -198,7 +198,3 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   class(best_solution) <- c("fuzzyclara", class(best_solution))
   return(best_solution)
 }
-
-
-
-

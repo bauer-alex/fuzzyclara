@@ -2,7 +2,7 @@
 % Please edit documentation in R/clustering_clara.R
 \name{clustering_clara}
 \alias{clustering_clara}
-\title{Perform clara clustering algorithm}
+\title{Perform CLARA clustering algorithm}
 \usage{
 clustering_clara(
   data,
@@ -62,8 +62,8 @@ to proxy::dist for the calculation of the distance matrix
 Object of class fuzzyclara
 }
 \description{
-Function to perform clara clustering algorithm in a fixed or fuzzy way.
-The function can either be performed using a common dissimilarity metric or
+Function to perform a CLARA clustering in a fixed or fuzzy way.
+The function can either be called using a common dissimilarity metric or
 a self-defined distance function.
 }
 \details{

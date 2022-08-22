@@ -55,7 +55,7 @@ a log file \code{clustering_progress.log}. Defaults to FALSE.}
 Clustering solution for data sample
 }
 \description{
-Function to perform a local iteration of the clarans clustering algorithm in
-a fixed or fuzzy way. The function can either be performed using a common
+Function to perform a local iteration of the CLARANS clustering algorithm in
+a fixed or fuzzy way. The function can either be called using a common
 dissimilarity metric or a self-defined distance function.
 }

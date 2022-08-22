@@ -36,7 +36,7 @@ reflecting the pipeline for performing
 \\ R offers several packages containing. However, a combination of both
 methods
 
-# Combination of fuzzy and clara/clarans clustering
+# Combination of fuzzy and CLARA/CLARANS clustering
 - Algorithmus/Flowchart
 - Fuzzy for Subsamples
 - Formel für Verrechnung

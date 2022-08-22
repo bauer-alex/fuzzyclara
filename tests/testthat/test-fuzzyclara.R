@@ -1,4 +1,4 @@
-test_that("fuzzyclara_fixed_clara", { # fixed clustering
+test_that("fuzzyclara_fixed_clara", { # fixed CLARA clustering
 
   data(USArrests)
 
@@ -56,7 +56,7 @@ test_that("fuzzyclara_fixed_clara", { # fixed clustering
 })
 
 
-test_that("fuzzyclara_fixed_clarans", { # fixed clarans clustering
+test_that("fuzzyclara_fixed_clarans", { # fixed CLARANS clustering
 
   data(USArrests)
 

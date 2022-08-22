@@ -2,7 +2,7 @@
 % Please edit documentation in R/clustering_clarans.R
 \name{clustering_clarans}
 \alias{clustering_clarans}
-\title{Perform clarans clustering algorithm}
+\title{Perform CLARANS clustering}
 \usage{
 clustering_clarans(
   data,
@@ -58,8 +58,8 @@ to proxy::dist for the calculation of the distance matrix
 Object of class fuzzyclara
 }
 \description{
-Function to perform clara clustering algorithm in a fixed or fuzzy way.
-The function can either be performed using a common dissimilarity metric or
+Function to perform a CLARANS clustering in a fixed or fuzzy way.
+The function can either be called using a common dissimilarity metric or
 a self-defined distance function.
 }
 \details{
