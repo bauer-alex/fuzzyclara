@@ -202,7 +202,7 @@ test_that("plot_fuzzyclara_clarans", { # plots
   data(USArrests)
 
   cc_fixed   <- fuzzyclara(data        = USArrests,
-                           clusters    = n_clusters,
+                           clusters    = 3,
                            metric      = "euclidean",
                            algorithm   = "clarans",
                            num_local   = 2,
@@ -320,7 +320,7 @@ test_that("plot_fuzzyclara_clarans", { # plots
 
   ## confidence threshold for fuzzy clustering
   cc_fuzzy  <- fuzzyclara(data        = USArrests,
-                          clusters    = n_clusters,
+                          clusters    = 3,
                           metric      = "euclidean",
                           algorithm   = "clarans",
                           num_local   = 2,
