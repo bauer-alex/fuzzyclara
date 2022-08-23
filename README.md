@@ -1,5 +1,5 @@
 
-# fuzzyclara
+# fuzzyclara <img src="man/figures/hex-sticker/fuzzyclara.png" align="right" width="200"/>
 
 <!-- badges: start
 [![R build status](https://github.com/bauer-alex/APCtools/workflows/R-CMD-check/badge.svg)](https://github.com/bauer-alex/APCtools/actions)
