@@ -21,7 +21,7 @@ dat_points <- dplyr::bind_rows(dat_norm1 %>% sample_n(5),
 
 # main plot ---------------------------------------------------------------
 gg <- ggplot() +
-  geom_density_2d(data = dat_norm1, aes(x = x, y = y), col = "#754668", h = c(1,1), bins = 4) +
+  geom_density_2d(data = dat_norm1, aes(x = x, y = y), col = "#995C88", h = c(1,1), bins = 4) +
   geom_density_2d(data = dat_norm2, aes(x = x, y = y), col = "#ED6445", h = c(1,1), bins = 4) +
   geom_density_2d(data = dat_norm3, aes(x = x, y = y), col = "#FFB200", h = c(1,1), bins = 4) +
   geom_point(data = dat_points, aes(x = x, y = y), col = "#277BC0") +
