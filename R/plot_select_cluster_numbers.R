@@ -1,7 +1,8 @@
 #' Visualization of the selection criterion for different cluster numbers
 #'
 #' Function to provide graphical visualization for selecting the optimal number
-#' of clusters
+#' of clusters.
+#' TODO describe what the function actually does
 #'
 #' @inheritParams fuzzyclara
 #' @param data data.frame to be clustered

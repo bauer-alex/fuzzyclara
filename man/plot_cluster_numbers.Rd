@@ -63,5 +63,6 @@ Object of class "fuzzyclara"
 }
 \description{
 Function to provide graphical visualization for selecting the optimal number
-of clusters
+of clusters.
+TODO describe what the function actually does
 }
