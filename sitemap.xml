@@ -64,6 +64,9 @@
     <loc>/reference/compute_distance_matrix.html</loc>
   </url>
   <url>
+    <loc>/reference/evaluate_cluster_numbers.html</loc>
+  </url>
+  <url>
     <loc>/reference/fuzzyclara.html</loc>
   </url>
   <url>
@@ -74,9 +77,6 @@
   </url>
   <url>
     <loc>/reference/plot.fuzzyclara.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot_cluster_numbers.html</loc>
   </url>
   <url>
     <loc>/reference/predict.fuzzyclara.html</loc>
