@@ -99,7 +99,7 @@ cc_mink
 
 ### Select optimal number of clusters
 ```{r optimal number clusters, warning = FALSE}
-cc_number <- plot_cluster_numbers(
+cc_number <- evaluate_cluster_numbers(
                        data            = USArrests,
                        clusters_range  = 2:6,
                        metric          = "euclidean",

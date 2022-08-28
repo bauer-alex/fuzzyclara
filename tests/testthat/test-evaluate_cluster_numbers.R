@@ -1,9 +1,9 @@
-test_that("plot_select_cl_nums", { # plot to select number of clusters
+test_that("evaluate_cl_nums", { # plot to select number of clusters
 
   data(USArrests)
 
   # fixed clustering
-  cc_number <- plot_cluster_numbers(
+  cc_number <- evaluate_cluster_numbers(
     data            = USArrests,
     clusters_range  = 2:6,
     metric          = "euclidean",
@@ -35,7 +35,7 @@ test_that("plot_select_cl_nums", { # plot to select number of clusters
 
   # fuzzy clustering
   # return clustering results
-  cc_number <- plot_cluster_numbers(
+  cc_number <- evaluate_cluster_numbers(
     data            = USArrests,
     clusters_range  = 2:6,
     metric          = "euclidean",

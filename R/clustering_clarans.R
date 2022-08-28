@@ -40,6 +40,7 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
 
   # Adding row.names to column:
   data <- data %>% tibble::rownames_to_column(var = "Name")
+  row.names(data) <- data$Name
 
   # Randomly draw pairs of medoids and non-medoids as well as starting medoids
   # for each local iteration:

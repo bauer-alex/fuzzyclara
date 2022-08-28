@@ -108,7 +108,6 @@ compute_distance_matrix <- function(data, metric = "euclidean") {
 
   checkmate::assert_data_frame(data)
 
-
   # Deletion of column "Name":
   data <- data %>% dplyr::select(-Name)
 
