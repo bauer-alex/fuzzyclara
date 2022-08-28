@@ -49,8 +49,7 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
     sample_med       <- sample(x       = 1:clusters,
                                size    = max_neighbors,
                                replace = TRUE)
-    # TODO shouldn't this sample over 1:(nrow(data) - clusters), as an index among all non-medoid points? Otherwise the index of a medoid could be drawn.
-    sample_non_med   <- sample(x       = 1:nrow(data),
+    sample_non_med   <- sample(x       = 1:(nrow(data) - clusters),
                                size    = max_neighbors,
                                replace = TRUE)
     starting_medoids <- sample(x       = data$Name[1:nrow(data)],
@@ -209,15 +208,8 @@ clustering_local <- function(data, sample_local, clusters = 5,
     # Change medoid and non-medoid:
     medoids <- medoids_current
     med     <- sample_local$medoids[neighbor]
-    non_med <- data$Name[sample_local$non_medoids[neighbor]]
-
-    # Stop if the selected non-medoid is actually a medoid:
-    # TODO As noted in the above 'TODO' note, sample_local$non_medoids should be designed to ensure that it doesn't contain the indices of current medoids.
-    #      Currently, we waste an actual iteration if we are 'unlucky' and draw a medoid.
-    if (non_med %in% medoids_current) {
-      neighbor <- neighbor + 1
-
-    } else {
+    non_medoids <- data$Name[!data$Name %in% medoids]
+    non_med <- non_medoids[sample_local$non_medoids[neighbor]]
 
       # Compute average distance based on new medoids:
       medoids[med] <- non_med
@@ -235,7 +227,6 @@ clustering_local <- function(data, sample_local, clusters = 5,
       }
 
       neighbor <- neighbor + 1
-    }
   }
 
   # Create clustering output based on the best medoids:
@@ -247,3 +238,8 @@ clustering_local <- function(data, sample_local, clusters = 5,
   # Return of clustering results:
   return(clustering_results)
 }
+
+
+
+
+
