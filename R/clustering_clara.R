@@ -121,6 +121,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                                                print_logMessage(paste0("--- Performing calculations for subsample ",i),
                                                                 verbose_toLogFile = TRUE)
                                              }
+                                             # TODO: add computation of distance matrix here
                                              clustering_numbers_list <- lapply(X = clusters, FUN = function(j) {
                                                clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
                                                                                clusters = j, metric = metric,

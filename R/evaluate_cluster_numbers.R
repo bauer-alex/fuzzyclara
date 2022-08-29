@@ -73,35 +73,33 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
   checkmate::assert_choice(verbose, choices = 0:2)
   checkmate::assert_logical(return_results, len = 1)
 
+  if(scale == TRUE){
+    # optional: Scaling of numerical (and ordinal) variables:
+    ind <- unlist(lapply(data, is.numeric), use.names = TRUE)
+    for (i in ind) {
+      data[, ind] <- scale(data[, ind])
+    }
+  }
+
 
   # Create data.frame with criterion results:
   criterion_df <- data.frame(cluster_number = clusters_range,
                              criterion = rep(0, length(clusters_range)))
-
-  # Create list for results
-  if (return_results == TRUE) {
-    results <- list()
+  criterion <- ifelse(type == "fuzzy", yes = "avg_weighted_dist",
+                      no = "avg_min_dist")
+  # Compute clustering for different cluster numbers:
+  if (algorithm == "clara") {
+    y <- clustering_clara(data, clusters = clusters_range, metric = metric,
+                          sample_size = sample_size, samples = samples,
+                          build = build, type = type, seed = seed, m = m,
+                          verbose = verbose, cores = cores, ...)
   }
-
-  # Extract and append criterion value for each cluster number:
-  for (i in clusters_range) {
-
-    y <- fuzzyclara(data, clusters = i, metric = metric,
-                    sample_size = sample_size, samples = samples, build = build,
-                    max_neighbors = max_neighbors, num_local = num_local,
-                    type = type, seed = seed, m = m, verbose = verbose,
-                    cores = cores, ...)
-
-    if (return_results == TRUE) {
-      results[[length(results) + 1]] <- y
-    }
-
-    if (type == "fixed") {
-      criterion_df[criterion_df$cluster_number == i,]["criterion"] <- y$avg_min_dist
-    } else { # type = "fuzzy"
-      criterion_df[criterion_df$cluster_number == i,]["criterion"] <- y$avg_weighted_dist
-    }
+  if (algorithm == "clarans") {
+    #TODO
   }
+  # Select criterion for choice of cluster number:
+  criterion_df$criterion <- as.numeric(sapply(X = seq_along(clusters_range),
+                                   FUN = function(i) {y[[i]][criterion]}))
 
   if (plot == TRUE) {
     ylab_text <- ifelse(type == "fixed", "Minimal Average Distance",
@@ -123,18 +121,18 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
       scale_x_continuous(breaks = breaks_width(1))
 
     # Return the plot (and the cluster results):
-    if(return_results == FALSE){
-      return(plot_cluster)
-    } else{
-      res <- list(plot_cluster, results)
-      names(res) <- c("plot", "cluster_results")
-      return(res)
+      if(return_results == FALSE){
+        return(plot_cluster)
+      } else{
+        res <- list(plot_cluster, y)
+        names(res) <- c("plot", "cluster_results")
+        return(res)
+      }
     }
-  }
 
-  else {
+  if (plot == FALSE) {
     if (return_results == TRUE) {
-      return(results)
+      return(res)
     }
   }
 }
