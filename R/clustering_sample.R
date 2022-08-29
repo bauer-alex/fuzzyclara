@@ -26,7 +26,7 @@ clustering_sample <- function(data, sample_ids, clusters = 5,
 
   checkmate::assert_data_frame(data)
   # TODO how to check 'sample_ids'?
-  checkmate::assert_number(clusters, lower = 1)
+  checkmate::assert_vector(clusters)
   checkmate::assert_number(sample_size, null.ok = TRUE)
   if (!is.null(sample_size)) {
     checkmate::assert_true(sample_size <= nrow(data))
@@ -148,7 +148,7 @@ perform_sample_clustering <- function(dist, data, clusters, type, metric,
                                       verbose = 1, ...) {
 
   checkmate::assert_class(dist, classes = "dist")
-  checkmate::assert_number(clusters)
+  checkmate::assert_vector(clusters)
   checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
   # TODO how to check 'names'?
   checkmate::assert_number(m, lower = 1)

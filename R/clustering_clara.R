@@ -31,7 +31,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                              build = FALSE, ...) {
 
   checkmate::assert_data_frame(data)
-  checkmate::assert_number(clusters, lower = 1)
+  checkmate::assert_vector(clusters)
   checkmate::assert_number(samples, lower = 1)
   checkmate::assert_number(sample_size, lower = 1, null.ok = TRUE)
   checkmate::assert_number(sample_size, null.ok = TRUE)
@@ -74,7 +74,8 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
 
   # Use pam clustering if m = 1 or only a single cluster is used:
   change_output_style <- FALSE
-  if ((type == "fuzzy" & m == 1) | (type == "fuzzy" & clusters == 1)) {
+  if ((type == "fuzzy" & m == 1) | (type == "fuzzy" & length(clusters == 1) &
+                                    clusters[1] == 1)) {
     type <- "fixed"
     change_output_style <- TRUE
   }
@@ -88,12 +89,16 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   if (cores == 1) { # single core
     clustering_results_list <- lapply(X = 1:samples, FUN = function(i) {
       if (verbose >= 1) { message("--- Performing calculations for subsample ", i) }
-      clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
-                                      clusters = clusters, metric = metric,
-                                      m = m, sample_size = sample_size,
-                                      type = type, verbose = verbose,
-                                      build = build, ...)
-      return(clustering)
+      # Perform clustering with different cluster numbers:
+      clustering_numbers_list <- lapply(X = clusters, FUN = function(j) {
+        clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
+                                        clusters = j, metric = metric,
+                                        m = m, sample_size = sample_size,
+                                        type = type, verbose = verbose,
+                                        build = build, ...)
+        return(clustering)
+      })
+      return(clustering_numbers_list)
     })
 
   } else { # cores > 1, i.e. multi-core computation
@@ -116,13 +121,15 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                                                print_logMessage(paste0("--- Performing calculations for subsample ",i),
                                                                 verbose_toLogFile = TRUE)
                                              }
-                                             clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
-                                                                             clusters = clusters, metric = metric,
-                                                                             m = m, sample_size = sample_size,
-                                                                             type = type, verbose = verbose,
-                                                                             verbose_toLogFile = TRUE,
-                                                                             build = build, ...)
-                                             return(clustering)
+                                             clustering_numbers_list <- lapply(X = clusters, FUN = function(j) {
+                                               clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
+                                                                               clusters = j, metric = metric,
+                                                                               m = m, sample_size = sample_size,
+                                                                               type = type, verbose = verbose,
+                                                                               build = build, ...)
+                                               return(clustering)
+                                             })
+                                             return(clustering_numbers_list)
                                            })
       stopCluster(local_cluster)
 
@@ -133,13 +140,15 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
           print_logMessage(paste0("--- Performing calculations for subsample ",i),
                            verbose_toLogFile = TRUE)
         }
-        clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
-                                        clusters = clusters, metric = metric,
-                                        m = m, sample_size = sample_size,
-                                        type = type, verbose = verbose,
-                                        verbose_toLogFile = TRUE,
-                                        build = build, ...)
-        return(clustering)
+        clustering_numbers_list <- lapply(X = clusters, FUN = function(j) {
+          clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
+                                          clusters = j, metric = metric,
+                                          m = m, sample_size = sample_size,
+                                          type = type, verbose = verbose,
+                                          build = build, ...)
+          return(clustering)
+        })
+        return(clustering_numbers_list)
       }, mc.cores = cores, mc.set.seed = seed)
     }
   }
@@ -149,54 +158,66 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                      verbose_toLogFile = (cores > 1))
   }
 
-  # Selection of best clustering solution (according to smallest average
-  # distance to closest cluster medoid):
-  min_distance_list <- lapply(X = 1:samples, FUN = function(i) {
+  # Return of results list for all numbers of clusters:
+  results_list <- lapply(X = seq_along(clusters), FUN = function(j) {
+
+    # Selection of best clustering solution (according to smallest average
+    # distance to closest cluster medoid):
+    min_distance_list <- lapply(X = 1:samples, FUN = function(i) {
+      if (type == "fixed") {
+        dist <- clustering_results_list[[i]][[j]]$avg_min_dist
+      } else { # type = "fuzzy"
+        dist <- clustering_results_list[[i]][[j]]$avg_weighted_dist
+      }
+      return(dist)
+    })
+    min_distance <- which.min(min_distance_list)
+    best_solution <- clustering_results_list[[min_distance]][[j]]
+    best_solution[["type"]] <- type
     if (type == "fixed") {
-      dist <- clustering_results_list[[i]]$avg_min_dist
-    } else { # type = "fuzzy"
-      dist <- clustering_results_list[[i]]$avg_weighted_dist
+      m <- 1
     }
-    return(dist)
+    best_solution[["fuzzyness"]] <- m
+    best_solution[["algorithm"]] <- "clara"
+    best_solution[["metric"]] <- metric
+
+    # Attach the distance-to-medoids matrix of the full dataset to the result:
+    clustering_results <- assign_cluster(data = data,
+                                         medoids = best_solution$medoids,
+                                         metric = metric, type = type, m = m,
+                                         return_distMatrix = TRUE,
+                                         return_data_medoids = TRUE)
+    best_solution$distance_to_medoids <- clustering_results$distance_to_medoids
+    best_solution$data_medoids <- clustering_results$data_medoids
+
+    # Change output style if pam was used for type "fuzzy":
+    if (change_output_style == TRUE) {
+      # Type:
+      best_solution$type <- "fuzzy"
+      # Weighted distance:
+      names(best_solution)[[3]] <- "avg_weighted_dist"
+      # Membership scores:
+      membership <- Matrix::sparseMatrix(i = 1:length(best_solution$clustering),
+                                         j = best_solution$clustering, x = 1)
+      membership <- as.data.frame(as.matrix(membership))
+      colnames(membership) <- paste0("Cluster", 1:ncol(membership))
+      row.names(membership) <- data$Name
+      element_names <- names(best_solution)
+      best_solution$membership_scores <- membership
+      best_solution <- best_solution[c(element_names[1:3], "membership_scores",
+                                       element_names[4:length(element_names)])]
+    }
+
+    # Return of clustering solution based on the best sample:
+    class(best_solution) <- c("fuzzyclara", class(best_solution))
+    return(best_solution)
   })
-  min_distance <- which.min(min_distance_list)
-  best_solution <- clustering_results_list[[min_distance]]
-  best_solution[["type"]] <- type
-  if (type == "fixed") {
-    m <- 1
+
+  # Change output format if only a single cluster is evaluated:
+  if (length(clusters) == 1) {
+    results_list <- results_list[[1]]
   }
-  best_solution[["fuzzyness"]] <- m
-  best_solution[["algorithm"]] <- "clara"
-  best_solution[["metric"]] <- metric
-
-  # Attach the distance-to-medoids matrix of the full dataset to the result:
-  clustering_results <- assign_cluster(data = data,
-                                       medoids = best_solution$medoids,
-                                       metric = metric, type = type, m = m,
-                                       return_distMatrix = TRUE,
-                                       return_data_medoids = TRUE)
-  best_solution$distance_to_medoids <- clustering_results$distance_to_medoids
-  best_solution$data_medoids <- clustering_results$data_medoids
-
-  # Change output style if pam was used for type "fuzzy":
-  if (change_output_style == TRUE) {
-    # Type:
-    best_solution$type <- "fuzzy"
-    # Weighted distance:
-    names(best_solution)[[3]] <- "avg_weighted_dist"
-    # Membership scores:
-    membership <- Matrix::sparseMatrix(i = 1:length(best_solution$clustering),
-                                       j = best_solution$clustering, x = 1)
-    membership <- as.data.frame(as.matrix(membership))
-    colnames(membership) <- paste0("Cluster", 1:ncol(membership))
-    row.names(membership) <- data$Name
-    element_names <- names(best_solution)
-    best_solution$membership_scores <- membership
-    best_solution <- best_solution[c(element_names[1:3], "membership_scores",
-                                     element_names[4:length(element_names)])]
-  }
-
-  # Return of clustering solution based on the best sample:
-  class(best_solution) <- c("fuzzyclara", class(best_solution))
-  return(best_solution)
+  return(results_list)
 }
+
+
