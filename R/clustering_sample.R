@@ -185,7 +185,7 @@ perform_sample_clustering <- function(dist, data, clusters, type, metric,
       starting_medoids <- which(names %in% starting_medoids)
       dist <- proxy::as.dist(dist)
       attributes(dist)[["Labels"]] <- as.character(1:nrow(data))
-      fuzzy_sample <- my_vegclustdist(x = dist, mobileMemb = starting_medoids,
+      fuzzy_sample <- vegclustdist(x = dist, mobileMemb = starting_medoids,
                                       method = "FCMdd", m = m, ...)
     }
 
