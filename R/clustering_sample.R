@@ -124,6 +124,8 @@ compute_distance_matrix <- function(data, sample_ids, metric = "euclidean") {
 #' @param m Fuzziness exponent (only for type = fuzzy)
 #' @param build Additional build algorithm to choose initial medoids (only
 #' relevant for type = "fuzzy". Default FALSE.)
+#' @param verbose_toLogFile If TRUE, the diagnostic messages are printed to
+#' a log file \code{clustering_progress.log}. Defaults to FALSE.
 #' @param ... Additional arguments passed to the main clustering algorithm
 #' (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})
 #'
@@ -134,7 +136,8 @@ compute_distance_matrix <- function(data, sample_ids, metric = "euclidean") {
 #'
 perform_sample_clustering <- function(dist, data, clusters, type, metric,
                                       names, m = 2, build = FALSE,
-                                      verbose = 1, ...) {
+                                      verbose = 1, verbose_toLogFile = FALSE,
+                                      ...) {
 
   checkmate::assert_class(dist, classes = "dist")
   checkmate::assert_vector(clusters)
@@ -142,6 +145,8 @@ perform_sample_clustering <- function(dist, data, clusters, type, metric,
   # TODO how to check 'names'?
   checkmate::assert_number(m, lower = 1)
   checkmate::assert_logical(build, len = 1)
+  checkmate::assert_choice(verbose, choices = 0:2)
+  checkmate::assert_logical(verbose_toLogFile, len = 1)
 
 
   # Hard pam clustering:

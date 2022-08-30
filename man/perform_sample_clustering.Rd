@@ -14,6 +14,7 @@ perform_sample_clustering(
   m = 2,
   build = FALSE,
   verbose = 1,
+  verbose_toLogFile = FALSE,
   ...
 )
 }
@@ -42,6 +43,9 @@ relevant for type = "fuzzy". Default FALSE.)}
 \item{verbose}{Can be set to integers between 0 and 2 to control the level of
 detail of the printed diagnostic messages. Higher numbers lead to more
 detailed messages. Defaults to 1.}
+
+\item{verbose_toLogFile}{If TRUE, the diagnostic messages are printed to
+a log file \code{clustering_progress.log}. Defaults to FALSE.}
 
 \item{...}{Additional arguments passed to the main clustering algorithm
 (\code{\link{pam}} or \code{\link[vegclust]{vegclust}})}
