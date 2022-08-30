@@ -13,7 +13,7 @@ evaluate_cluster_numbers(
   sample_size = NULL,
   num_local = 5,
   max_neighbors = 100,
-  type = "fixed",
+  type = "hard",
   cores = 1,
   seed = 1234,
   m = 2,
@@ -51,7 +51,7 @@ used as sample size.}
 \item{max_neighbors}{Maximum number of randomized medoid searches with each
 cluster (only if \code{algorithm = "clarans"})}
 
-\item{type}{One of \code{c("fixed","fuzzy")}, specifying the type of
+\item{type}{One of \code{c("hard","fuzzy")}, specifying the type of
 clustering to be performed.}
 
 \item{cores}{Numbers of cores for computation. \code{cores > 1} implies

@@ -27,7 +27,7 @@
 #' cluster (only if \code{algorithm = "clarans"})
 #' @param num_local Number of clustering iterations (only if
 #' \code{algorithm = "clarans"}).
-#' @param type One of \code{c("fixed","fuzzy")}, specifying the type of
+#' @param type One of \code{c("hard","fuzzy")}, specifying the type of
 #' clustering to be performed.
 #' @param m Fuzziness exponent (only for \code{type = "fuzzy"}), which has to be
 #' a numeric of minimum 1. Defaults to 2.
@@ -56,7 +56,7 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
                                      metric = "euclidean",
                                      algorithm = "clara", samples = 10,
                                      sample_size = NULL, num_local = 5,
-                                     max_neighbors = 100, type = "fixed",
+                                     max_neighbors = 100, type = "hard",
                                      cores = 1, seed = 1234, m = 2,
                                      scale = TRUE, build = FALSE,
                                      verbose = 1, plot = TRUE,
@@ -66,7 +66,7 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
   checkmate::assert_numeric(clusters_range, lower = 1, upper = nrow(data))
   checkmate::assert_number(samples, lower = 1)
   checkmate::assert_number(sample_size, lower = 1, null.ok = TRUE)
-  checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
+  checkmate::assert_choice(type, choices = c("hard","fuzzy"))
   checkmate::assert_number(cores, lower = 1)
   checkmate::assert_number(seed)
   checkmate::assert_number(m, lower = 1)
@@ -105,7 +105,7 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
                                    FUN = function(i) {y[[i]][criterion]}))
 
   if (plot == TRUE) {
-    ylab_text <- ifelse(type == "fixed", "Minimal Average Distance",
+    ylab_text <- ifelse(type == "hard", "Minimal Average Distance",
                         "Minimal Weighted \nAverage Distance") # for type = "fuzzy"
 
     plot_cluster <- ggplot(criterion_df) +

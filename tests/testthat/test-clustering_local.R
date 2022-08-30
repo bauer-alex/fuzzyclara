@@ -11,17 +11,17 @@ test_that("clustering_local", { # clustering_local function
                  "start" = starting_medoids)
 
 
-  # fixed clustering
-  cc_fixed <- clustering_local(data = data,
+  # hard clustering
+  cc_hard <- clustering_local(data = data,
                                 clusters = 3,
                                 sample_local = sample,
                                 metric = "euclidean",
-                                type = "fixed",
+                                type = "hard",
                                 verbose = 2)
 
   # check whole object
-  expect_class(cc_fixed, "list")
-  expect_length(cc_fixed, 5)
+  expect_class(cc_hard, "list")
+  expect_length(cc_hard, 5)
 
   # fuzzy clustering
   cc_fuzzy <- clustering_local(data = data,

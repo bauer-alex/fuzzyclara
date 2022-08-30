@@ -9,7 +9,7 @@ assign_cluster(
   metric,
   medoids,
   dist_matrix = NULL,
-  type = "fixed",
+  type = "hard",
   m = 2,
   return_distMatrix = FALSE,
   return_data_medoids = FALSE
@@ -29,7 +29,7 @@ sample}
 
 \item{dist_matrix}{Optional dissimilarity matrix (defaults to NULL)}
 
-\item{type}{One of \code{c("fixed","fuzzy")}, specifying the type of
+\item{type}{One of \code{c("hard","fuzzy")}, specifying the type of
 clustering to be performed.}
 
 \item{m}{Fuzziness exponent (only for \code{type = "fuzzy"}), which has to be

@@ -1,6 +1,6 @@
 #' Perform clustering
 #'
-#' Function to perform a cluster analysis in a fixed or fuzzy way. The
+#' Function to perform a cluster analysis in a hard or fuzzy way. The
 #' function can either be performed using a common dissimilarity metric or
 #' a self-defined distance function.
 #'
@@ -23,7 +23,7 @@
 #' cluster (only if \code{algorithm = "clarans"})
 #' @param num_local Number of clustering iterations (only if
 #' \code{algorithm = "clarans"})
-#' @param type One of \code{c("fixed","fuzzy")}, specifying the type of
+#' @param type One of \code{c("hard","fuzzy")}, specifying the type of
 #' clustering to be performed.
 #' @param m Fuzziness exponent (only for \code{type = "fuzzy"}), which has to be
 #' a numeric of minimum 1. Defaults to 2.
@@ -50,7 +50,7 @@
 #'
 fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
                        algorithm = "clara", samples = 10, sample_size = NULL,
-                       max_neighbors = 100, num_local = 10, type = "fixed",
+                       max_neighbors = 100, num_local = 10, type = "hard",
                        cores = 1, seed = 1234, m = 2, verbose = 1, # TODO alle seeds auf default 42 aendern? Waere etwas interessanter als 1234. ;)
                        scale = TRUE, build = FALSE, ...) {
 
@@ -62,7 +62,7 @@ fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
   checkmate::assert_numeric(max_neighbors, lower = 1)
   checkmate::assert_numeric(num_local, lower = 1)
   checkmate::assert_choice(algorithm, choices = c("clara", "clarans"))
-  checkmate::assert_choice(type, choices = c("fixed", "fuzzy"))
+  checkmate::assert_choice(type, choices = c("hard", "fuzzy"))
   checkmate::assert_number(m, lower = 1)
   checkmate::assert_number(cores, lower = 1)
   checkmate::assert_number(seed)
@@ -73,7 +73,7 @@ fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
 
   # pam requires the number of clusters to be smaller than the number of
   # observations -> another check of sample_size
-  if(type == "fixed" | m == 1 | clusters == 1){
+  if(type == "hard" | m == 1 | clusters == 1){
     checkmate::assert_numeric(x = sample_size, lower = clusters + 1,
                               null.ok = TRUE)
   }

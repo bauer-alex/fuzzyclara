@@ -7,17 +7,17 @@ test_that("clustering_sample", { # clustering_sample function
 
 
 
-  # fixed clustering
-  cc_fixed <- clustering_sample(data = data, dist = dist,
+  # hard clustering
+  cc_hard <- clustering_sample(data = data, dist = dist,
                                 clusters = 3,
                                 sample_ids = 1:10,
                                 metric = "euclidean",
-                                type = "fixed")
+                                type = "hard")
 
   # check whole object
-  expect_class(cc_fixed, "list")
-  expect_length(cc_fixed, 6)
-  expect_identical(dim(cc_fixed$dist_matrix), as.integer(c(10, 10)))
+  expect_class(cc_hard, "list")
+  expect_length(cc_hard, 6)
+  expect_identical(dim(cc_hard$dist_matrix), as.integer(c(10, 10)))
 
   # fuzzy clustering
   cc_fuzzy <- clustering_sample(data = data, dist = dist,
@@ -89,9 +89,9 @@ test_that("perform_sample_clustering", {
 
   dist_mat <- compute_distance_matrix(data, sample_ids = 1:10, metric = "Euclidean")
 
-  # fixed
+  # hard
   clust <- perform_sample_clustering(dist = dist_mat, data = data[1:10,],
-                                     clusters = 3, type = "fixed",
+                                     clusters = 3, type = "hard",
                                      names = data[1:10,]$Name,
                                      metric = "Euclidean")
 

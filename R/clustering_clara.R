@@ -1,6 +1,6 @@
 #' Perform CLARA clustering algorithm
 #'
-#' Function to perform a CLARA clustering in a fixed or fuzzy way.
+#' Function to perform a CLARA clustering in a hard or fuzzy way.
 #' The function can either be called using a common dissimilarity metric or
 #' a self-defined distance function.
 #'
@@ -26,7 +26,7 @@
 #' @references TODO add CLARA paper
 #'
 clustering_clara <- function(data, clusters = 5, metric = "euclidean",
-                             samples = 10, sample_size = NULL, type = "fixed",
+                             samples = 10, sample_size = NULL, type = "hard",
                              cores = 1, seed = 1234, m = 2, verbose = 1,
                              build = FALSE, ...) {
 
@@ -38,7 +38,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   if (!is.null(sample_size)) {
     checkmate::assert_true(sample_size <= nrow(data))
   }
-  checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
+  checkmate::assert_choice(type, choices = c("hard","fuzzy"))
   checkmate::assert_number(cores, lower = 1)
   checkmate::assert_number(seed)
   checkmate::assert_number(m, lower = 1)
@@ -76,7 +76,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   change_output_style <- FALSE
   if ((type == "fuzzy" & m == 1) | (type == "fuzzy" & length(clusters == 1) &
                                     clusters[1] == 1)) {
-    type <- "fixed"
+    type <- "hard"
     change_output_style <- TRUE
   }
   # The resulting output, however, should look the usual fuzzy output.
@@ -189,7 +189,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
     # Selection of best clustering solution (according to smallest average
     # distance to closest cluster medoid):
     min_distance_list <- lapply(X = 1:samples, FUN = function(i) {
-      if (type == "fixed") {
+      if (type == "hard") {
         dist <- clustering_results_list[[i]][[j]]$avg_min_dist
       } else { # type = "fuzzy"
         dist <- clustering_results_list[[i]][[j]]$avg_weighted_dist
@@ -199,7 +199,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
     min_distance <- which.min(min_distance_list)
     best_solution <- clustering_results_list[[min_distance]][[j]]
     best_solution[["type"]] <- type
-    if (type == "fixed") {
+    if (type == "hard") {
       m <- 1
     }
     best_solution[["fuzzyness"]] <- m

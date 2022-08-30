@@ -41,7 +41,7 @@ predict.fuzzyclara <- function(object, newdata, ...){
                                 return_distMatrix = TRUE)
 
   # Preparation of output object:
-  if (object$type == "fixed") {
+  if (object$type == "hard") {
     assignments <- list(assignments$clustering, assignments$distance_to_medoids)
     names(assignments) <- c("assignment", "distance_to_medoids")
   }

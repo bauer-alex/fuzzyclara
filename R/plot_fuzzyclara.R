@@ -562,7 +562,7 @@ clara_silhouette <- function(x, data,
 
     checkmate::assert_true(x$algorithm == "clara") # because for clarans, no distance matrix is calculated
 
-    if(x$type == "fixed"){ # fixed clustering
+    if(x$type == "hard"){ # hard clustering
 
       data_sub <- data[x$subsample_ids, ]
       sil <- silhouette(as.numeric(data_sub$cluster), x$dist_matrix)

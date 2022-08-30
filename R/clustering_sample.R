@@ -1,6 +1,6 @@
 #' Perform clustering algorithm on a data sample
 #'
-#' Function to perform clara clustering algorithm in a fixed or fuzzy way.
+#' Function to perform clara clustering algorithm in a hard or fuzzy way.
 #' The function can either be performed using a common dissimilarity metric or
 #' a self-defined distance function.
 #'
@@ -22,7 +22,7 @@
 #'
 clustering_sample <- function(data, sample_ids, dist, clusters = 5,
                               metric = "euclidean", sample_size = NULL,
-                              type = "fixed", m = 2, verbose = 1,
+                              type = "hard", m = 2, verbose = 1,
                               verbose_toLogFile = FALSE, build = FALSE, ...) {
 
   checkmate::assert_data_frame(data)
@@ -32,7 +32,7 @@ clustering_sample <- function(data, sample_ids, dist, clusters = 5,
   if (!is.null(sample_size)) {
     checkmate::assert_true(sample_size <= nrow(data))
   }
-  checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
+  checkmate::assert_choice(type, choices = c("hard","fuzzy"))
   checkmate::assert_number(m, lower = 1)
   checkmate::assert_choice(verbose, choices = 0:2)
   checkmate::assert_logical(verbose_toLogFile, len = 1)
@@ -113,13 +113,13 @@ compute_distance_matrix <- function(data, sample_ids, metric = "euclidean") {
 
 #' Perform pam or vegclust clustering on a data sample
 #'
-#' Function to perform pam in a fixed or fuzzy way on a data sample
+#' Function to perform pam in a hard or fuzzy way on a data sample
 
 #' @inheritParams fuzzyclara
 #' @param dist Dissimilarity matrix
 #' @param data Data sample
 #' @param clusters Number of clusters
-#' @param type Fixed or fuzzy clustering
+#' @param type Hard or fuzzy clustering
 #' @param names Vector of names for observations
 #' @param m Fuzziness exponent (only for type = fuzzy)
 #' @param build Additional build algorithm to choose initial medoids (only
@@ -138,14 +138,14 @@ perform_sample_clustering <- function(dist, data, clusters, type, metric,
 
   checkmate::assert_class(dist, classes = "dist")
   checkmate::assert_vector(clusters)
-  checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
+  checkmate::assert_choice(type, choices = c("hard","fuzzy"))
   # TODO how to check 'names'?
   checkmate::assert_number(m, lower = 1)
   checkmate::assert_logical(build, len = 1)
 
 
-  # Fixed pam clustering:
-  if (type == "fixed") {
+  # Hard pam clustering:
+  if (type == "hard") {
     pam_sample <- pam(x = dist, k = clusters, diss = TRUE, ...)
     medoids    <- pam_sample$medoids
     clustering <- pam_sample$clustering

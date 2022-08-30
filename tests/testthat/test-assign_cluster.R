@@ -4,10 +4,10 @@ test_that("assign_cluster", {
   data <- USArrests %>% tibble::rownames_to_column(var = "Name")
   row.names(data) <- data$Name
 
-  # fixed
+  # hard
   result <- assign_cluster(data = data,
                            medoids = c("Alabama", "Alaska", "Arizona"),
-                           metric = "Euclidean", type = "fixed",
+                           metric = "Euclidean", type = "hard",
                            return_distMatrix = TRUE)
 
   # check whole object

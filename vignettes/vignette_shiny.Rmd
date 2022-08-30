@@ -30,15 +30,15 @@ library(shiny)
 ### Hard clustering
 ```{r, hard clustering example}
 # TODO replace USArrests by a better dataset (maybe TourIST)
-cc_fixed <- fuzzyclara(data        = USArrests,
+cc_hard <- fuzzyclara(data        = USArrests,
                        clusters    = 3,
                        metric      = "euclidean",
                        samples     = 1,
                        sample_size = NULL,
-                       type        = "fixed",
+                       type        = "hard",
                        seed        = 3526,
                        verbose     = 0)
-cc_fixed
+cc_hard
 ```
 
 ### Fuzzy clustering
@@ -80,7 +80,7 @@ cc_manh <- fuzzyclara(data        = USArrests,
                        metric      = "manhattan",
                        samples     = 1,
                        sample_size = NULL,
-                       type        = "fixed",
+                       type        = "hard",
                        seed        = 3526,
                        verbose     = 0)
 cc_manh
@@ -93,7 +93,7 @@ cc_mink <- fuzzyclara(data        = USArrests,
                        metric      = dist_mink,
                        samples     = 1,
                        sample_size = NULL,
-                       type        = "fixed",
+                       type        = "hard",
                        seed        = 3526,
                        verbose     = 0)
 cc_mink
@@ -107,7 +107,7 @@ cc_number <- evaluate_cluster_numbers(
                        metric          = "euclidean",
                        samples         = 1,
                        sample_size     = NULL,
-                       type            = "fixed",
+                       type            = "hard",
                        seed            = 3526,
                        verbose         = 0)
 cc_number
@@ -135,7 +135,7 @@ shinyApp(
                        metric          = "euclidean",
                        samples         = 1,
                        sample_size     = NULL,
-                       type            = "fixed",
+                       type            = "hard",
                        seed            = 3526,
                        verbose         = 0)
     })

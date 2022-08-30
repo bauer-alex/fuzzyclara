@@ -24,7 +24,7 @@ perform_sample_clustering(
 
 \item{clusters}{Number of clusters}
 
-\item{type}{Fixed or fuzzy clustering}
+\item{type}{Hard or fuzzy clustering}
 
 \item{metric}{A character specifying a predefined dissimilarity metric (like
 \code{"euclidean"} or \code{"manhattan"}) or a self-defined dissimilarity
@@ -51,5 +51,5 @@ List with information on cluster results (medoid and cluster
 assignment)
 }
 \description{
-Function to perform pam in a fixed or fuzzy way on a data sample
+Function to perform pam in a hard or fuzzy way on a data sample
 }

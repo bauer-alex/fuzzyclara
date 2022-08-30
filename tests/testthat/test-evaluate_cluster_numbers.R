@@ -2,14 +2,14 @@ test_that("evaluate_cl_nums_clara", { # plot to select number of clusters
 
   data(USArrests)
 
-  # fixed clustering
+  # hard clustering
   cc_number <- evaluate_cluster_numbers(
     data            = USArrests,
     clusters_range  = 2:6,
     metric          = "euclidean",
     samples         = 1,
     sample_size     = 10,
-    type            = "fixed",
+    type            = "hard",
     seed            = 3526,
     verbose         = 0)
 
@@ -23,15 +23,15 @@ test_that("evaluate_cl_nums_clara", { # plot to select number of clusters
                    as.integer(c(5, 2)))
 
   # compare result to manually calculated clustering result:
-  cc_fixed <- fuzzyclara(data        = USArrests,
+  cc_hard <- fuzzyclara(data        = USArrests,
                          clusters    = 2,
                          metric      = "euclidean",
                          samples     = 1,
                          sample_size = 10,
-                         type        = "fixed",
+                         type        = "hard",
                          seed        = 3526,
                          verbose     = 0)
-  expect_identical(round(cc_number$data[1, 2], 2), round(cc_fixed$avg_min_dist, 2))
+  expect_identical(round(cc_number$data[1, 2], 2), round(cc_hard$avg_min_dist, 2))
 
   # fuzzy clustering
   # return clustering results
@@ -74,14 +74,14 @@ test_that("evaluate_cl_nums_clarans", { # plot to select number of clusters
 
   data(USArrests)
 
-  # fixed clustering
+  # hard clustering
   cc_number <- evaluate_cluster_numbers(
     data            = USArrests,
     clusters_range  = 2:6,
     metric          = "euclidean",
     num_local = 2,
     max_neighbors = 10,
-    type            = "fixed",
+    type            = "hard",
     algorithm       = "clarans",
     seed            = 3526,
     verbose         = 0)

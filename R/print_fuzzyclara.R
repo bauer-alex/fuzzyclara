@@ -23,7 +23,7 @@ print.fuzzyclara <- function(x, ...) {
   print(x$clustering)
 
   cat("\n")
-  if (x$type == "fixed") {
+  if (x$type == "hard") {
     cat("Minimum average distance\n")
     print(x$avg_min_dist)
 

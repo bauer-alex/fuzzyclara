@@ -2,12 +2,12 @@ test_that("plot_fuzzyclara_clara", { # plots
 
   data(USArrests)
 
-  cc_fixed <- fuzzyclara(data        = USArrests,
+  cc_hard <- fuzzyclara(data        = USArrests,
                          clusters    = 3,
                          metric      = "euclidean",
                          samples     = 1,
                          sample_size = NULL,
-                         type        = "fixed",
+                         type        = "hard",
                          seed        = 3526,
                          verbose     = 0)
 
@@ -30,42 +30,42 @@ test_that("plot_fuzzyclara_clara", { # plots
                                          "Northeast")))
 
   ## error for wrong variable specification
-  expect_error(plot(x = cc_fixed, data = USArrests_enriched, variable = "Assalt"))
+  expect_error(plot(x = cc_hard, data = USArrests_enriched, variable = "Assalt"))
 
   ## convert data if class is not data.frame
-  p <- plot(x = cc_fixed, data = as.matrix(USArrests_enriched[, 1:2]), variable = "Assault")
+  p <- plot(x = cc_hard, data = as.matrix(USArrests_enriched[, 1:2]), variable = "Assault")
   # check class of object
   expect_s3_class(p, "ggplot")
 
 
   ## Boxplot
-  p <- plot(x = cc_fixed, data = USArrests_enriched, variable = "Assault")
+  p <- plot(x = cc_hard, data = USArrests_enriched, variable = "Assault")
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBoxplot")
 
   # Grouped Boxplot
-  p <- plot(x = cc_fixed, data = USArrests_enriched, variable = "Assault", group_by = "Area")
+  p <- plot(x = cc_hard, data = USArrests_enriched, variable = "Assault", group_by = "Area")
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBoxplot")
 
 
   ## Barplot
-  p <- plot(x = cc_fixed, data = USArrests_enriched, variable = "Area")
+  p <- plot(x = cc_hard, data = USArrests_enriched, variable = "Area")
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBar")
 
   ## Grouped Barplot
-  p <- plot(x = cc_fixed, data = USArrests_enriched, variable = "Area", group_by = "State")
+  p <- plot(x = cc_hard, data = USArrests_enriched, variable = "Area", group_by = "State")
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBar")
 
 
   ## Wordcloud
-  p <- plot(x = cc_fixed, data = USArrests_enriched, variable = "State",
+  p <- plot(x = cc_hard, data = USArrests_enriched, variable = "State",
             type = "wordclouds")
   # check class of object
   expect_s3_class(p, "ggplot")
@@ -73,34 +73,34 @@ test_that("plot_fuzzyclara_clara", { # plots
 
 
   ## Scatterplot
-  p <- plot(x = cc_fixed, data = USArrests_enriched, type = "scatterplot",
+  p <- plot(x = cc_hard, data = USArrests_enriched, type = "scatterplot",
             x_var = "Murder", y_var = "Assault")
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomPoint")
 
-  expect_error(plot(x = cc_fixed, data = USArrests_enriched, type = "scatterplot",
+  expect_error(plot(x = cc_hard, data = USArrests_enriched, type = "scatterplot",
                     x_var = "Murder", y_var = "Area"))
 
   ## PCA
-  p <- plot(x = cc_fixed, data = USArrests_enriched, type = "pca")
+  p <- plot(x = cc_hard, data = USArrests_enriched, type = "pca")
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomPoint")
 
-  p <- plot(x = cc_fixed, data = USArrests_enriched, type = "pca", group_by = "Area")
+  p <- plot(x = cc_hard, data = USArrests_enriched, type = "pca", group_by = "Area")
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomPoint")
 
   ## Silhouette
-  invisible(capture.output(p <- plot(x = cc_fixed, data = USArrests, type = "silhouette",
+  invisible(capture.output(p <- plot(x = cc_hard, data = USArrests, type = "silhouette",
                                      silhouette_subsample = TRUE)))
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBar")
 
-  invisible(capture.output(p <- plot(x = cc_fixed, data = USArrests, type = "silhouette")))
+  invisible(capture.output(p <- plot(x = cc_hard, data = USArrests, type = "silhouette")))
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBar")
@@ -108,16 +108,16 @@ test_that("plot_fuzzyclara_clara", { # plots
   # compare silhouette values to manually calculated values
   dat_sil <- p$data
   data <- scale(USArrests)
-  dat_sil_manual <- silhouette(as.numeric(cc_fixed$clustering), dist(data))
+  dat_sil_manual <- silhouette(as.numeric(cc_hard$clustering), dist(data))
   expect_identical(round(sort(dat_sil$sil_width), 2), round(sort(dat_sil_manual[, 3]), 2))
 
 
   # errors:
-  expect_error(plot(x = cc_fixed, data = USArrests_enriched,
+  expect_error(plot(x = cc_hard, data = USArrests_enriched,
                     variable = "Assault", group_by = "area"))
-  expect_error(plot(x = cc_fixed, data = USArrests_enriched,
+  expect_error(plot(x = cc_hard, data = USArrests_enriched,
                     variable = "Area", group_by = "area"))
-  expect_error(plot(x = cc_fixed, data = USArrests_enriched, variable = "state",
+  expect_error(plot(x = cc_hard, data = USArrests_enriched, variable = "state",
                     type = "wordclouds"))
 
 
@@ -201,13 +201,13 @@ test_that("plot_fuzzyclara_clarans", { # plots
 
   data(USArrests)
 
-  cc_fixed   <- fuzzyclara(data        = USArrests,
+  cc_hard   <- fuzzyclara(data        = USArrests,
                            clusters    = 3,
                            metric      = "euclidean",
                            algorithm   = "clarans",
                            num_local   = 2,
                            max_neighbors = 20,
-                           type        = "fixed",
+                           type        = "hard",
                            seed        = 3526,
                            verbose     = 0)
 
@@ -230,42 +230,42 @@ test_that("plot_fuzzyclara_clarans", { # plots
                                          "Northeast")))
 
   ## error for wrong variable specification
-  expect_error(plot(x = cc_fixed, data = USArrests_enriched, variable = "Assalt"))
+  expect_error(plot(x = cc_hard, data = USArrests_enriched, variable = "Assalt"))
 
   ## convert data if class is not data.frame
-  p <- plot(x = cc_fixed, data = as.matrix(USArrests_enriched[, 1:2]), variable = "Assault")
+  p <- plot(x = cc_hard, data = as.matrix(USArrests_enriched[, 1:2]), variable = "Assault")
   # check class of object
   expect_s3_class(p, "ggplot")
 
 
   ## Boxplot
-  p <- plot(x = cc_fixed, data = USArrests_enriched, variable = "Assault")
+  p <- plot(x = cc_hard, data = USArrests_enriched, variable = "Assault")
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBoxplot")
 
   # Grouped Boxplot
-  p <- plot(x = cc_fixed, data = USArrests_enriched, variable = "Assault", group_by = "Area")
+  p <- plot(x = cc_hard, data = USArrests_enriched, variable = "Assault", group_by = "Area")
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBoxplot")
 
 
   ## Barplot
-  p <- plot(x = cc_fixed, data = USArrests_enriched, variable = "Area")
+  p <- plot(x = cc_hard, data = USArrests_enriched, variable = "Area")
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBar")
 
   ## Grouped Barplot
-  p <- plot(x = cc_fixed, data = USArrests_enriched, variable = "Area", group_by = "State")
+  p <- plot(x = cc_hard, data = USArrests_enriched, variable = "Area", group_by = "State")
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBar")
 
 
   ## Wordcloud
-  p <- plot(x = cc_fixed, data = USArrests_enriched, variable = "State",
+  p <- plot(x = cc_hard, data = USArrests_enriched, variable = "State",
             type = "wordclouds")
   # check class of object
   expect_s3_class(p, "ggplot")
@@ -273,31 +273,31 @@ test_that("plot_fuzzyclara_clarans", { # plots
 
 
   ## Scatterplot
-  p <- plot(x = cc_fixed, data = USArrests_enriched, type = "scatterplot",
+  p <- plot(x = cc_hard, data = USArrests_enriched, type = "scatterplot",
             x_var = "Murder", y_var = "Assault")
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomPoint")
 
-  expect_error(plot(x = cc_fixed, data = USArrests_enriched, type = "scatterplot",
+  expect_error(plot(x = cc_hard, data = USArrests_enriched, type = "scatterplot",
                     x_var = "Murder", y_var = "Area"))
 
   ## PCA
-  p <- plot(x = cc_fixed, data = USArrests_enriched, type = "pca")
+  p <- plot(x = cc_hard, data = USArrests_enriched, type = "pca")
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomPoint")
 
-  p <- plot(x = cc_fixed, data = USArrests_enriched, type = "pca", group_by = "Area")
+  p <- plot(x = cc_hard, data = USArrests_enriched, type = "pca", group_by = "Area")
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomPoint")
 
   ## Silhouette
-  expect_error(plot(x = cc_fixed, data = USArrests, type = "silhouette",
+  expect_error(plot(x = cc_hard, data = USArrests, type = "silhouette",
                                      silhouette_subsample = TRUE))
 
-  invisible(capture.output(p <- plot(x = cc_fixed, data = USArrests, type = "silhouette")))
+  invisible(capture.output(p <- plot(x = cc_hard, data = USArrests, type = "silhouette")))
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBar")
@@ -305,16 +305,16 @@ test_that("plot_fuzzyclara_clarans", { # plots
   # compare silhouette values to manually calculated values
   dat_sil <- p$data
   data <- scale(USArrests)
-  dat_sil_manual <- silhouette(as.numeric(cc_fixed$clustering), dist(data))
+  dat_sil_manual <- silhouette(as.numeric(cc_hard$clustering), dist(data))
   expect_identical(round(sort(dat_sil$sil_width), 2), round(sort(dat_sil_manual[, 3]), 2))
 
 
   # errors:
-  expect_error(plot(x = cc_fixed, data = USArrests_enriched,
+  expect_error(plot(x = cc_hard, data = USArrests_enriched,
                     variable = "Assault", group_by = "area"))
-  expect_error(plot(x = cc_fixed, data = USArrests_enriched,
+  expect_error(plot(x = cc_hard, data = USArrests_enriched,
                     variable = "Area", group_by = "area"))
-  expect_error(plot(x = cc_fixed, data = USArrests_enriched, variable = "state",
+  expect_error(plot(x = cc_hard, data = USArrests_enriched, variable = "state",
                     type = "wordclouds"))
 
 

@@ -13,7 +13,7 @@ fuzzyclara(
   sample_size = NULL,
   max_neighbors = 100,
   num_local = 10,
-  type = "fixed",
+  type = "hard",
   cores = 1,
   seed = 1234,
   m = 2,
@@ -48,7 +48,7 @@ cluster (only if \code{algorithm = "clarans"})}
 \item{num_local}{Number of clustering iterations (only if
 \code{algorithm = "clarans"})}
 
-\item{type}{One of \code{c("fixed","fuzzy")}, specifying the type of
+\item{type}{One of \code{c("hard","fuzzy")}, specifying the type of
 clustering to be performed.}
 
 \item{cores}{Numbers of cores for computation. \code{cores > 1} implies
@@ -77,7 +77,7 @@ to proxy::dist for the calculation of the distance matrix
 Object of class "fuzzyclara"
 }
 \description{
-Function to perform a cluster analysis in a fixed or fuzzy way. The
+Function to perform a cluster analysis in a hard or fuzzy way. The
 function can either be performed using a common dissimilarity metric or
 a self-defined distance function.
 }

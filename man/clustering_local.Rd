@@ -10,7 +10,7 @@ clustering_local(
   clusters = 5,
   metric = "euclidean",
   max_neighbors = 100,
-  type = "fixed",
+  type = "hard",
   m = 2,
   verbose = 1,
   verbose_toLogFile = FALSE,
@@ -35,7 +35,7 @@ full details.}
 \item{max_neighbors}{Maximum number of randomized medoid searches with each
 cluster (only if \code{algorithm = "clarans"})}
 
-\item{type}{One of \code{c("fixed","fuzzy")}, specifying the type of
+\item{type}{One of \code{c("hard","fuzzy")}, specifying the type of
 clustering to be performed.}
 
 \item{m}{Fuzziness exponent (only for \code{type = "fuzzy"}), which has to be
@@ -56,7 +56,7 @@ Clustering solution for data sample
 }
 \description{
 Function to perform a local iteration of the CLARANS clustering algorithm in
-a fixed or fuzzy way. The function can either be called using a common
+a hard or fuzzy way. The function can either be called using a common
 dissimilarity metric or a self-defined distance function.
 }
 \references{

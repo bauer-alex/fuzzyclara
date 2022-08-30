@@ -10,7 +10,7 @@ clustering_clara(
   metric = "euclidean",
   samples = 10,
   sample_size = NULL,
-  type = "fixed",
+  type = "hard",
   cores = 1,
   seed = 1234,
   m = 2,
@@ -36,7 +36,7 @@ full details.}
 (default), the minimum of \code{nrow(data)} and \code{40 + clusters * 2} is
 used as sample size.}
 
-\item{type}{One of \code{c("fixed","fuzzy")}, specifying the type of
+\item{type}{One of \code{c("hard","fuzzy")}, specifying the type of
 clustering to be performed.}
 
 \item{cores}{Numbers of cores for computation. \code{cores > 1} implies
@@ -62,7 +62,7 @@ to proxy::dist for the calculation of the distance matrix
 Object of class fuzzyclara
 }
 \description{
-Function to perform a CLARA clustering in a fixed or fuzzy way.
+Function to perform a CLARA clustering in a hard or fuzzy way.
 The function can either be called using a common dissimilarity metric or
 a self-defined distance function.
 }

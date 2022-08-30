@@ -8,7 +8,7 @@ clustering_clarans(
   data,
   clusters = 5,
   metric = "euclidean",
-  type = "fixed",
+  type = "hard",
   num_local = 5,
   max_neighbors = 100,
   cores = 1,
@@ -29,7 +29,7 @@ function. Defaults to \code{"euclidean"}. Will be passed as argument
 \code{method} to \code{\link[proxy]{dist}}, so check \code{?proxy::dist} for
 full details.}
 
-\item{type}{One of \code{c("fixed","fuzzy")}, specifying the type of
+\item{type}{One of \code{c("hard","fuzzy")}, specifying the type of
 clustering to be performed.}
 
 \item{num_local}{Number of clustering iterations. Defaults to 5.
@@ -58,7 +58,7 @@ to proxy::dist for the calculation of the distance matrix
 Object of class fuzzyclara
 }
 \description{
-Function to perform a CLARANS clustering in a fixed or fuzzy way.
+Function to perform a CLARANS clustering in a hard or fuzzy way.
 The function can either be called using a common dissimilarity metric or
 a self-defined distance function.
 }

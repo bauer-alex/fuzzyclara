@@ -11,7 +11,7 @@ clustering_sample(
   clusters = 5,
   metric = "euclidean",
   sample_size = NULL,
-  type = "fixed",
+  type = "hard",
   m = 2,
   verbose = 1,
   verbose_toLogFile = FALSE,
@@ -36,7 +36,7 @@ full details.}
 
 \item{sample_size}{Number of observations belonging to a sample}
 
-\item{type}{One of \code{c("fixed","fuzzy")}, specifying the type of
+\item{type}{One of \code{c("hard","fuzzy")}, specifying the type of
 clustering to be performed.}
 
 \item{m}{Fuzziness exponent (only for \code{type = "fuzzy"}), which has to be
@@ -59,7 +59,7 @@ relevant for type = "fuzzy". Default FALSE.)}
 Clustering solution for data sample
 }
 \description{
-Function to perform clara clustering algorithm in a fixed or fuzzy way.
+Function to perform clara clustering algorithm in a hard or fuzzy way.
 The function can either be performed using a common dissimilarity metric or
 a self-defined distance function.
 }

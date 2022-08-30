@@ -28,15 +28,15 @@ library(dplyr)
 ### Hard clustering
 ```{r, hard clustering example}
 # TODO replace USArrests by a better dataset (maybe TourIST)
-cc_fixed <- fuzzyclara(data        = USArrests,
+cc_hard <- fuzzyclara(data        = USArrests,
                        clusters    = 3,
                        metric      = "euclidean",
                        samples     = 1,
                        sample_size = NULL,
-                       type        = "fixed",
+                       type        = "hard",
                        seed        = 3526,
                        verbose     = 0)
-cc_fixed
+cc_hard
 ```
 
 ### Fuzzy clustering
@@ -78,7 +78,7 @@ cc_manh <- fuzzyclara(data        = USArrests,
                        metric      = "manhattan",
                        samples     = 1,
                        sample_size = NULL,
-                       type        = "fixed",
+                       type        = "hard",
                        seed        = 3526,
                        verbose     = 0)
 cc_manh
@@ -91,7 +91,7 @@ cc_mink <- fuzzyclara(data        = USArrests,
                        metric      = dist_mink,
                        samples     = 1,
                        sample_size = NULL,
-                       type        = "fixed",
+                       type        = "hard",
                        seed        = 3526,
                        verbose     = 0)
 cc_mink
@@ -105,7 +105,7 @@ cc_number <- evaluate_cluster_numbers(
                        metric          = "euclidean",
                        samples         = 1,
                        sample_size     = NULL,
-                       type            = "fixed",
+                       type            = "hard",
                        seed            = 3526,
                        verbose         = 0)
 cc_number
@@ -139,23 +139,23 @@ USArrests_enriched <- USArrests %>%
 
 ### Boxplot
 ```{r}
-plot(x = cc_fixed, data = USArrests_enriched, variable = "Assault") 
+plot(x = cc_hard, data = USArrests_enriched, variable = "Assault") 
 ```
 
 ### Barplot
 ```{r}
-plot(x = cc_fixed, data = USArrests_enriched, variable = "Area")
+plot(x = cc_hard, data = USArrests_enriched, variable = "Area")
 ```
 
 ### Wordcloud
 ```{r fig.width=6, fig.height=4}
-plot(x = cc_fixed, data = USArrests_enriched, variable = "State",
+plot(x = cc_hard, data = USArrests_enriched, variable = "State",
      type = "wordclouds")
 ```
 
 ### Scatterplot
 ```{r}
-plot(x = cc_fixed, data = USArrests_enriched, type = "scatterplot",
+plot(x = cc_hard, data = USArrests_enriched, type = "scatterplot",
      x_var = "Murder", y_var = "Assault")
 
 ```
@@ -176,7 +176,7 @@ plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
 
 ### PCA
 ```{r fig.width=6, fig.height=4}
-plot(x = cc_fixed, data = USArrests_enriched, type = "pca",
+plot(x = cc_hard, data = USArrests_enriched, type = "pca",
      group_by = "Area")
 ```
 
@@ -197,7 +197,7 @@ plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
 
 ### Silhouette
 ```{r fig.width=6, fig.height=4}
-plot(x = cc_fixed, data = USArrests, type = "silhouette")
+plot(x = cc_hard, data = USArrests, type = "silhouette")
 ```
 
 ### Fuzzy clustering: Threshold for membership scores

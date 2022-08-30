@@ -1,6 +1,6 @@
 #' Perform CLARANS clustering
 #'
-#' Function to perform a CLARANS clustering in a fixed or fuzzy way.
+#' Function to perform a CLARANS clustering in a hard or fuzzy way.
 #' The function can either be called using a common dissimilarity metric or
 #' a self-defined distance function.
 #'
@@ -21,13 +21,13 @@
 #' @references TODO add CLARANS paper
 #'
 clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
-                               type = "fixed", num_local = 5,
+                               type = "hard", num_local = 5,
                                max_neighbors = 100, cores = 1, seed = 1234,
                                m = 2, verbose = 1, ...) {
 
   checkmate::assert_data_frame(data)
   checkmate::assert_vector(clusters)
-  checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
+  checkmate::assert_choice(type, choices = c("hard","fuzzy"))
   checkmate::assert_number(max_neighbors, lower = 1)
   checkmate::assert_number(num_local, lower = 1)
   checkmate::assert_number(cores, lower = 1)
@@ -138,7 +138,7 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
     # Selection of best clustering solution (according to smallest average
     # distance to closest cluster medoid):
     min_distance_list <- lapply(X = 1:num_local, FUN = function(i) {
-      if (type == "fixed") {
+      if (type == "hard") {
         dist <- clustering_results_list[[i]][[j]]$avg_min_dist
       } else { # type = "fuzzy"
         dist <- clustering_results_list[[i]][[j]]$avg_weighted_dist
@@ -148,7 +148,7 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
     min_distance  <- which.min(min_distance_list)
     best_solution <- clustering_results_list[[min_distance]][[j]]
     best_solution[["type"]] <- type
-    if (type == "fixed") {
+    if (type == "hard") {
       m <- 1
     }
     best_solution[["fuzzyness"]] <- m
@@ -174,7 +174,7 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
 #' Perform a local iteration of CLARANS clustering
 #'
 #' Function to perform a local iteration of the CLARANS clustering algorithm in
-#' a fixed or fuzzy way. The function can either be called using a common
+#' a hard or fuzzy way. The function can either be called using a common
 #' dissimilarity metric or a self-defined distance function.
 #'
 #' @inheritParams fuzzyclara
@@ -195,13 +195,13 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
 #'
 clustering_local <- function(data, sample_local, clusters = 5,
                              metric = "euclidean", max_neighbors = 100,
-                             type = "fixed", m = 2, verbose = 1,
+                             type = "hard", m = 2, verbose = 1,
                              verbose_toLogFile = FALSE, ...) {
 
   checkmate::assert_data_frame(data)
   # TODO how to check 'samples_local'?
   checkmate::assert_vector(clusters)
-  checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
+  checkmate::assert_choice(type, choices = c("hard","fuzzy"))
   checkmate::assert_number(m, lower = 1)
   checkmate::assert_choice(verbose, choices = 0:2)
   checkmate::assert_logical(verbose_toLogFile, len = 1)
@@ -218,7 +218,7 @@ clustering_local <- function(data, sample_local, clusters = 5,
   medoids_current <- sample_local$start
   cost_obj        <- assign_cluster(data = data, medoids = medoids_current,
                                     metric = metric, type = type, m = m)
-  cost_current    <- ifelse(type == "fixed", cost_obj$avg_min_dist,
+  cost_current    <- ifelse(type == "hard", cost_obj$avg_min_dist,
                             cost_obj$avg_weighted_dist) # for type == "fuzzy"
 
   # Iterative swap of medoids and non-medoids:
@@ -238,7 +238,7 @@ clustering_local <- function(data, sample_local, clusters = 5,
       cost_obj <- assign_cluster(data = data, medoids = medoids,
                                  metric = metric, type = type,
                                  m = m)
-      cost     <- ifelse(type == "fixed", cost_obj$avg_min_dist,
+      cost     <- ifelse(type == "hard", cost_obj$avg_min_dist,
                          cost_obj$avg_weighted_dist) # for type == "fuzzy"
 
       if (cost < cost_current) {

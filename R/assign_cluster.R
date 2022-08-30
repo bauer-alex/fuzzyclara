@@ -20,12 +20,12 @@
 #' @import proxy
 #'
 assign_cluster <- function(data, metric, medoids, dist_matrix = NULL,
-                           type = "fixed", m = 2, return_distMatrix = FALSE,
+                           type = "hard", m = 2, return_distMatrix = FALSE,
                            return_data_medoids = FALSE) {
 
   checkmate::assert_data_frame(data)
   # TODO what check to run on 'medoids'? The argument specification in the documentation above should also be more specific
-  checkmate::assert_choice(type, choices = c("fixed", "fuzzy"))
+  checkmate::assert_choice(type, choices = c("hard", "fuzzy"))
   checkmate::assert_matrix(dist_matrix, null.ok = TRUE)
   checkmate::assert_number(m, lower = 1)
   checkmate::assert_logical(return_distMatrix, len = 1)
@@ -57,8 +57,8 @@ assign_cluster <- function(data, metric, medoids, dist_matrix = NULL,
     colnames(memb_scores) <- paste0("Cluster", 1:ncol(memb_scores))
   }
 
-  # Computation of distance for fixed and fuzzy clustering:
-  if (type == "fixed") {
+  # Computation of distance for hard and fuzzy clustering:
+  if (type == "hard") {
     # Minimum distance:
     distances <- apply(dist, 1, min)
   } else { # type = "fuzzy"
@@ -83,7 +83,7 @@ assign_cluster <- function(data, metric, medoids, dist_matrix = NULL,
   clustering_result <- list("medoids" = medoids, "clustering" = assignment)
 
   # Compute distance:
-  if (type == "fixed") { # average distance for fixed clustering
+  if (type == "hard") { # average distance for hard clustering
     clustering_result[["avg_min_dist"]] <- average_dist
 
   } else { # type = "fuzzy": weighted average distance for fuzzy clustering
