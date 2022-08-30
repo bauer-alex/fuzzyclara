@@ -74,7 +74,7 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
   checkmate::assert_logical(return_results, len = 1)
 
 
-  # some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2
+  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
   cluster_number <- NULL
 
 

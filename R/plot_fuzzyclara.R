@@ -15,7 +15,7 @@
 #'
 #' @return Clustering plot
 #'
-#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggsci ggwordcloud
+#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr
 #' @importFrom stats as.formula prcomp
 #' @export
 #'
@@ -33,6 +33,10 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
   checkmate::assert_logical(na.omit, len = 1)
 
 
+  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  max_memb_score <- NULL
+  
+  
   # Convertion of matrix to data.frame:
   if (!(any(class(data) == "data.frame"))) {
     data <- as.data.frame(data)
@@ -66,7 +70,7 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
   if (x$type == "fuzzy") {
     # Filter relevant observation based on the membership score threshold
     relevant_obs <- x$membership_scores %>%
-      mutate(max_memb_score = do.call(pmax, c(., na.rm = TRUE))) %>%
+      mutate(max_memb_score = do.call(pmax, c(x$membership_scores, na.rm = TRUE))) %>%
       filter(max_memb_score >= confidence_threshold)
     rel_obs <- rownames(relevant_obs)
 
@@ -128,7 +132,7 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
 #'
 #' @return barplot
 #'
-#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggsci ggwordcloud
+#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr
 #' @export
 #'
 clara_barplot <- function(x, data, variable, group_by = NULL,
@@ -140,6 +144,10 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
   checkmate::assert_character(group_by, null.ok = TRUE)
   checkmate::assert_logical(na.omit, len = 1)
 
+  
+  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  cluster <- NULL
+  
 
   # Remove missing values if specified:
   if (na.omit == TRUE) {
@@ -176,7 +184,7 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
 #'
 #' @return boxplot
 #'
-#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggsci ggwordcloud
+#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr
 #' @export
 #'
 clara_boxplot <- function(x, data, variable, group_by = NULL,
@@ -189,6 +197,10 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
   checkmate::assert_logical(na.omit, len = 1)
 
 
+  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  cluster <- NULL
+  
+  
   # Remove missing values if specified:
   if (na.omit == TRUE) {
     data <- data %>% filter(!is.na(!!sym(variable)))
@@ -201,8 +213,7 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
   plot <- ggplot2::ggplot(data = data,
                           mapping = aes(x = cluster, y = !!ensym(variable),
                                         fill = cluster)) +
-    geom_boxplot() + theme_minimal() +
-    scale_fill_npg()
+    geom_boxplot() + theme_minimal()
 
   if(!is.null(group_by)){
     if (!(group_by %in% names(data))) {
@@ -229,7 +240,7 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
 #'
 #' @return wordcloud plot
 #'
-#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggsci ggwordcloud
+#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggwordcloud
 #' @export
 #'
 clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42){
@@ -239,6 +250,11 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42){
   checkmate::assert_choice(variable, choices = names(data))
   checkmate::assert_number(seed)
   checkmate::assert_logical(na.omit, len = 1)
+  
+  
+  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  cluster <- var <- angle <- NULL
+  
   
   # Remove missing values if specified:
   if (na.omit == TRUE) {
@@ -259,11 +275,10 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42){
         angle = angle
       )
     ) +
-    geom_text_wordcloud_area(area_corr_power = 1) +
+    ggwordcloud::geom_text_wordcloud_area(area_corr_power = 1) +
     ggplot2::scale_size_area(max_size = 4) +
     theme_minimal() +
-    facet_wrap(~ cluster) +
-    scale_color_npg()
+    facet_wrap(~ cluster)
 
   return(plot)
 
@@ -293,7 +308,7 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42){
 #'
 #' @return PCA plot
 #'
-#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggsci ggwordcloud
+#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr
 #' @importFrom stats as.formula prcomp
 #' @export
 #'
@@ -310,6 +325,11 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
   checkmate::assert_logical(focus, len = 1)
   checkmate::assert_vector(focus_clusters, null.ok = TRUE)
 
+  
+  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  cluster <- Dim.1 <- Dim.2 <- NULL
+  
+  
   if(x$type == "fuzzy" && focus == TRUE){ # for focus = TRUE, perform PCA on whole dataset
       data$cluster <- NULL
   }
@@ -372,16 +392,16 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
         guides(color = "none", alpha = guide_legend(title = "membership \n probability"))
     }
 
-  } else{ # normal PCA plot
+  } else { # normal PCA plot
 
     # Add clusters
     individuals_coord$cluster <- data$cluster
 
     if (x$type == "fuzzy") {
       individuals_coord_fuzzy <- individuals_coord %>%
-        filter(row.names(.) %in% row.names(transparent_obs))
+        filter(row.names(individuals_coord) %in% row.names(transparent_obs))
       individuals_coord <- individuals_coord %>%
-        filter(!(row.names(.) %in% row.names(transparent_obs)))
+        filter(!(row.names(individuals_coord) %in% row.names(transparent_obs)))
     }
 
     if (!is.null(group_by)) {
@@ -450,7 +470,7 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
 #'
 #' @return scatterplot
 #'
-#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggsci ggwordcloud tidyr
+#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr tidyr
 #' @export
 #'
 clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
@@ -470,6 +490,10 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
   checkmate::assert_logical(na.omit, len = 1)
   
 
+  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  variable <- cluster <- prob <- NULL
+  
+  
   if (((!(!is.null(x_var) & !is.null(y_var)) ) | !(class(data[, x_var]) == "numeric" & class(data[, y_var]) == "numeric"))) {
     stop("Please specify the variables correctly. Both variable and group_by should contain the names of metric variables.")
   }
@@ -503,7 +527,6 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
       ggplot(aes(x = !!ensym(x_var), y = !!ensym(y_var), alpha = prob, color = cluster)) +
       geom_point() +
       theme_minimal()  +
-      scale_color_npg() +
       facet_wrap(~cluster) +
       guides(color = "none", alpha = guide_legend(title = "membership \n probability"))
 
@@ -512,8 +535,7 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
       ggplot(aes(x = !!ensym(x_var), y = !!ensym(y_var), color = cluster) )+
       geom_point() +
       geom_smooth(method = "lm") +
-      theme_minimal()  +
-      scale_color_npg()
+      theme_minimal()
 
     if(x$type == "fuzzy" && plot_all_fuzzy == TRUE){
       plot <- plot +
@@ -543,7 +565,7 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
 #'
 #' @return silhouette plot
 #'
-#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggsci ggwordcloud
+#' @import checkmate cluster dplyr factoextra ggplot2 ggpubr
 #' @export
 #'
 clara_silhouette <- function(x, data,
@@ -560,6 +582,10 @@ clara_silhouette <- function(x, data,
   # TODO how to check 'rel_obs'? (Edit Jana: rel_obs is created in plot.fuzzyclara, so maybe not necessary to check?)
 
 
+  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  cluster <- NULL
+  
+  
   if(scale_sil == TRUE){
     ind <- unlist(lapply(data, is.numeric), use.names = TRUE)
     for (i in ind) {
@@ -601,11 +627,7 @@ clara_silhouette <- function(x, data,
   }
 
   plot <- fviz_silhouette(sil) + theme_minimal() +
-    scale_fill_npg() + scale_color_npg() +
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
   return(plot)
 }
-
-
-

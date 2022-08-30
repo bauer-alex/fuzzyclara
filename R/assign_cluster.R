@@ -32,7 +32,7 @@ assign_cluster <- function(data, metric, medoids, dist_matrix = NULL,
   checkmate::assert_logical(return_data_medoids, len = 1)
 
 
-  # some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2
+  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
   Name <- NULL
 
 

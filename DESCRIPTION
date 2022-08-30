@@ -6,19 +6,15 @@ Authors@R: c(
     person(given = "Alexander",  family = "Bauer",   email = "alexander.bauer@stat.uni-muenchen.de", role = "aut", comment = c(ORCID = "0000-0003-3495-5131")),
     person(given = "Jana",       family = "Gauss",   role = "aut"),
     person(given = "Asmik",      family = "Nalmpatian", role = "ctb"))
-Description: The 'fuzzyclara' package tackles two issues of cluster analysis
-applications.
-First, it includes routines for fuzzy clustering which avoid the common hard
-clustering assumption that each observation is a clear member of one sole cluster.
-Instead, membership probabilities indicate to which extent the characteristics
-of each observation are shaped by the characteristics of several 'typical' clusters.
-Second, the estimation of classical clustering algorithms is often only hardly
-or not at all feasible in large data situations with thousands of observations.
-Subsampling-based algorithms building on the CLARA algorithm are implemented to
-make the estimation feasible in such situations.
-Building on these two points, the 'fuzzyclara' package offers routines for all
-aspects of a cluster analysis, including the use of user-defined distance
-functions and diverse visualization techniques.
+Description: The 'fuzzyclara' package tackles two issues of cluster analysis applications.
+  First, it includes routines for fuzzy clustering which avoid the common hard clustering assumption
+  that each observation is a clear member of one sole cluster. Instead, membership probabilities indicate
+  to which extent the characteristics of each observation are shaped by the characteristics of several
+  'typical' clusters. Second, the estimation of classical clustering algorithms is often only hardly or
+  not at all feasible in large data situations with thousands of observations. Subsampling-based algorithms
+  building on the CLARA algorithm are implemented to make the estimation feasible in such situations.
+  Building on these two points, the 'fuzzyclara' package offers routines for all aspects of a cluster
+  analysis, including the use of user-defined distance functions and diverse visualization techniques.
 License: MIT + file LICENSE
 URL: https://MaxWeigert.github.io/fuzzyclara/
 Encoding: UTF-8
@@ -38,9 +34,7 @@ Imports:
     dplyr,
     parallel,
     proxy,
-    readxl,
     vegclust,
-    ggsci,
     ggwordcloud,
     ggpubr,
     factoextra,
