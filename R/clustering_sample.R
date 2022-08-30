@@ -94,6 +94,11 @@ compute_distance_matrix <- function(data, sample_ids, metric = "euclidean") {
 
   checkmate::assert_data_frame(data)
 
+  
+  # some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2
+  Name <- NULL
+  
+  
   # Reduction of data to sample observations:
   data <- data %>% dplyr::slice(sample_ids)
 

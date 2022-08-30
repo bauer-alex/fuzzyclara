@@ -20,10 +20,7 @@ Suggests:
     shiny
 VignetteBuilder: knitr
 Config/testthat/edition: 3
-LinkingTo: 
-    Rcpp
 Imports: 
-    Rcpp,
     checkmate,
     cluster,
     dplyr,
