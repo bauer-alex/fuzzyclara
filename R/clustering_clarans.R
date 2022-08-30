@@ -68,12 +68,15 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
   if (cores == 1) { # single core
     clustering_results_list <- lapply(X = 1:num_local, FUN = function(i) {
       if (verbose >= 1) { message("--- Performing calculations for local iteration ", i) }
-      clustering <- clustering_local(data = data,
-                                     sample_local = samples_local[[i]],
-                                     clusters = clusters, metric = metric,
-                                     m = m, max_neighbors = max_neighbors,
-                                     type = type, verbose = verbose)
-      return(clustering)
+      clustering_numbers_list <- lapply(X = clusters, FUN = function(j) {
+        clustering <- clustering_local(data = data, sample_ids = sample_ids[[i]],
+                                       clusters = clusters, metric = metric,
+                                       m = m, max_neighbors = max_neighbors,
+                                       type = type, verbose = verbose,
+                                       verbose_toLogFile = TRUE)
+        return(clustering)
+      })
+      return(clustering_numbers_list)
     })
 
   } else { # cores > 1, i.e. multi-core computation
@@ -95,13 +98,15 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
                                                print_logMessage(paste0("--- Performing calculations for subsample ",i),
                                                                 verbose_toLogFile = TRUE)
                                              }
-                                             clustering <- clustering_local(data = data,
-                                                                            sample_local = samples_local[[i]],
-                                                                            clusters = clusters, metric = metric,
-                                                                            m = m, max_neighbors = max_neighbors,
-                                                                            type = type, verbose = verbose,
-                                                                            verbose_toLogFile = TRUE)
-                                             return(clustering)
+                                             clustering_numbers_list <- lapply(X = clusters, FUN = function(j) {
+                                               clustering <- clustering_local(data = data, sample_ids = sample_ids[[i]],
+                                                                              clusters = clusters, metric = metric,
+                                                                              m = m, max_neighbors = max_neighbors,
+                                                                              type = type, verbose = verbose,
+                                                                              verbose_toLogFile = TRUE)
+                                               return(clustering)
+                                             })
+                                             return(clustering_numbers_list)
                                            })
       stopCluster(local_cluster)
 
@@ -112,40 +117,53 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
           print_logMessage(paste0("--- Performing calculations for subsample ",i),
                            verbose_toLogFile = TRUE)
         }
-        clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
-                                        clusters = clusters, metric = metric,
-                                        m = m, max_neighbors = max_neighbors,
-                                        type = type, verbose = verbose,
-                                        verbose_toLogFile = TRUE)
-        return(clustering)
+        clustering_numbers_list <- lapply(X = clusters, FUN = function(j) {
+          clustering <- clustering_local(data = data, sample_ids = sample_ids[[i]],
+                                         clusters = clusters, metric = metric,
+                                         m = m, max_neighbors = max_neighbors,
+                                         type = type, verbose = verbose,
+                                         verbose_toLogFile = TRUE)
+          return(clustering)
+         })
+        return(clustering_numbers_list)
       }, mc.cores = cores, mc.set.seed = seed)
     }
   }
 
-  # Selection of best clustering solution (according to smallest average
-  # distance to closest cluster medoid):
-  min_distance_list <- lapply(X = 1:num_local, FUN = function(i) {
+  # Return of results list for all numbers of clusters:
+  results_list <- lapply(X = seq_along(clusters), FUN = function(j) {
+
+    # Selection of best clustering solution (according to smallest average
+    # distance to closest cluster medoid):
+    min_distance_list <- lapply(X = 1:num_local, FUN = function(i) {
+      if (type == "fixed") {
+        dist <- clustering_results_list[[i]][[j]]$avg_min_dist
+      } else { # type = "fuzzy"
+        dist <- clustering_results_list[[i]][[j]]$avg_weighted_dist
+      }
+      return(dist)
+    })
+    min_distance  <- which.min(min_distance_list)
+    best_solution <- clustering_results_list[[min_distance]][[j]]
+    best_solution[["type"]] <- type
     if (type == "fixed") {
-      dist <- clustering_results_list[[i]]$avg_min_dist
-    } else { # type = "fuzzy"
-      dist <- clustering_results_list[[i]]$avg_weighted_dist
+      m <- 1
     }
-    return(dist)
+    best_solution[["fuzzyness"]] <- m
+    best_solution[["algorithm"]] <- "clarans"
+    best_solution[["metric"]]    <- metric
+
+    # Return of clustering solution based on the best local iteration:
+    class(best_solution) <- c("fuzzyclara", class(best_solution))
+
+    return(best_solution)
   })
-  min_distance  <- which.min(min_distance_list)
-  best_solution <- clustering_results_list[[min_distance]]
-  best_solution[["type"]] <- type
-  if (type == "fixed") {
-    m <- 1
+
+  # Change output format if only a single cluster is evaluated:
+  if (length(clusters) == 1) {
+    results_list <- results_list[[1]]
   }
-  best_solution[["fuzzyness"]] <- m
-  best_solution[["algorithm"]] <- "clarans"
-  best_solution[["metric"]]    <- metric
-
-  # Return of clustering solution based on the best local iteration:
-  class(best_solution) <- c("fuzzyclara", class(best_solution))
-
-  return(best_solution)
+  return(results_list)
 }
 
 
@@ -180,7 +198,7 @@ clustering_local <- function(data, sample_local, clusters = 5,
 
   checkmate::assert_data_frame(data)
   # TODO how to check 'samples_local'?
-  checkmate::assert_number(clusters, lower = 1)
+  checkmate::assert_vector()
   checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
   checkmate::assert_number(m, lower = 1)
   checkmate::assert_choice(verbose, choices = 0:2)

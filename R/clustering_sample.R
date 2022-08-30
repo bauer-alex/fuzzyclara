@@ -191,7 +191,7 @@ perform_sample_clustering <- function(dist, data, clusters, type, metric,
 
     if (build == FALSE) {
       attributes(dist)[["Labels"]] <- as.character(1:nrow(data))
-      fuzzy_sample <- my_vegclustdist(x = dist, mobileMemb = clusters,
+      fuzzy_sample <- vegclustdist(x = dist, mobileMemb = clusters,
                                       method = "FCMdd", m = m, ...)
     }
 
