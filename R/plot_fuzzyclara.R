@@ -30,6 +30,7 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
                            choices = c("boxplot","wordclouds", "silhouette",
                                        "pca", "scatterplot"), null.ok = TRUE)
   checkmate::assert_character(variable, null.ok = TRUE)
+  checkmate::assert_logical(na.omit, len = 1)
 
 
   # Convertion of matrix to data.frame:
@@ -91,7 +92,8 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
                           na.omit = na.omit, ...)
 
   } else if (type == "wordclouds") {
-    plot <- clara_wordcloud(x = x, data = data, variable = variable, ...)
+    plot <- clara_wordcloud(x = x, data = data, variable = variable,
+                            na.omit = na.omit, ...)
 
   } else if (type == "silhouette") {
     plot <- clara_silhouette(x = x, data = data,
@@ -103,7 +105,8 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
 
   } else if (type == "scatterplot") {
     plot <- clara_scatterplot(x = x, data = data,
-                              transparent_obs = transparent_obs, ...)
+                              transparent_obs = transparent_obs,
+                              na.omit = na.omit, ...)
   }
 
 
@@ -220,6 +223,8 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
 #' @param x An object of class "fuzzyclara"
 #' @param data Prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))
 #' @param variable Name of variable to plot
+#' @param na.omit Should missing values be excluded for plotting? Defaults to
+#' FALSE.
 #' @param seed Random number seed. Defaults to 42.
 #'
 #' @return wordcloud plot
@@ -227,13 +232,18 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
 #' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggsci ggwordcloud
 #' @export
 #'
-clara_wordcloud <- function(x, data, variable, seed = 42){
+clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42){
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
   checkmate::assert_choice(variable, choices = names(data))
   checkmate::assert_number(seed)
-
+  checkmate::assert_logical(na.omit, len = 1)
+  
+  # Remove missing values if specified:
+  if (na.omit == TRUE) {
+    data <- data %>% filter(!is.na(!!sym(variable)))
+  }
 
   data$var <- data[, variable] # dplyr::count() doesn't work with !!ensym(variable)
 
@@ -435,6 +445,8 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
 #' to the respective cluster. Defaults to FALSE.
 #' @param focus_clusters Optional vector of integers to focus on specific
 #' clusters
+#' @param na.omit Should missing values be excluded for plotting? Defaults to
+#' FALSE.
 #'
 #' @return scatterplot
 #'
@@ -443,7 +455,8 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
 #'
 clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
                               transparent_obs = NULL, alpha_fuzzy = 0.4,
-                              focus = FALSE, focus_clusters = NULL){
+                              focus = FALSE, focus_clusters = NULL,
+                              na.omit = FALSE) {
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
@@ -454,9 +467,16 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
   checkmate::assert_number(alpha_fuzzy, lower = 0, upper = 1)
   checkmate::assert_logical(focus, len = 1)
   checkmate::assert_vector(focus_clusters, null.ok = TRUE)
+  checkmate::assert_logical(na.omit, len = 1)
+  
 
   if (((!(!is.null(x_var) & !is.null(y_var)) ) | !(class(data[, x_var]) == "numeric" & class(data[, y_var]) == "numeric"))) {
     stop("Please specify the variables correctly. Both variable and group_by should contain the names of metric variables.")
+  }
+  
+  # Remove missing values if specified:
+  if (na.omit == TRUE) {
+    data <- data %>% filter(!is.na(!!sym(variable)))
   }
 
   if (x$type == "fuzzy" & focus == TRUE) {

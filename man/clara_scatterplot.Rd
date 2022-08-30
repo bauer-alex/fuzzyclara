@@ -13,7 +13,8 @@ clara_scatterplot(
   transparent_obs = NULL,
   alpha_fuzzy = 0.4,
   focus = FALSE,
-  focus_clusters = NULL
+  focus_clusters = NULL,
+  na.omit = FALSE
 )
 }
 \arguments{
@@ -39,6 +40,9 @@ to the respective cluster. Defaults to FALSE.}
 
 \item{focus_clusters}{Optional vector of integers to focus on specific
 clusters}
+
+\item{na.omit}{Should missing values be excluded for plotting? Defaults to
+FALSE.}
 }
 \value{
 scatterplot

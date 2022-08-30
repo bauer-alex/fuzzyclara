@@ -4,7 +4,7 @@
 \alias{clara_wordcloud}
 \title{Plot function wordcloud}
 \usage{
-clara_wordcloud(x, data, variable, seed = 42)
+clara_wordcloud(x, data, variable, na.omit = na.omit, seed = 42)
 }
 \arguments{
 \item{x}{An object of class "fuzzyclara"}
@@ -12,6 +12,9 @@ clara_wordcloud(x, data, variable, seed = 42)
 \item{data}{Prepared data.frame (contains cluster variable, observations are already filtered by threshold (fuzzy))}
 
 \item{variable}{Name of variable to plot}
+
+\item{na.omit}{Should missing values be excluded for plotting? Defaults to
+FALSE.}
 
 \item{seed}{Random number seed. Defaults to 42.}
 }
