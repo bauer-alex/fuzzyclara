@@ -95,7 +95,10 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
                           verbose = verbose, cores = cores, ...)
   }
   if (algorithm == "clarans") {
-    #TODO
+    y <- clustering_clarans(data, clusters = clusters_range, metric = metric,
+                            max_neighbors = max_neighbors, num_local = num_local,
+                            algorithm = "clarans", type = type, seed = seed,
+                            m = m, verbose = verbose, cores = cores, ...)
   }
   # Select criterion for choice of cluster number:
   criterion_df$criterion <- as.numeric(sapply(X = seq_along(clusters_range),

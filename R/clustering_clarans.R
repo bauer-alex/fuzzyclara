@@ -45,20 +45,22 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
   # Randomly draw pairs of medoids and non-medoids as well as starting medoids
   # for each local iteration:
   samples_local <- lapply(X = 1:num_local, FUN = function(i) {
-
-    sample_med       <- sample(x       = 1:clusters,
-                               size    = max_neighbors,
-                               replace = TRUE)
-    sample_non_med   <- sample(x       = 1:(nrow(data) - clusters),
-                               size    = max_neighbors,
-                               replace = TRUE)
-    starting_medoids <- sample(x       = data$Name[1:nrow(data)],
-                               size    = clusters,
-                               replace = FALSE)
-    sample <- list("medoids"     = sample_med,
-                   "non_medoids" = sample_non_med,
-                   "start"       = starting_medoids)
-    return(sample)
+    samples_cluster <- lapply(X = seq_along(clusters), FUN = function(j) {
+      sample_med       <- sample(x       = 1:clusters[j],
+                                 size    = max_neighbors,
+                                 replace = TRUE)
+      sample_non_med   <- sample(x       = 1:(nrow(data) - clusters[j]),
+                                 size    = max_neighbors,
+                                 replace = TRUE)
+      starting_medoids <- sample(x       = data$Name[1:nrow(data)],
+                                 size    = clusters[j],
+                                 replace = FALSE)
+      sample <- list("medoids"     = sample_med,
+                     "non_medoids" = sample_non_med,
+                     "start"       = starting_medoids)
+      return(sample)
+    })
+    return(samples_cluster)
   })
   # Sample definition is performed before parallelized computations in order
   # to get reproducible results.
@@ -68,9 +70,9 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
   if (cores == 1) { # single core
     clustering_results_list <- lapply(X = 1:num_local, FUN = function(i) {
       if (verbose >= 1) { message("--- Performing calculations for local iteration ", i) }
-      clustering_numbers_list <- lapply(X = clusters, FUN = function(j) {
-        clustering <- clustering_local(data = data, sample_ids = sample_ids[[i]],
-                                       clusters = clusters, metric = metric,
+      clustering_numbers_list <- lapply(X = seq_along(clusters), FUN = function(j) {
+        clustering <- clustering_local(data = data, sample_local = samples_local[[i]][[j]],
+                                       clusters = clusters[j], metric = metric,
                                        m = m, max_neighbors = max_neighbors,
                                        type = type, verbose = verbose,
                                        verbose_toLogFile = TRUE)
@@ -98,9 +100,9 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
                                                print_logMessage(paste0("--- Performing calculations for subsample ",i),
                                                                 verbose_toLogFile = TRUE)
                                              }
-                                             clustering_numbers_list <- lapply(X = clusters, FUN = function(j) {
-                                               clustering <- clustering_local(data = data, sample_ids = sample_ids[[i]],
-                                                                              clusters = clusters, metric = metric,
+                                             clustering_numbers_list <- lapply(X = seq_along(clusters), FUN = function(j) {
+                                               clustering <- clustering_local(data = data, sample_local = samples_local[[i]][[j]],
+                                                                              clusters = clusters[j], metric = metric,
                                                                               m = m, max_neighbors = max_neighbors,
                                                                               type = type, verbose = verbose,
                                                                               verbose_toLogFile = TRUE)
@@ -117,9 +119,9 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
           print_logMessage(paste0("--- Performing calculations for subsample ",i),
                            verbose_toLogFile = TRUE)
         }
-        clustering_numbers_list <- lapply(X = clusters, FUN = function(j) {
-          clustering <- clustering_local(data = data, sample_ids = sample_ids[[i]],
-                                         clusters = clusters, metric = metric,
+        clustering_numbers_list <- lapply(X = seq_along(clusters), FUN = function(j) {
+          clustering <- clustering_local(data = data, sample_local = samples_local[[i]][[j]],
+                                         clusters = clusters[j], metric = metric,
                                          m = m, max_neighbors = max_neighbors,
                                          type = type, verbose = verbose,
                                          verbose_toLogFile = TRUE)
@@ -198,7 +200,7 @@ clustering_local <- function(data, sample_local, clusters = 5,
 
   checkmate::assert_data_frame(data)
   # TODO how to check 'samples_local'?
-  checkmate::assert_vector()
+  checkmate::assert_vector(clusters)
   checkmate::assert_choice(type, choices = c("fixed","fuzzy"))
   checkmate::assert_number(m, lower = 1)
   checkmate::assert_choice(verbose, choices = 0:2)

@@ -1,4 +1,4 @@
-test_that("evaluate_cl_nums", { # plot to select number of clusters
+test_that("evaluate_cl_nums_clara", { # plot to select number of clusters
 
   data(USArrests)
 
@@ -66,8 +66,58 @@ test_that("evaluate_cl_nums", { # plot to select number of clusters
                          seed        = 3526,
                          verbose     = 0)
   expect_identical(cluster_results[[1]], cc_fuzzy)
+})
 
 
 
+test_that("evaluate_cl_nums_clarans", { # plot to select number of clusters
+
+  data(USArrests)
+
+  # fixed clustering
+  cc_number <- evaluate_cluster_numbers(
+    data            = USArrests,
+    clusters_range  = 2:6,
+    metric          = "euclidean",
+    num_local = 2,
+    max_neighbors = 10,
+    type            = "fixed",
+    algorithm       = "clarans",
+    seed            = 3526,
+    verbose         = 0)
+
+  # check whole object
+  expect_s3_class(cc_number, "ggplot")
+  expect_s3_class(cc_number$layers[[1]]$geom, "GeomLine")
+
+  expect_length(cc_number, 9)
+
+  expect_identical(dim(cc_number$data),
+                   as.integer(c(5, 2)))
+
+  # fuzzy clustering
+  # return clustering results
+  cc_number <- evaluate_cluster_numbers(
+    data            = USArrests,
+    clusters_range  = 2:6,
+    metric          = "euclidean",
+    num_local = 2,
+    max_neighbors = 10,
+    type            = "fuzzy",
+    algorithm = "clarans",
+    m = 2,
+    seed            = 3526,
+    verbose         = 0,
+    return_results = TRUE)
+
+  # check whole object
+  expect_class(cc_number, "list")
+  expect_length(cc_number, 2)
+
+  cluster_results <- cc_number$cluster_results
+  expect_class(cluster_results, "list")
+  expect_length(cluster_results, 5)
+
+  expect_class(cluster_results[[1]], "fuzzyclara")
 })
 
