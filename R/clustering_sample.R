@@ -7,6 +7,7 @@
 #' @inheritParams fuzzyclara
 #' @param data data.frame to be clustered
 #' @param sample_ids ids for the sample's observations
+#' @param dist Dissimilarity matrix for subsample
 #' @param sample_size Number of observations belonging to a sample
 #' @param verbose_toLogFile If TRUE, the diagnostic messages are printed to
 #' a log file \code{clustering_progress.log}. Defaults to FALSE.
@@ -19,7 +20,7 @@
 #'
 #' @import checkmate cluster dplyr
 #'
-clustering_sample <- function(data, sample_ids, clusters = 5,
+clustering_sample <- function(data, sample_ids, dist, clusters = 5,
                               metric = "euclidean", sample_size = NULL,
                               type = "fixed", m = 2, verbose = 1,
                               verbose_toLogFile = FALSE, build = FALSE, ...) {
@@ -37,31 +38,15 @@ clustering_sample <- function(data, sample_ids, clusters = 5,
   checkmate::assert_logical(verbose_toLogFile, len = 1)
   checkmate::assert_logical(build, len = 1)
 
-
   # Reduction of data to sample observations:
   data_sample <- data %>% dplyr::slice(sample_ids)
-
-  # Extract name of metric:
-  if (class(metric) == "function") {
-    name_metric <- deparse(substitute(metric))
-
-  } else { # 'metric' is no function, but a character name
-    name_metric <- metric
-  }
-
-  # Computation of distance matrix:
-  if (verbose >= 2) {
-    print_logMessage("Calculating the distance matrix...",
-                     verbose_toLogFile = verbose_toLogFile)
-  }
-  dist_matrix <- compute_distance_matrix(data = data_sample, metric = metric)
 
   # Clustering of data sample:
   if (verbose >= 2) {
     print_logMessage("Perform the main clustering step...",
                      verbose_toLogFile = verbose_toLogFile)
   }
-  clustering_results_sample <- perform_sample_clustering(dist = dist_matrix,
+  clustering_results_sample <- perform_sample_clustering(dist = dist,
                                                          data = data_sample,
                                                          clusters = clusters,
                                                          type = type,
@@ -84,7 +69,7 @@ clustering_sample <- function(data, sample_ids, clusters = 5,
   # Add information about subsample, distance matrix, clustering of subsample
   # for silhouette plot:
   clustering_results[["subsample_ids"]] <- sample_ids
-  clustering_results[["dist_matrix"]] <- dist_matrix
+  clustering_results[["dist_matrix"]] <- dist
   clustering_results[["subsample_clustering"]] <- clustering_results[["clustering"]][sample_ids]
 
 
@@ -99,14 +84,18 @@ clustering_sample <- function(data, sample_ids, clusters = 5,
 #'
 #' @inheritParams fuzzyclara
 #' @param data Sample of data.frame to be clustered
+#' @param sample_ids ids for the sample's observations
 #'
 #' @return Dissimilarity matrix for data sample
 #'
 #' @import checkmate proxy
 #'
-compute_distance_matrix <- function(data, metric = "euclidean") {
+compute_distance_matrix <- function(data, sample_ids, metric = "euclidean") {
 
   checkmate::assert_data_frame(data)
+
+  # Reduction of data to sample observations:
+  data <- data %>% dplyr::slice(sample_ids)
 
   # Deletion of column "Name":
   data <- data %>% dplyr::select(-Name)

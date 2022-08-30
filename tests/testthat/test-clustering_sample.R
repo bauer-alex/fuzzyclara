@@ -1,12 +1,14 @@
 test_that("clustering_sample", { # clustering_sample function
 
   data(USArrests)
+  dist <- proxy::dist(USArrests[1:10, ])
   data <- USArrests %>% tibble::rownames_to_column(var = "Name")
   row.names(data) <- data$Name
 
 
+
   # fixed clustering
-  cc_fixed <- clustering_sample(data = data,
+  cc_fixed <- clustering_sample(data = data, dist = dist,
                                 clusters = 3,
                                 sample_ids = 1:10,
                                 metric = "euclidean",
@@ -18,14 +20,14 @@ test_that("clustering_sample", { # clustering_sample function
   expect_identical(dim(cc_fixed$dist_matrix), as.integer(c(10, 10)))
 
   # fuzzy clustering
-  cc_fuzzy <- clustering_sample(data = data,
+  cc_fuzzy <- clustering_sample(data = data, dist = dist,
                                 clusters = 3,
                                 sample_ids = 1:10,
                                 metric = "euclidean",
                                 type = "fuzzy")
 
   # fuzzy clustering with build algorithm
-  cc_fuzzy_build <- clustering_sample(data = data,
+  cc_fuzzy_build <- clustering_sample(data = data, dist = dist,
                                       clusters = 3,
                                       sample_ids = 1:10,
                                       metric = "euclidean",
@@ -47,7 +49,8 @@ test_that("compute_dist_matrix", {
   data(USArrests)
   data <- USArrests %>% tibble::rownames_to_column(var = "Name")
 
-  dist_mat <- compute_distance_matrix(data[1:10,], metric = "Euclidean")
+  dist_mat <- compute_distance_matrix(data, sample_ids = 1:10,
+                                      metric = "Euclidean")
 
   # check whole object
   expect_class(dist_mat, "dist")
@@ -57,7 +60,8 @@ test_that("compute_dist_matrix", {
   dist_function <- function(x, y) {
     sqrt(sum((x - y)^2))
   }
-  dist_mat_2 <- compute_distance_matrix(data[1:10,], metric = dist_function)
+  dist_mat_2 <- compute_distance_matrix(data, sample_ids = 1:10,
+                                        metric = dist_function)
 
   # calculate manually:
   dist_mat_3 <- proxy::dist(USArrests[1:10,], method = "Euclidean")
@@ -68,8 +72,8 @@ test_that("compute_dist_matrix", {
 
 
   # try Manhattan and Gower:
-  dist_gow <- compute_distance_matrix(data[1:10,], metric = "Gower")
-  dist_manh <- compute_distance_matrix(data[1:10,], metric = "Manhattan")
+  dist_gow <- compute_distance_matrix(data, sample_ids = 1:10, metric = "Gower")
+  dist_manh <- compute_distance_matrix(data, sample_ids = 1:10, metric = "Manhattan")
 
   expect_class(dist_gow, "dist")
   expect_class(dist_manh, "dist")
@@ -83,7 +87,7 @@ test_that("perform_sample_clustering", {
   data <- USArrests %>% tibble::rownames_to_column(var = "Name")
   row.names(data) <- data$Name
 
-  dist_mat <- compute_distance_matrix(data[1:10,], metric = "Euclidean")
+  dist_mat <- compute_distance_matrix(data, sample_ids = 1:10, metric = "Euclidean")
 
   # fixed
   clust <- perform_sample_clustering(dist = dist_mat, data = data[1:10,],

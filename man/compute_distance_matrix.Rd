@@ -4,10 +4,12 @@
 \alias{compute_distance_matrix}
 \title{Compute the dissimilarity matrix for a data sample}
 \usage{
-compute_distance_matrix(data, metric = "euclidean")
+compute_distance_matrix(data, sample_ids, metric = "euclidean")
 }
 \arguments{
 \item{data}{Sample of data.frame to be clustered}
+
+\item{sample_ids}{ids for the sample's observations}
 
 \item{metric}{A character specifying a predefined dissimilarity metric (like
 \code{"euclidean"} or \code{"manhattan"}) or a self-defined dissimilarity

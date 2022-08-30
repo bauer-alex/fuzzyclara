@@ -7,6 +7,7 @@
 clustering_sample(
   data,
   sample_ids,
+  dist,
   clusters = 5,
   metric = "euclidean",
   sample_size = NULL,
@@ -22,6 +23,8 @@ clustering_sample(
 \item{data}{data.frame to be clustered}
 
 \item{sample_ids}{ids for the sample's observations}
+
+\item{dist}{Dissimilarity matrix for subsample}
 
 \item{clusters}{Number of clusters. Defaults to 5.}
 

@@ -88,12 +88,22 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   # Calculation of clustering results for each sample:
   if (cores == 1) { # single core
     clustering_results_list <- lapply(X = 1:samples, FUN = function(i) {
+
+      # Create distance matrix for clustering sample:
+      if (verbose >= 1) { message("--- Calculating the distance matrix for subsample ", i)}
+      dist_matrix <- compute_distance_matrix(data = data,
+                                             sample_ids = sample_ids[[i]],
+                                             metric = metric)
+
+      # Perform actual clustering:
       if (verbose >= 1) { message("--- Performing calculations for subsample ", i) }
       # Perform clustering with different cluster numbers:
       clustering_numbers_list <- lapply(X = clusters, FUN = function(j) {
-        clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
-                                        clusters = j, metric = metric,
-                                        m = m, sample_size = sample_size,
+        clustering <- clustering_sample(data = data,
+                                        sample_ids = sample_ids[[i]],
+                                        dist = dist_matrix, clusters = j,
+                                        metric = metric, m = m,
+                                        sample_size = sample_size,
                                         type = type, verbose = verbose,
                                         build = build, ...)
         return(clustering)
@@ -117,15 +127,22 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                     envir = environment(fuzzyclara))
       clustering_results_list <- parLapply(cl = local_cluster, X = 1:samples,
                                            fun = function(i) {
-                                             if (verbose >= 1) {
-                                               print_logMessage(paste0("--- Performing calculations for subsample ",i),
-                                                                verbose_toLogFile = TRUE)
-                                             }
-                                             # TODO: add computation of distance matrix here
+
+                                             # Create distance matrix for clustering sample:
+                                             if (verbose >= 1) { message("--- Calculating the distance matrix for subsample ", i)}
+                                             dist_matrix <- compute_distance_matrix(data = data,
+                                                                                    sample_ids = sample_ids[[i]],
+                                                                                    metric = metric)
+
+                                             # Perform actual clustering:
+                                             if (verbose >= 1) { message("--- Performing calculations for subsample ", i) }
+                                             # Perform clustering with different cluster numbers:
                                              clustering_numbers_list <- lapply(X = clusters, FUN = function(j) {
-                                               clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
-                                                                               clusters = j, metric = metric,
-                                                                               m = m, sample_size = sample_size,
+                                               clustering <- clustering_sample(data = data,
+                                                                               sample_ids = sample_ids[[i]],
+                                                                               dist = dist_matrix, clusters = j,
+                                                                               metric = metric, m = m,
+                                                                               sample_size = sample_size,
                                                                                type = type, verbose = verbose,
                                                                                build = build, ...)
                                                return(clustering)
@@ -137,14 +154,21 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
     } else { # other OS than Windows
 
       clustering_results_list <- mclapply(X = 1:samples, FUN = function(i) {
-        if (verbose >= 1) {
-          print_logMessage(paste0("--- Performing calculations for subsample ",i),
-                           verbose_toLogFile = TRUE)
-        }
+        # Create distance matrix for clustering sample:
+        if (verbose >= 1) { message("--- Calculating the distance matrix for subsample ", i)}
+        dist_matrix <- compute_distance_matrix(data = data,
+                                               sample_ids = sample_ids[[i]],
+                                               metric = metric)
+
+        # Perform actual clustering:
+        if (verbose >= 1) { message("--- Performing calculations for subsample ", i) }
+        # Perform clustering with different cluster numbers:
         clustering_numbers_list <- lapply(X = clusters, FUN = function(j) {
-          clustering <- clustering_sample(data = data, sample_ids = sample_ids[[i]],
-                                          clusters = j, metric = metric,
-                                          m = m, sample_size = sample_size,
+          clustering <- clustering_sample(data = data,
+                                          sample_ids = sample_ids[[i]],
+                                          dist = dist_matrix, clusters = j,
+                                          metric = metric, m = m,
+                                          sample_size = sample_size,
                                           type = type, verbose = verbose,
                                           build = build, ...)
           return(clustering)
