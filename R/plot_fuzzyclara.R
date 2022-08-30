@@ -9,6 +9,8 @@
 #' a barplot or a boxplot, depending on the class of \code{variable}.
 #' @param na.omit Should missing values be excluded for plotting? Defaults to
 #' FALSE.
+#' @param confidence_threshold Threshold for fuzzy clustering observations to
+#' be plotted. Must be a number between 0 and 1. Defaults to 0.
 #' @param ... Further arguments for internal plot functions.
 #'
 #' @return Clustering plot
@@ -18,7 +20,7 @@
 #' @export
 #'
 plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
-                            na.omit = FALSE, ...){
+                            na.omit = FALSE, confidence_threshold = 0, ...){
 
   checkmate::assert_class(x, class = "fuzzyclara")
   checkmate::assert(checkmate::check_data_frame(data),
@@ -64,24 +66,29 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
   # Creation of plot object:
   if (type == "barplot") {
     plot <- clara_barplot(x = x, data = data, variable = variable,
-                          na.omit = na.omit, ...)
+                          na.omit = na.omit,
+                          confidence_threshold = confidence_threshold, ...)
 
   } else if (type == "boxplot") {
     plot <- clara_boxplot(x = x, data = data, variable = variable,
-                          na.omit = na.omit, ...)
+                          na.omit = na.omit,
+                          confidence_threshold = confidence_threshold, ...)
 
   } else if (type == "wordclouds") {
     plot <- clara_wordcloud(x = x, data = data, variable = variable,
                             na.omit = na.omit, ...)
 
   } else if (type == "silhouette") {
-    plot <- clara_silhouette(x = x, data = data, ...)
+    plot <- clara_silhouette(x = x, data = data,
+                             confidence_threshold = confidence_threshold, ...)
 
   } else if (type == "pca") {
-    plot <- clara_pca(x = x, data = data, ...)
+    plot <- clara_pca(x = x, data = data,
+                      confidence_threshold = confidence_threshold, ...)
 
   } else if (type == "scatterplot") {
-    plot <- clara_scatterplot(x = x, data = data, na.omit = na.omit, ...)
+    plot <- clara_scatterplot(x = x, data = data, na.omit = na.omit,
+                              confidence_threshold = confidence_threshold, ...)
   }
 
 
@@ -100,6 +107,8 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
 #' @param group_by Optional grouping variable
 #' @param na.omit Should missing values be excluded for plotting? Defaults to
 #' FALSE.
+#' @param confidence_threshold Threshold for fuzzy clustering observations to
+#' be plotted. Must be a number between 0 and 1. Defaults to 0.
 #'
 #' @return barplot
 #'
@@ -107,19 +116,26 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
 #' @export
 #'
 clara_barplot <- function(x, data, variable, group_by = NULL,
-                          na.omit = FALSE) {
+                          na.omit = FALSE, confidence_threshold = 0) {
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
   checkmate::assert_choice(variable, choices = names(data))
   checkmate::assert_character(group_by, null.ok = TRUE)
   checkmate::assert_logical(na.omit, len = 1)
-
   
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
   cluster <- NULL
   
-
+  # Select observations based on confidence_threshold:
+  if (x$type == "fuzzy") {
+    # Filter relevant observation based on the membership score threshold:
+    relevant_obs <- x$membership_scores %>%
+      mutate(max_memb_score = do.call(pmax, c(x$membership_scores, na.rm = TRUE))) %>%
+      filter(max_memb_score >= confidence_threshold)
+    data <- data %>% dplyr::filter(!(row.names(data) %in% rownames(relevant_obs)))
+  }
+  
   # Remove missing values if specified:
   if (na.omit == TRUE) {
     data <- data %>% filter(!is.na(!!sym(variable)))
@@ -159,7 +175,7 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
 #' @export
 #'
 clara_boxplot <- function(x, data, variable, group_by = NULL,
-                          na.omit = FALSE) {
+                          na.omit = FALSE, confidence_threshold = 0) {
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
@@ -171,6 +187,14 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
   cluster <- NULL
   
+  # Select observations based on confidence_threshold:
+  if (x$type == "fuzzy") {
+    # Filter relevant observation based on the membership score threshold:
+    relevant_obs <- x$membership_scores %>%
+      mutate(max_memb_score = do.call(pmax, c(x$membership_scores, na.rm = TRUE))) %>%
+      filter(max_memb_score >= confidence_threshold)
+    data <- data %>% dplyr::filter(!(row.names(data) %in% rownames(relevant_obs)))
+  }
   
   # Remove missing values if specified:
   if (na.omit == TRUE) {
@@ -222,10 +246,17 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42){
   checkmate::assert_number(seed)
   checkmate::assert_logical(na.omit, len = 1)
   
-  
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
   cluster <- var <- angle <- NULL
   
+  # Select observations based on confidence_threshold:
+  #if (x$type == "fuzzy") {
+  #  # Filter relevant observation based on the membership score threshold:
+  #  relevant_obs <- x$membership_scores %>%
+  #    mutate(max_memb_score = do.call(pmax, c(x$membership_scores, na.rm = TRUE))) %>%
+  #    filter(max_memb_score >= confidence_threshold)
+  #  data <- data %>% dplyr::filter(!(row.names(data) %in% rownames(relevant_obs)))
+  #}
   
   # Remove missing values if specified:
   if (na.omit == TRUE) {

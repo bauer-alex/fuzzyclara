@@ -4,7 +4,14 @@
 \alias{clara_boxplot}
 \title{Plot function boxplot}
 \usage{
-clara_boxplot(x, data, variable, group_by = NULL, na.omit = FALSE)
+clara_boxplot(
+  x,
+  data,
+  variable,
+  group_by = NULL,
+  na.omit = FALSE,
+  confidence_threshold = 0
+)
 }
 \arguments{
 \item{x}{An object of class "fuzzyclara"}
@@ -18,6 +25,9 @@ already filtered by threshold (fuzzy))}
 
 \item{na.omit}{Should missing values be excluded for plotting? Defaults to
 FALSE.}
+
+\item{confidence_threshold}{Threshold for fuzzy clustering observations to
+be plotted. Must be a number between 0 and 1. Defaults to 0.}
 }
 \value{
 boxplot
