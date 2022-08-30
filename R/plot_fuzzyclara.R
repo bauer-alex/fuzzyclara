@@ -133,7 +133,7 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
     relevant_obs <- x$membership_scores %>%
       mutate(max_memb_score = do.call(pmax, c(x$membership_scores, na.rm = TRUE))) %>%
       filter(max_memb_score >= confidence_threshold)
-    data <- data %>% dplyr::filter(!(row.names(data) %in% rownames(relevant_obs)))
+    data <- data %>% dplyr::filter(row.names(data) %in%  rownames(relevant_obs))
   }
   
   # Remove missing values if specified:
@@ -193,7 +193,7 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
     relevant_obs <- x$membership_scores %>%
       mutate(max_memb_score = do.call(pmax, c(x$membership_scores, na.rm = TRUE))) %>%
       filter(max_memb_score >= confidence_threshold)
-    data <- data %>% dplyr::filter(!(row.names(data) %in% rownames(relevant_obs)))
+    data <- data %>% dplyr::filter(row.names(data) %in%  rownames(relevant_obs))
   }
   
   # Remove missing values if specified:
