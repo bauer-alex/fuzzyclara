@@ -59,7 +59,7 @@
 <span>  <span class="va">x</span>,</span>
 <span>  <span class="va">data</span>,</span>
 <span>  group_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  plot_all_fuzzy <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  plot_all_fuzzy <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  transparent_obs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  alpha_fuzzy <span class="op">=</span> <span class="fl">0.4</span>,</span>
 <span>  focus <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -84,8 +84,7 @@ already filtered by threshold (fuzzy))</p></dd>
 
 <dt>plot_all_fuzzy</dt>
 <dd><p>For fuzzy clustering and threshold: should observations
-below threshold be plottet transparent? PCA is performed based on the
-observations above the threshold. Defaults to FALSE.</p></dd>
+below threshold be plotted transparent? Defaults to TRUE.</p></dd>
 
 
 <dt>transparent_obs</dt>
@@ -106,7 +105,7 @@ to the respective cluster. Defaults to FALSE.</p></dd>
 
 <dt>focus_clusters</dt>
 <dd><p>Optional vector of integers to focus on specific
-clusters</p></dd>
+clusters.</p></dd>
 
 </dl></div>
     <div class="section level2">

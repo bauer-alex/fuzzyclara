@@ -60,7 +60,7 @@
 <span>  <span class="va">data</span>,</span>
 <span>  <span class="va">x_var</span>,</span>
 <span>  <span class="va">y_var</span>,</span>
-<span>  plot_all_fuzzy <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  plot_all_fuzzy <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  transparent_obs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  alpha_fuzzy <span class="op">=</span> <span class="fl">0.4</span>,</span>
 <span>  focus <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -85,18 +85,17 @@ already filtered by threshold (fuzzy))</p></dd>
 
 <dt>plot_all_fuzzy</dt>
 <dd><p>For fuzzy clustering and threshold: should observations
-below threshold be plottet transparent? The regression line is only based on
-the observations above the threshold. Defaults to FALSE.</p></dd>
+below threshold be plotted transparent? Defaults to TRUE.</p></dd>
 
 
 <dt>transparent_obs</dt>
 <dd><p>data.frame containing observations that are plotted
-transparent, only relevant for <code>plot_all_fuzzy = TRUE</code>.</p></dd>
+transparent, only relevant for fuzzy clustering and <code>focus = FALSE</code>.</p></dd>
 
 
 <dt>alpha_fuzzy</dt>
 <dd><p>Alpha value for observations below threshold, only
-relevant for <code>plot_all_fuzzy = TRUE</code>. Defaults to 0.4.</p></dd>
+relevant for fuzzy clustering and <code>focus = FALSE</code>. Defaults to 0.4.</p></dd>
 
 
 <dt>focus</dt>
