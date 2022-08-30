@@ -59,7 +59,15 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for fuzzyclara</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">data</span>, type <span class="op">=</span> <span class="cn">NULL</span>, variable <span class="op">=</span> <span class="cn">NULL</span>, na.omit <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">data</span>,</span>
+<span>  type <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  na.omit <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  confidence_threshold <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -81,6 +89,11 @@ a barplot or a boxplot, depending on the class of <code>variable</code>.</p></dd
 <dt>na.omit</dt>
 <dd><p>Should missing values be excluded for plotting? Defaults to
 FALSE.</p></dd>
+
+
+<dt>confidence_threshold</dt>
+<dd><p>Threshold for fuzzy clustering observations to
+be plotted. Must be a number between 0 and 1. Defaults to 0.</p></dd>
 
 
 <dt>...</dt>
