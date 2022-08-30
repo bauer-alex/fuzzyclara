@@ -64,7 +64,7 @@
 <span>  <span class="va">x_var</span>,</span>
 <span>  <span class="va">y_var</span>,</span>
 <span>  plot_all_fuzzy <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  transparent_obs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  confidence_threshold <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  alpha_fuzzy <span class="op">=</span> <span class="fl">0.4</span>,</span>
 <span>  focus <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  focus_clusters <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -79,8 +79,7 @@
 
 
 <dt>data</dt>
-<dd><p>Prepared data.frame (contains cluster variable, observations are
-already filtered by threshold (fuzzy))</p></dd>
+<dd><p>data.frame or matrix used for clustering</p></dd>
 
 
 <dt>x_var, y_var</dt>
@@ -92,9 +91,9 @@ already filtered by threshold (fuzzy))</p></dd>
 below threshold be plotted transparent? Defaults to TRUE.</p></dd>
 
 
-<dt>transparent_obs</dt>
-<dd><p>data.frame containing observations that are plotted
-transparent, only relevant for fuzzy clustering and <code>focus = FALSE</code>.</p></dd>
+<dt>confidence_threshold</dt>
+<dd><p>Threshold for fuzzy clustering observations to
+be plotted. Must be a number between 0 and 1. Defaults to 0.</p></dd>
 
 
 <dt>alpha_fuzzy</dt>
