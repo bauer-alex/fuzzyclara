@@ -202,12 +202,9 @@ plot(x = cc_hard, data = USArrests, type = "silhouette")
 
 ### Fuzzy clustering: Threshold for membership scores
 ```{r fig.width=6, fig.height=4}
-plot(x = cc_fuzzy, data = USArrests_enriched, variable = "Assault", confidence_threshold = 0) 
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca", variable = "Assault", confidence_threshold = 0) 
 
-plot(x = cc_fuzzy, data = USArrests_enriched, variable = "Assault", confidence_threshold = 0.5)
-
-
-
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca", variable = "Assault", confidence_threshold = 0.5)
 ```
 
 ```{r fig.width=6, fig.height=4, message = FALSE}
@@ -219,7 +216,6 @@ plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
 
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
      x_var = "Murder", y_var = "Assault", confidence_threshold = 0.5, plot_all_fuzzy = TRUE)
-
 ```
 
 ```{r fig.width=6, fig.height=4, message = FALSE}
@@ -231,5 +227,4 @@ plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
 
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
      group_by = "Area", confidence_threshold = 0.5, plot_all_fuzzy = TRUE)
-
 ```

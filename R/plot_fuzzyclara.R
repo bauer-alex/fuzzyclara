@@ -7,8 +7,6 @@
 #' @param type,variable Type of plot. One of \code{c("barplot","boxplot","wordclouds",
 #' "silhouette","pca","scatterplot")}. Defaults to NULL, which either plots
 #' a barplot or a boxplot, depending on the class of \code{variable}.
-#' @param confidence_threshold Threshold for fuzzy clustering observations to
-#' be plotted. Must be a number between 0 and 1. Defaults to 0.
 #' @param na.omit Should missing values be excluded for plotting? Defaults to
 #' FALSE.
 #' @param ... Further arguments for internal plot functions.
@@ -20,12 +18,11 @@
 #' @export
 #'
 plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
-                            confidence_threshold = 0, na.omit = FALSE, ...){
+                            na.omit = FALSE, ...){
 
   checkmate::assert_class(x, class = "fuzzyclara")
   checkmate::assert(checkmate::check_data_frame(data),
                     checkmate::check_matrix(data), combine = "or")
-  checkmate::assert_number(confidence_threshold, lower = 0, upper = 1)
   checkmate::assert_choice(type,
                            choices = c("boxplot","wordclouds", "silhouette",
                                        "pca", "scatterplot"), null.ok = TRUE)
@@ -33,10 +30,6 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
   checkmate::assert_logical(na.omit, len = 1)
 
 
-  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
-  max_memb_score <- NULL
-  
-  
   # Convertion of matrix to data.frame:
   if (!(any(class(data) == "data.frame"))) {
     data <- as.data.frame(data)
@@ -64,27 +57,9 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
       stop("Please specify the 'type' or the variable' argument.")
     }
     
-    type <- ifelse(class(data[[variable]]) != "numeric", "barplot","boxplot")
+    type <- ifelse(class(data[[variable]]) != "numeric", "barplot", "boxplot")
   }
   
-  if (x$type == "fuzzy") {
-    # Filter relevant observation based on the membership score threshold
-    relevant_obs <- x$membership_scores %>%
-      mutate(max_memb_score = do.call(pmax, c(x$membership_scores, na.rm = TRUE))) %>%
-      filter(max_memb_score >= confidence_threshold)
-    rel_obs <- rownames(relevant_obs)
-
-
-    # transparent observations for scatterplots
-    transparent_obs <- data %>% dplyr::filter(!(row.names(data) %in%  rownames(relevant_obs)))
-    
-    if (type != "pca") {
-      data <- data %>% dplyr::filter(row.names(data) %in%  rownames(relevant_obs))
-    }
-
-  } else{
-    transparent_obs <- NULL
-  }
 
   # Creation of plot object:
   if (type == "barplot") {
@@ -100,17 +75,13 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
                             na.omit = na.omit, ...)
 
   } else if (type == "silhouette") {
-    plot <- clara_silhouette(x = x, data = data,
-                             rel_obs = rel_obs, ...)
+    plot <- clara_silhouette(x = x, data = data, ...)
 
   } else if (type == "pca") {
-    plot <- clara_pca(x = x, data = data,
-                      transparent_obs = transparent_obs, ...)
+    plot <- clara_pca(x = x, data = data, ...)
 
   } else if (type == "scatterplot") {
-    plot <- clara_scatterplot(x = x, data = data,
-                              transparent_obs = transparent_obs,
-                              na.omit = na.omit, ...)
+    plot <- clara_scatterplot(x = x, data = data, na.omit = na.omit, ...)
   }
 
 
@@ -290,14 +261,12 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42){
 #'
 #' Function to plot PCA results
 #'
-#' @param x An object of class "fuzzyclara"
-#' @param data Prepared data.frame (contains cluster variable, observations are
-#' already filtered by threshold (fuzzy))
+#' @inheritParams plot.fuzzyclara
 #' @param group_by Optional grouping variable
 #' @param plot_all_fuzzy For fuzzy clustering and threshold: should observations
 #' below threshold be plotted transparent? Defaults to TRUE.
-#' @param transparent_obs data.frame containing observations that are plotted
-#' transparent, only relevant for \code{plot_all_fuzzy = TRUE}.
+#' @param confidence_threshold Threshold for fuzzy clustering observations to
+#' be plotted. Must be a number between 0 and 1. Defaults to 0.
 #' @param alpha_fuzzy Alpha value for observations below threshold, only
 #' relevant for \code{plot_all_fuzzy = TRUE}. Defaults to 0.4.
 #' @param focus For fuzzy clustering, focus on clusters given by variable
@@ -313,21 +282,36 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42){
 #' @export
 #'
 clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
-                      transparent_obs = NULL, alpha_fuzzy = 0.4,
+                      confidence_threshold = 0, alpha_fuzzy = 0.4,
                       focus = FALSE, focus_clusters = NULL) {
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
   checkmate::assert_character(group_by, null.ok = TRUE)
   checkmate::assert_logical(plot_all_fuzzy, len = 1)
-  checkmate::assert_data_frame(transparent_obs, null.ok = TRUE)
+  checkmate::assert_number(confidence_threshold, lower = 0, upper = 1)
   checkmate::assert_number(alpha_fuzzy, lower = 0, upper = 1)
   checkmate::assert_logical(focus, len = 1)
   checkmate::assert_vector(focus_clusters, null.ok = TRUE)
 
   
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
-  cluster <- Dim.1 <- Dim.2 <- NULL
+  max_memb_score <- cluster <- Dim.1 <- Dim.2 <- NULL
+  
+  
+  if (x$type == "fuzzy") {
+    # Filter relevant observation based on the membership score threshold:
+    relevant_obs <- x$membership_scores %>%
+      mutate(max_memb_score = do.call(pmax, c(x$membership_scores, na.rm = TRUE))) %>%
+      filter(max_memb_score >= confidence_threshold)
+    rel_obs <- rownames(relevant_obs)
+    
+    # Transparent observations for scatterplots:
+    transparent_obs <- data %>% dplyr::filter(!(row.names(data) %in%  rownames(relevant_obs)))
+    
+  } else {
+    transparent_obs <- NULL
+  }
   
   
   if(x$type == "fuzzy" && focus == TRUE){ # for focus = TRUE, perform PCA on whole dataset
@@ -450,14 +434,12 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
 #'
 #' Function to plot a scatterplot
 #'
-#' @param x An object of class "fuzzyclara"
-#' @param data Prepared data.frame (contains cluster variable, observations are
-#' already filtered by threshold (fuzzy))
+#' @inheritParams plot.fuzzyclara
 #' @param x_var,y_var Names of x and y variable
 #' @param plot_all_fuzzy For fuzzy clustering and threshold: should observations
 #' below threshold be plotted transparent? Defaults to TRUE.
-#' @param transparent_obs data.frame containing observations that are plotted
-#' transparent, only relevant for fuzzy clustering and \code{focus = FALSE}.
+#' @param confidence_threshold Threshold for fuzzy clustering observations to
+#' be plotted. Must be a number between 0 and 1. Defaults to 0.
 #' @param alpha_fuzzy Alpha value for observations below threshold, only
 #' relevant for fuzzy clustering and \code{focus = FALSE}. Defaults to 0.4.
 #' @param focus For fuzzy clustering, focus on clusters given by variable
@@ -474,7 +456,7 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
 #' @export
 #'
 clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
-                              transparent_obs = NULL, alpha_fuzzy = 0.4,
+                              confidence_threshold = 0, alpha_fuzzy = 0.4,
                               focus = FALSE, focus_clusters = NULL,
                               na.omit = FALSE) {
 
@@ -483,7 +465,7 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
   checkmate::assert_character(x_var, len = 1)
   checkmate::assert_character(y_var, len = 1)
   checkmate::assert_logical(plot_all_fuzzy, len = 1)
-  checkmate::assert_data_frame(transparent_obs, null.ok = TRUE)
+  checkmate::assert_number(confidence_threshold, lower = 0, upper = 1)
   checkmate::assert_number(alpha_fuzzy, lower = 0, upper = 1)
   checkmate::assert_logical(focus, len = 1)
   checkmate::assert_vector(focus_clusters, null.ok = TRUE)
@@ -491,7 +473,7 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
   
 
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
-  variable <- cluster <- prob <- NULL
+  max_memb_score <- variable <- cluster <- prob <- NULL
   
   
   if (((!(!is.null(x_var) & !is.null(y_var)) ) | !(class(data[, x_var]) == "numeric" & class(data[, y_var]) == "numeric"))) {
@@ -503,6 +485,23 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
     data <- data %>% filter(!is.na(!!sym(variable)))
   }
 
+  if (x$type == "fuzzy") {
+    # Filter relevant observation based on the membership score threshold:
+    relevant_obs <- x$membership_scores %>%
+      mutate(max_memb_score = do.call(pmax, c(x$membership_scores, na.rm = TRUE))) %>%
+      filter(max_memb_score >= confidence_threshold)
+    rel_obs <- rownames(relevant_obs)
+    
+    # Transparent observations for scatterplots:
+    transparent_obs <- data %>% dplyr::filter(!(row.names(data) %in%  rownames(relevant_obs)))
+    
+    data <- data %>% dplyr::filter(row.names(data) %in%  rownames(relevant_obs))
+    
+  } else {
+    transparent_obs <- NULL
+  }
+  
+  
   if (x$type == "fuzzy" & focus == TRUE) {
     data         <- rbind(data, transparent_obs)
     data$cluster <- NULL
@@ -551,9 +550,7 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
 #'
 #' Function to plot a scatterplot
 #'
-#' @param x An object of class "fuzzyclara"
-#' @param data Prepared data.frame (contains cluster variable, observations are
-#' already filtered by threshold (fuzzy))
+#' @inheritParams plot.fuzzyclara
 #' @param metric  A character specifying a predefined dissimilarity metric (like
 #' \code{"euclidean"} or \code{"manhattan"}) or a self-defined dissimilarity
 #' function. Defaults to \code{"euclidean"}. Irrelevant if \code{silhouette_subsample} is TRUE.
@@ -561,7 +558,8 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
 #' plot instead of all samples? Defaults to FALSE.
 #' @param scale_sil Scale numeric variables for silhouette plot? Defaults to
 #' TRUE. Irrelevant if \code{silhouette_subsample} is TRUE.
-#' @param rel_obs Optional names of observations > threshold.
+#' @param confidence_threshold Threshold for fuzzy clustering observations to
+#' be plotted. Must be a number between 0 and 1. Defaults to 0.
 #'
 #' @return silhouette plot
 #'
@@ -572,28 +570,42 @@ clara_silhouette <- function(x, data,
                              metric = "euclidean",
                              silhouette_subsample = FALSE,
                              scale_sil = TRUE,
-                             rel_obs = NULL){
+                             confidence_threshold = 0){
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
   # TODO how to check 'metric'? (Edit Jana: in fuzzycara we don't check it either) At least specify 'metric' a bit more in the above documentation -> DONE. Similar to the proxy::dist metric? (Jana: Yes)
   checkmate::assert_logical(silhouette_subsample, len = 1)
   checkmate::assert_logical(scale_sil, len = 1)
-  # TODO how to check 'rel_obs'? (Edit Jana: rel_obs is created in plot.fuzzyclara, so maybe not necessary to check?)
+  checkmate::assert_number(confidence_threshold, lower = 0, upper = 1)
 
 
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
-  cluster <- NULL
+  max_memb_score <- cluster <- NULL
   
   
-  if(scale_sil == TRUE){
+  if (x$type == "fuzzy") {
+    # Filter relevant observation based on the membership score threshold:
+    relevant_obs <- x$membership_scores %>%
+      mutate(max_memb_score = do.call(pmax, c(x$membership_scores, na.rm = TRUE))) %>%
+      filter(max_memb_score >= confidence_threshold)
+    rel_obs <- rownames(relevant_obs)
+    
+    data <- data %>% dplyr::filter(row.names(data) %in%  rownames(relevant_obs))
+    
+  } else {
+    rel_obs <- rownames(x$membership_scores)
+  }
+  
+  
+  if (scale_sil == TRUE) {
     ind <- unlist(lapply(data, is.numeric), use.names = TRUE)
     for (i in ind) {
       data[, ind] <- scale(data[, ind])
     }
   }
 
-  if(silhouette_subsample == FALSE){
+  if (silhouette_subsample == FALSE) {
 
     sil <- silhouette(as.numeric(data$cluster), dist(select(data, -cluster), method = metric))
 
@@ -606,7 +618,7 @@ clara_silhouette <- function(x, data,
       data_sub <- data[x$subsample_ids, ]
       sil <- silhouette(as.numeric(data_sub$cluster), x$dist_matrix)
 
-    } else{ # x$type = "fuzzy" -> data is already filtered by threshold. Distance matrix has to be filtered too
+    } else { # x$type = "fuzzy" -> data is already filtered by threshold. Distance matrix has to be filtered too
 
       # considered observations: part of subsample and rel_obs
       rel_obs_sil <- intersect(rel_obs, rownames(x$distance_to_medoids)[x$subsample_ids])
@@ -623,7 +635,6 @@ clara_silhouette <- function(x, data,
       sil <- silhouette(as.numeric(data_sub$cluster), dist)
 
     }
-
   }
 
   plot <- fviz_silhouette(sil) + theme_minimal() +

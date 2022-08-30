@@ -9,7 +9,7 @@ clara_pca(
   data,
   group_by = NULL,
   plot_all_fuzzy = TRUE,
-  transparent_obs = NULL,
+  confidence_threshold = 0,
   alpha_fuzzy = 0.4,
   focus = FALSE,
   focus_clusters = NULL
@@ -18,16 +18,15 @@ clara_pca(
 \arguments{
 \item{x}{An object of class "fuzzyclara"}
 
-\item{data}{Prepared data.frame (contains cluster variable, observations are
-already filtered by threshold (fuzzy))}
+\item{data}{data.frame or matrix used for clustering}
 
 \item{group_by}{Optional grouping variable}
 
 \item{plot_all_fuzzy}{For fuzzy clustering and threshold: should observations
 below threshold be plotted transparent? Defaults to TRUE.}
 
-\item{transparent_obs}{data.frame containing observations that are plotted
-transparent, only relevant for \code{plot_all_fuzzy = TRUE}.}
+\item{confidence_threshold}{Threshold for fuzzy clustering observations to
+be plotted. Must be a number between 0 and 1. Defaults to 0.}
 
 \item{alpha_fuzzy}{Alpha value for observations below threshold, only
 relevant for \code{plot_all_fuzzy = TRUE}. Defaults to 0.4.}

@@ -247,7 +247,6 @@ plot(x = cc_fuzzy, data = USArrests_enriched, variable = "State",
 ```{r fig.width=6, fig.height=4}
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
      x_var = "Murder", y_var = "Assault")
-
 ```
 
 ```{r,echo=F, message = F}
