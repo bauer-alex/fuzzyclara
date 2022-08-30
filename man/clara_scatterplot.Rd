@@ -9,7 +9,7 @@ clara_scatterplot(
   data,
   x_var,
   y_var,
-  plot_all_fuzzy = FALSE,
+  plot_all_fuzzy = TRUE,
   transparent_obs = NULL,
   alpha_fuzzy = 0.4,
   focus = FALSE,
@@ -25,14 +25,13 @@ already filtered by threshold (fuzzy))}
 \item{x_var, y_var}{Names of x and y variable}
 
 \item{plot_all_fuzzy}{For fuzzy clustering and threshold: should observations
-below threshold be plottet transparent? The regression line is only based on
-the observations above the threshold. Defaults to FALSE.}
+below threshold be plotted transparent? Defaults to TRUE.}
 
 \item{transparent_obs}{data.frame containing observations that are plotted
-transparent, only relevant for \code{plot_all_fuzzy = TRUE}.}
+transparent, only relevant for fuzzy clustering and \code{focus = FALSE}.}
 
 \item{alpha_fuzzy}{Alpha value for observations below threshold, only
-relevant for \code{plot_all_fuzzy = TRUE}. Defaults to 0.4.}
+relevant for fuzzy clustering and \code{focus = FALSE}. Defaults to 0.4.}
 
 \item{focus}{For fuzzy clustering, focus on clusters given by variable
 \code{focus_clusters} and plot observations based on probability of belonging

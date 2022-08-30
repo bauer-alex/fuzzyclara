@@ -8,7 +8,7 @@ clara_pca(
   x,
   data,
   group_by = NULL,
-  plot_all_fuzzy = FALSE,
+  plot_all_fuzzy = TRUE,
   transparent_obs = NULL,
   alpha_fuzzy = 0.4,
   focus = FALSE,
@@ -24,8 +24,7 @@ already filtered by threshold (fuzzy))}
 \item{group_by}{Optional grouping variable}
 
 \item{plot_all_fuzzy}{For fuzzy clustering and threshold: should observations
-below threshold be plottet transparent? PCA is performed based on the
-observations above the threshold. Defaults to FALSE.}
+below threshold be plotted transparent? Defaults to TRUE.}
 
 \item{transparent_obs}{data.frame containing observations that are plotted
 transparent, only relevant for \code{plot_all_fuzzy = TRUE}.}
@@ -38,7 +37,7 @@ relevant for \code{plot_all_fuzzy = TRUE}. Defaults to 0.4.}
 to the respective cluster. Defaults to FALSE.}
 
 \item{focus_clusters}{Optional vector of integers to focus on specific
-clusters}
+clusters.}
 }
 \value{
 PCA plot

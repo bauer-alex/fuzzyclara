@@ -51,8 +51,17 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
       data[, ind] <- scale(data[, ind])
     }
   }
-
-
+ 
+  # Handle 'type = NULL':
+  if (is.null(type)) {
+    # Check if 'variable' argument was specified
+    if (is.null(variable)) {
+      stop("Please specify the 'type' or the variable' argument.")
+    }
+    
+    type <- ifelse(class(data[[variable]]) != "numeric", "barplot","boxplot")
+  }
+  
   if (x$type == "fuzzy") {
     # Filter relevant observation based on the membership score threshold
     relevant_obs <- x$membership_scores %>%
@@ -61,24 +70,15 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
     rel_obs <- rownames(relevant_obs)
 
 
-    # transparent observations for scatterplot and pca
+    # transparent observations for scatterplots
     transparent_obs <- data %>% dplyr::filter(!(row.names(data) %in%  rownames(relevant_obs)))
-
-    data <- data %>% dplyr::filter(row.names(data) %in%  rownames(relevant_obs))
+    
+    if (type != "pca") {
+      data <- data %>% dplyr::filter(row.names(data) %in%  rownames(relevant_obs))
+    }
 
   } else{
     transparent_obs <- NULL
-  }
-
-
-  # Handle 'type = NULL':
-  if (is.null(type)) {
-    # Check if 'variable' argument was specified
-    if (is.null(variable)) {
-      stop("Please specify the 'type' or the variable' argument.")
-    }
-
-    type <- ifelse(class(data[[variable]]) != "numeric", "barplot","boxplot")
   }
 
   # Creation of plot object:
@@ -270,8 +270,7 @@ clara_wordcloud <- function(x, data, variable, seed = 42){
 #' already filtered by threshold (fuzzy))
 #' @param group_by Optional grouping variable
 #' @param plot_all_fuzzy For fuzzy clustering and threshold: should observations
-#' below threshold be plottet transparent? PCA is performed based on the
-#' observations above the threshold. Defaults to FALSE.
+#' below threshold be plotted transparent? Defaults to TRUE.
 #' @param transparent_obs data.frame containing observations that are plotted
 #' transparent, only relevant for \code{plot_all_fuzzy = TRUE}.
 #' @param alpha_fuzzy Alpha value for observations below threshold, only
@@ -280,7 +279,7 @@ clara_wordcloud <- function(x, data, variable, seed = 42){
 #' \code{focus_clusters} and plot observations based on probability of belonging
 #' to the respective cluster. Defaults to FALSE.
 #' @param focus_clusters Optional vector of integers to focus on specific
-#' clusters
+#' clusters.
 #'
 #' @return PCA plot
 #'
@@ -288,9 +287,9 @@ clara_wordcloud <- function(x, data, variable, seed = 42){
 #' @importFrom stats as.formula prcomp
 #' @export
 #'
-clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
+clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
                       transparent_obs = NULL, alpha_fuzzy = 0.4,
-                      focus = FALSE, focus_clusters = NULL){
+                      focus = FALSE, focus_clusters = NULL) {
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
@@ -299,30 +298,28 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
   checkmate::assert_data_frame(transparent_obs, null.ok = TRUE)
   checkmate::assert_number(alpha_fuzzy, lower = 0, upper = 1)
   checkmate::assert_logical(focus, len = 1)
-  # TODO how to check 'focus_clusters'? Edit Jana: in line 336, an error is thrown if the specified clusters aren't found in the data. I think this is enough.
+  checkmate::assert_vector(focus_clusters, null.ok = TRUE)
 
-
-  if(x$type == "fuzzy" & focus == TRUE){ # for focus = TRUE, perform PCA on whole dataset
-    data         <- rbind(data, transparent_obs)
-    data$cluster <- NULL
+  if(x$type == "fuzzy" && focus == TRUE){ # for focus = TRUE, perform PCA on whole dataset
+      data$cluster <- NULL
   }
 
   num_vars <- unlist(lapply(data, is.numeric))
 
   # Dimension reduction using PCA
-  pca_result <- stats::prcomp(data[, num_vars], center = FALSE, scale = FALSE) # data is already scaled
+  pca_result <- stats::prcomp(data[, num_vars], center = FALSE, scale = FALSE) # data are already scaled
   individuals_coord <- as.data.frame(get_pca_ind(pca_result)$coord)
 
   if (!is.null(group_by)) {
     individuals_coord[, group_by] <- data[, group_by]
   }
 
-
+  
   # Compute the eigenvalues
   eigenvalue    <- round(get_eigenvalue(pca_result), 1)
   variance_perc <- eigenvalue$variance.percent
 
-
+  # Plot with memberships of all clusters:
   if(x$type == "fuzzy" & focus == TRUE){
     # convert data into long format containing information on membership scores
     individuals_coord <- cbind(individuals_coord, x$membership_scores)
@@ -370,6 +367,13 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
     # Add clusters
     individuals_coord$cluster <- data$cluster
 
+    if (x$type == "fuzzy") {
+      individuals_coord_fuzzy <- individuals_coord %>%
+        filter(row.names(.) %in% row.names(transparent_obs))
+      individuals_coord <- individuals_coord %>%
+        filter(!(row.names(.) %in% row.names(transparent_obs)))
+    }
+
     if (!is.null(group_by)) {
       plot <- ggscatter(
         individuals_coord, x = "Dim.1", y = "Dim.2",
@@ -387,33 +391,24 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
         ylab = paste0("Dim 2 (", variance_perc[2], "% )" )
       ) + stat_mean(aes(color = cluster), size = 4) + theme_minimal()
     }
-
-
-    if(x$type == "fuzzy" && plot_all_fuzzy == TRUE && nrow(transparent_obs) != 0){ # add transparent observations (probability below threshold)
-      # calculate coordinates
-      coords_transparent <- as.data.frame(as.matrix(transparent_obs[, num_vars])%*% as.matrix(pca_result$rotation))
-      if (!is.null(group_by)) {
-        coords_transparent[, group_by] <- transparent_obs[, group_by]
-      }
-      coords_transparent$cluster <- transparent_obs$cluster
-
-      colnames(coords_transparent) <- colnames(individuals_coord)
-
+    
+    # Add transparent values for fuzzy clustering:
+    if (x$type == "fuzzy" && plot_all_fuzzy == TRUE &&
+        nrow(transparent_obs != 0)) {
       if (!is.null(group_by)) {
         plot <- plot + geom_point(
-          data = coords_transparent,
+          data = individuals_coord_fuzzy,
           aes(x = Dim.1, y = Dim.2,
               color = cluster, shape = !!ensym(group_by),
               alpha = alpha_fuzzy),
           size = 1.5, show.legend = FALSE)
       } else {
         plot <- plot + geom_point(
-          data = coords_transparent,
+          data = individuals_coord_fuzzy,
           aes(x = Dim.1, y = Dim.2, color = cluster,
               alpha = alpha_fuzzy),
           size = 1.5, show.legend = FALSE)
       }
-
     }
   }
 
@@ -430,12 +425,11 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
 #' already filtered by threshold (fuzzy))
 #' @param x_var,y_var Names of x and y variable
 #' @param plot_all_fuzzy For fuzzy clustering and threshold: should observations
-#' below threshold be plottet transparent? The regression line is only based on
-#' the observations above the threshold. Defaults to FALSE.
+#' below threshold be plotted transparent? Defaults to TRUE.
 #' @param transparent_obs data.frame containing observations that are plotted
-#' transparent, only relevant for \code{plot_all_fuzzy = TRUE}.
+#' transparent, only relevant for fuzzy clustering and \code{focus = FALSE}.
 #' @param alpha_fuzzy Alpha value for observations below threshold, only
-#' relevant for \code{plot_all_fuzzy = TRUE}. Defaults to 0.4.
+#' relevant for fuzzy clustering and \code{focus = FALSE}. Defaults to 0.4.
 #' @param focus For fuzzy clustering, focus on clusters given by variable
 #' \code{focus_clusters} and plot observations based on probability of belonging
 #' to the respective cluster. Defaults to FALSE.
@@ -447,7 +441,7 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = FALSE,
 #' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggsci ggwordcloud tidyr
 #' @export
 #'
-clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = FALSE,
+clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
                               transparent_obs = NULL, alpha_fuzzy = 0.4,
                               focus = FALSE, focus_clusters = NULL){
 
@@ -459,8 +453,7 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = FALSE,
   checkmate::assert_data_frame(transparent_obs, null.ok = TRUE)
   checkmate::assert_number(alpha_fuzzy, lower = 0, upper = 1)
   checkmate::assert_logical(focus, len = 1)
-  # TODO how to check 'focus_cluster'? Edit Jana: in line 482, an error is thrown if the specified clusters aren't found in the data. I think this is enough.
-
+  checkmate::assert_vector(focus_clusters, null.ok = TRUE)
 
   if (((!(!is.null(x_var) & !is.null(y_var)) ) | !(class(data[, x_var]) == "numeric" & class(data[, y_var]) == "numeric"))) {
     stop("Please specify the variables correctly. Both variable and group_by should contain the names of metric variables.")
