@@ -1,5 +1,5 @@
 ---
-title: 'fuzzyclara: Efficient medoid-based clustering algorithms for large and fuzzy data'
+title: 'fuzzyclara: Efficient Medoid-based Clustering Algorithms for Large and Fuzzy Data'
 
 tags:
   - R
@@ -19,35 +19,53 @@ authors:
 affiliations:
  - name: Statistical Consulting Unit StaBLab, Department of Statistics, LMU Munich, Germany
    index: 1
-date: 30 June 2022
+date: 30 August 2022
 bibliography: paper.bib
 ---
 
 # Summary
-Partitioning clustering The R package \code{fuzzyclara} offers a flexible framework to c
+
+Cluster analysis aims to find reasonable groupings of a set of observations
+that resemble their characteristics (REFERENCE?).
+The `fuzzyclara` package comprises routines to cover the whole workflow for
+real-world clustering applications.
+This includes both the estimation of hard and fuzzy clusterings,
+the inclusion of subsampling-based estimation algorithms that make the
+estimation on large data feasible, and the inclusion of general
+convenience functionalities and visualization techniques.
+
 
 # Statement of Need
 
-Statement of the problem, partitioning cluster analysis for large
-data, fuzzy algorithms, general package for whole cluster analysis process,
-own distance function
-
-Motivation: Clustering problems can be fuzzy. For large datasets 
+Apart from offering general functions for clustering, the `fuzzyclara` package
+specifically tackles two issues of cluster analysis applications.
+First, it includes routines for fuzzy clustering which avoid the common hard
+clustering assumption that each observation is a clear member of one sole cluster.
+Instead, membership probabilities indicate to which extent the characteristics
+of each observation are shaped by the characteristics of several 'typical' clusters.
+Second, the estimation of classical clustering algorithms is often only hardly
+or not at all feasible in large data situations with thousands of observations.
+Sampling-based algorithms building on the CLARA algorithm are implemented to
+make the estimation feasible in such situations.
+Building on these two points, the 'fuzzyclara' package offers routines for all
+aspects of a cluster analysis, including the use of user-defined distance
+functions and diverse visualization techniques.
 
 The concepts of fuzzy clustering. Together with this, we aim to provide a package
 reflecting the pipeline for performing 
 \\ R offers several packages containing. 
-\\ Absatz zu existierenden Paketen: cluster,
+\\ Absatz zu existierenden Paketen: `cluster`,
 \begin{itemize}
-\item Allgemeine Pakete für partionierendes Cluster: cluster
-\item Fuzzy Clustering: fclust, vegclust, ...
-\item Subsampling: clara (cluster-Paket), clarans
+\item Allgemeine Pakete für partionierendes Cluster: `cluster` [@R_cluster]
+\item Fuzzy Clustering: `fclust` [@R_fclust], `vegclust` [@R_vegclust], ...
+\item Subsampling: clara (`cluster`-Paket) [@R_cluster], clarans im Paket `qtcat` [@R_qtcat]
+\item `fastkmedoids` enthält wohl auch (Versionen von) CLARA und CLARANS [@R_fastkmedoids]
 \end{itemize}
 However, a combination of both strategies is not available.
 
 # Combination of fuzzy and CLARA clustering
 For our we build on the clara clustering algorithm which was originally
-designed as a effficient variant of the partitioning around medoid algorithm
+designed as a efficient variant of the partitioning around medoids (PAM) algorithm
 \cite{kaufmann}.
 - Algorithmus/Flowchart
 Instead of a hard clustering method, we apply the fuzzy-k-medoids algorithm
@@ -75,6 +93,8 @@ Graphik 2: Wordcloud, PCA-Plot (differenziert nach Kerncluster)
 
 
 
-# Acknowledgements
+# Acknowledgments
+
+This work has been partially funded by the German Research Foundation (DFG) under Grant No. KU 1359/4-1 and by the German Federal Ministry of Education and Research (BMBF) under Grant No. 01IS18036A.
 
 # References
