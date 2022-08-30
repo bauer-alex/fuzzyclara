@@ -1,5 +1,7 @@
-^TouristClust\.Rproj$
+^.*\.Rproj$
 ^\.Rproj\.user$
+^_pkgdown\.yaml$
+^README\.Rmd$
 ^LICENSE\.md$
 ^doc$
 ^Meta$
