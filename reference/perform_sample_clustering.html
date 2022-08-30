@@ -65,6 +65,7 @@
 <span>  m <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  build <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  verbose_toLogFile <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -112,6 +113,11 @@ relevant for type = "fuzzy". Default FALSE.)</p></dd>
 <dd><p>Can be set to integers between 0 and 2 to control the level of
 detail of the printed diagnostic messages. Higher numbers lead to more
 detailed messages. Defaults to 1.</p></dd>
+
+
+<dt>verbose_toLogFile</dt>
+<dd><p>If TRUE, the diagnostic messages are printed to
+a log file <code>clustering_progress.log</code>. Defaults to FALSE.</p></dd>
 
 
 <dt>...</dt>
