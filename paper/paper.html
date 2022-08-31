@@ -252,6 +252,28 @@ if (window.hljs) {
 
 
 
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 
 
@@ -371,54 +393,96 @@ Clustering Algorithms for Large and Fuzzy Data</h1>
 
 <div id="summary" class="section level1">
 <h1>Summary</h1>
-<p>Cluster analysis aims to find reasonable groupings of a set of
-observations that resemble their characteristics (REFERENCE?). The
-<code>fuzzyclara</code> package comprises routines to cover the whole
-workflow for real-world clustering applications. This includes both the
-estimation of hard and fuzzy clusterings, the inclusion of
-subsampling-based estimation algorithms that make the estimation on
-large data feasible, and the inclusion of general convenience
-functionalities and visualization techniques.</p>
+<p>Cluster analysis analysis aims to find reasonable groupings of a set
+of observations that resemble their characteristics (REFERENCE?).
+Medoid-based partitioning methods The R package <code>fuzzyclara</code>
+provides routines to cover the whole workflow for real-world clustering
+applications. This includes both the estimation of hard and fuzzy
+clusterings, the inclusion of subsampling-based estimation algorithms
+that make the estimation on large data feasible, and the inclusion of
+general convenience functionalities and visualization techniques.</p>
 </div>
 <div id="statement-of-need" class="section level1">
 <h1>Statement of Need</h1>
-<p>Apart from offering general functions for clustering, the
-<code>fuzzyclara</code> package specifically tackles two issues of
-cluster analysis applications. First, it includes routines for fuzzy
-clustering which avoid the common hard clustering assumption that each
-observation is a clear member of one sole cluster. Instead, membership
-probabilities indicate to which extent the characteristics of each
-observation are shaped by the characteristics of several ‘typical’
-clusters. Second, the estimation of classical clustering algorithms is
-often only hardly or not at all feasible in large data situations with
-thousands of observations. Sampling-based algorithms building on the
-CLARA algorithm are implemented to make the estimation feasible in such
-situations. Building on these two points, the ‘fuzzyclara’ package
-offers routines for all aspects of a cluster analysis, including the use
-of user-defined distance functions and diverse visualization
+<p>Partitioning clustering algorithms aim to find reasonable groupings
+(‘clusters’) of a set of observations based on a predefined number of
+cluster. Medoid-based versions of this strategy build clusters based on
+a representative object in each cluster, the ‘medoid’. The most
+prominent representative of medoid-based clustering is the ‘partitioning
+around medoids’ algorithm, which is considered a robust method for many
+data situations (REFERENCE?).</p>
+<p>The PAM algorithm, however, suffers from two drawbacks. First, the
+estimation is often only hardly or not at all feasible in large data
+situations with thousands of observations. The algorithm requires the
+computation of a dissimilarity matrix between all observations which
+scales <span class="math inline">\(O(n^2)\)</span> in terms of runtime
+and memory usage. Sampling-based algorithms such as CLARA (Reference) or
+CLARANS (Reference) make the estimation feasible in such situations.
+Second, PAM is a hard clustering algorithm where each observation is
+rigidly assigned to a single cluster. This assumption is not valid in
+many data situations where observations may share characteristics of
+several ‘typical’ clusters. Such structures are taken into account by
+‘fuzzy clustering’ methods which compute membership scores for each
+observation to each cluster.</p>
+<p>The statistical software R already provides a wide range of packages
+containing clustering algorithms for large or fuzzy data. The package
+<span class="citation">(Maechler et al. 2022)</span> contains diverse
+clustering routines developed by (clustering book by Kaufmann) including
+the clara algorithm for large data and the fanny algorithm for fuzzy
+data. The clarans algorithm is implemented in the package
+<code>qtcat</code> <span class="citation">(Klasen 2022)</span>. The
+package <code>fastkmedoids</code> <span class="citation">(Li
+2021)</span> provides fast CLARA and CLARANS algorithms. A variaty of
+medoid-based fuzzy clustering methods is available in the packages
+<code>vegclust</code> <span class="citation">(De Caceres, Font, and
+Oliva 2010)</span> and <code>fclust</code> <span class="citation">(Ferraro, Giordani, and Serafini 2019)</span>.</p>
+<p>All of the mentioned implementations have in common that they either
+apply fuzzy clustering or work with subsampling approaches. The
+‘fuzzyclara’ package makes it possible to analyze large and fuzzy data
+at the same time, by combining the clara and clarans algorithms with the
+fuzzy-k-medoids algorithm by Krishnapuram. Apart from this, the package
+provides routines to cover the whole workflow for real-world clustering
+applications including the choice of the optimal of clusters, the use of
+user-defined distance functions and diverse visualization
 techniques.</p>
-The concepts of fuzzy clustering. Together with this, we aim to provide
-a package reflecting the pipeline for performing \ R offers several
-packages containing. \ Absatz zu existierenden Paketen:
-<code>cluster</code>,
-<p>However, a combination of both strategies is not available.</p>
 </div>
 <div id="combination-of-fuzzy-and-clara-clustering" class="section level1">
 <h1>Combination of fuzzy and CLARA clustering</h1>
-<p>For our we build on the clara clustering algorithm which was
-originally designed as a efficient variant of the partitioning around
-medoids (PAM) algorithm . - Algorithmus/Flowchart Instead of a hard
-clustering method, we apply the fuzzy-k-medoids algorithm (Krishnapuram
-et al.) on each subsample of the data. In accordance to the clara
-algorithm, the best subsample is then chosen based on all data. For each
-subsample, The subset of medians which minimizes the sum of minimal
-weighted distances is selected for the final clustering solutions.</p>
-<p>chosen in accordance to Formel für Verrechnung <span class="math display">\[\begin{equation}
+<p>To combine the CLARA strategy with the principle of fuzzy clustering,
+we adapt the original clara clustering algorithm which was originally
+designed as a efficient variant of the partitioning around medoids (PAM)
+algorithm. The clara algorithm by Kaufmann and Rousseauw consists of the
+following basic steps:</p>
+<ol style="list-style-type: decimal">
+<li>Determination of <span class="math inline">\(k\)</span> random
+subsamples of the data<br />
+</li>
+<li>For each subsample:<br />
+a Application of PAM clustering on each subsample<br />
+b Assignment of each observation of the whole dataset<br />
+c Computation of the average distance to the closest clustering medoid
+as clustering criterion</li>
+<li>Selection of the best clustering solution according to the minimal
+clustering criterion</li>
+</ol>
+<p>To account for fuzzyness, we adapt this algorithm as follows. Instead
+of a hard clustering method, we apply the fuzzy-k-medoids algorithm
+(Krishnapuram et al.) on each subsample of the data in step 2.
+Afterwards, each observation is assigned a membership score to each
+cluster according to the fuzzy-k-medoids algorithm: <span class="math display">\[\begin{equation}
 m =
-\end{equation}\]</span></p>
+\end{equation}\]</span> As clustering criterion a weighted average
+distance taking into account all membership scores. Finally, the final
+clustering solution is determined by the subsample solution which
+minimizes the average weighted distance.</p>
+<p>The clarans algorithm does not use random samples of the data, but…
+The implementation of its fuzzy version follows basically the same idea
+as the fuzzy clara agorithm. Again, memberships scores are computed
+according to (1) and the weighted average distance to the cluster medoid
+is uses as selection criterion.</p>
 </div>
-<div id="clustering-pipeline" class="section level1">
-<h1>Clustering pipeline</h1>
+<div id="general-routine-of-cluster-analysis" class="section level1">
+<h1>General Routine of Cluster Analysis</h1>
 </div>
 <div id="application" class="section level1">
 <h1>Application</h1>
@@ -433,8 +497,33 @@ Grpahik 1: Optimale Clusteranzahl Graphik 2: Wordcloud, PCA-Plot
 (DFG) under Grant No. KU 1359/4-1 and by the German Federal Ministry of
 Education and Research (BMBF) under Grant No. 01IS18036A.</p>
 </div>
-<div id="references" class="section level1">
-<h1>References</h1>
+<div id="references" class="section level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-R_vegclust" class="csl-entry">
+De Caceres, Miquel, Xavier Font, and Francesc Oliva. 2010. <em>The
+Management of Vegetation Classifications with Fuzzy Clustering</em>.
+<em>Journal of Vegetation Science</em>. Vol. 21. <a href="https://doi.org/10.1111/j.1654-1103.2010.01211.x">https://doi.org/10.1111/j.1654-1103.2010.01211.x</a>.
+</div>
+<div id="ref-R_fclust" class="csl-entry">
+Ferraro, M. B., P. Giordani, and A. Serafini. 2019. <span>“Fclust: An r
+Package for Fuzzy Clustering.”</span> <em>The <span>R</span>
+Journal</em> 11. <a href="https://journal.r-project.org/archive/2019/RJ-2019-017/RJ-2019-017.pdf">https://journal.r-project.org/archive/2019/RJ-2019-017/RJ-2019-017.pdf</a>.
+</div>
+<div id="ref-R_qtcat" class="csl-entry">
+Klasen, Jonas. 2022. <em>Qtcat: Quantitative Trait Cluster Association
+Test</em>. <a href="http://github.com/QTCAT/qtcat">http://github.com/QTCAT/qtcat</a>.
+</div>
+<div id="ref-R_fastkmedoids" class="csl-entry">
+Li, Xun. 2021. <em>Fastkmedoids: Faster k-Medoids Clustering Algorithms:
+FastPAM, FastCLARA, FastCLARANS</em>. <a href="https://CRAN.R-project.org/package=fastkmedoids">https://CRAN.R-project.org/package=fastkmedoids</a>.
+</div>
+<div id="ref-R_cluster" class="csl-entry">
+Maechler, Martin, Peter Rousseeuw, Anja Struyf, Mia Hubert, and Kurt
+Hornik. 2022. <em>Cluster: Cluster Analysis Basics and Extensions</em>.
+<a href="https://CRAN.R-project.org/package=cluster">https://CRAN.R-project.org/package=cluster</a>.
+</div>
+</div>
 </div>
 
 

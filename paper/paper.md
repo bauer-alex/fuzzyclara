@@ -25,9 +25,10 @@ bibliography: paper.bib
 
 # Summary
 
-Cluster analysis aims to find reasonable groupings of a set of observations
-that resemble their characteristics (REFERENCE?).
-The `fuzzyclara` package comprises routines to cover the whole workflow for
+Cluster analysis analysis aims to find reasonable groupings
+of a set of observations that resemble their characteristics (REFERENCE?).
+Medoid-based partitioning methods The R package `fuzzyclara`
+provides routines to cover the whole workflow for
 real-world clustering applications.
 This includes both the estimation of hard and fuzzy clusterings,
 the inclusion of subsampling-based estimation algorithms that make the
@@ -37,52 +38,79 @@ convenience functionalities and visualization techniques.
 
 # Statement of Need
 
-Apart from offering general functions for clustering, the `fuzzyclara` package
-specifically tackles two issues of cluster analysis applications.
-First, it includes routines for fuzzy clustering which avoid the common hard
-clustering assumption that each observation is a clear member of one sole cluster.
-Instead, membership probabilities indicate to which extent the characteristics
-of each observation are shaped by the characteristics of several 'typical' clusters.
-Second, the estimation of classical clustering algorithms is often only hardly
-or not at all feasible in large data situations with thousands of observations.
-Sampling-based algorithms building on the CLARA algorithm are implemented to
-make the estimation feasible in such situations.
-Building on these two points, the 'fuzzyclara' package offers routines for all
-aspects of a cluster analysis, including the use of user-defined distance
-functions and diverse visualization techniques.
+Partitioning clustering algorithms aim to find reasonable groupings ('clusters')
+of a set of observations based on a predefined number of cluster. Medoid-based
+versions of this strategy build clusters based on a representative object in each
+cluster, the 'medoid'. The most prominent representative of medoid-based
+clustering is the 'partitioning around medoids' algorithm, which is considered
+a robust method for many data situations (REFERENCE?).
 
-The concepts of fuzzy clustering. Together with this, we aim to provide a package
-reflecting the pipeline for performing 
-\\ R offers several packages containing. 
-\\ Absatz zu existierenden Paketen: `cluster`,
-\begin{itemize}
-\item Allgemeine Pakete für partionierendes Cluster: `cluster` [@R_cluster]
-\item Fuzzy Clustering: `fclust` [@R_fclust], `vegclust` [@R_vegclust], ...
-\item Subsampling: clara (`cluster`-Paket) [@R_cluster], clarans im Paket `qtcat` [@R_qtcat]
-\item `fastkmedoids` enthält wohl auch (Versionen von) CLARA und CLARANS [@R_fastkmedoids]
-\end{itemize}
-However, a combination of both strategies is not available.
+The PAM algorithm, however, suffers from two drawbacks. First, the estimation is
+often only hardly or not at all feasible in large data situations with
+thousands of observations. The algorithm requires the computation of a
+dissimilarity matrix between all observations which scales $O(n^2)$ in terms of 
+runtime and memory usage. Sampling-based algorithms such as CLARA (Reference) or
+CLARANS (Reference) make the estimation feasible in such situations. Second,
+PAM is a hard clustering algorithm where each observation is rigidly assigned to a single
+cluster. This assumption is not valid in many data situations where
+observations may share characteristics of several 'typical' clusters. Such
+structures are taken into account by 'fuzzy clustering' methods which
+compute membership scores for each observation to each cluster.
+
+The statistical software R already provides a wide range of packages containing
+clustering algorithms for large or fuzzy data. The package [@R_cluster]
+contains diverse clustering routines developed by (clustering book by Kaufmann)
+including the clara algorithm for large data and the fanny algorithm for fuzzy
+data. The clarans algorithm is implemented in the package `qtcat` [@R_qtcat].
+The package `fastkmedoids` [@R_fastkmedoids] provides fast CLARA and
+CLARANS algorithms. A variaty of medoid-based fuzzy clustering methods is
+available in the packages `vegclust` [@R_vegclust] and `fclust` [@R_fclust].
+
+All of the mentioned implementations have in common that they either apply
+fuzzy clustering or work with subsampling approaches. The 'fuzzyclara' package
+makes it possible to analyze large and fuzzy data at the same time, by
+combining the clara and clarans algorithms with the fuzzy-k-medoids algorithm
+by Krishnapuram. Apart from this, the package provides routines to cover the
+whole workflow for real-world clustering applications including the choice of
+the optimal of clusters, the use of user-defined distance functions and
+diverse visualization techniques.
 
 # Combination of fuzzy and CLARA clustering
-For our we build on the clara clustering algorithm which was originally
-designed as a efficient variant of the partitioning around medoids (PAM) algorithm
-\cite{kaufmann}.
-- Algorithmus/Flowchart
-Instead of a hard clustering method, we apply the fuzzy-k-medoids algorithm
-(Krishnapuram et al.) on each subsample of the data. In accordance to the
-clara algorithm, the best subsample is then chosen based on all data. For each
-subsample, 
-The subset of 
-medians which minimizes the sum of minimal weighted distances is selected for
-the final clustering solutions. 
+To combine the CLARA strategy with the principle of fuzzy clustering,
+we adapt the original clara clustering algorithm which was originally
+designed as a efficient variant of the partitioning around medoids (PAM)
+algorithm. The clara algorithm by Kaufmann and Rousseauw consists of the following
+basic steps:
 
-chosen in accordance to 
-Formel für Verrechnung
+1. Determination of $k$ random subsamples of the data \
+2. For each subsample: \
+a Application of PAM clustering on each subsample \
+b Assignment of each observation of the whole dataset \
+c Computation of the average distance to the closest clustering medoid as
+clustering criterion
+3. Selection of the best clustering solution according to the minimal
+clustering criterion
+
+To account for fuzzyness, we adapt this algorithm as follows. Instead of a hard
+clustering method, we apply the fuzzy-k-medoids algorithm (Krishnapuram et al.)
+on each subsample of the data in step 2. Afterwards, each observation is
+assigned a membership score to each cluster according to the fuzzy-k-medoids
+algorithm:
 \begin{equation}
 m = 
 \end{equation}
+As clustering criterion a weighted average distance taking into
+account all membership scores. Finally, the final clustering solution is
+determined by the subsample solution which minimizes the average weighted
+distance. 
 
-# Clustering pipeline
+The clarans algorithm does not use random samples of the data, but... The
+implementation of its fuzzy version follows basically the same idea as the
+fuzzy clara agorithm. Again, memberships scores are computed according to (1)
+and the weighted average distance to the cluster medoid is uses as selection
+criterion. 
+
+# General Routine of Cluster Analysis
 
 # Application
 To showcase the functionality of our clustering package, we apply fuzzyclara
