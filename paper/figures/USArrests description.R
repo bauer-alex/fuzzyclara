@@ -34,24 +34,33 @@ ggsave("USArrests_description.png", bg = "white", width = 5, height = 3)
 
 # cluster data ------------------------------------------------------------
 # select number of clusters
-choice <- evaluate_cluster_numbers(data = USArrests, clusters_range = 2:12,
-                                   metric = "euclidean", samples = 20,
-                                   sample_size = 30,
-                                   type        = "fuzzy",
-                                   seed        = 3526,
-                                   verbose     = 0,
-                                   m = 1, plot = TRUE, return_results = TRUE)
+choice <- evaluate_cluster_numbers(data           = USArrests,
+                                   clusters_range = 2:12,
+                                   metric         = "euclidean",
+                                   samples        = 20,
+                                   sample_size    = nrow(USArrests),
+                                   type           = "fuzzy",
+                                   seed           = 3526,
+                                   verbose        = 0,
+                                   m              = 1.5,
+                                   plot           = TRUE,
+                                   return_results = TRUE)
 choice$plot
 
+
 dat_long <- dat_long %>% 
-  mutate(cluster = paste("Cluster", rep(choice$cluster_results[[4]]$clustering, each = 4)),
+  mutate(cluster = paste("Cluster", rep(choice$cluster_results[[6]]$clustering, each = 4)),
          cluster = factor(cluster))
+dat_long_medoids <- dat_long %>% 
+  filter(state %in% choice$cluster_results[[6]]$medoids)
 
 
 
 # plot clustered data -----------------------------------------------------
-ggplot(dat_long, aes(x = variable, y = value, group = state, col = cluster)) +
-  geom_line() +
+# with highlighted medoids per cluster
+ggplot(mapping = aes(x = variable, y = value, group = state, col = cluster)) +
+  geom_line(data = dat_long, alpha = 0.2) +
+  geom_line(data = dat_long_medoids) +
   ylab("standardized value") +
   facet_wrap(~ cluster, nrow = 1) +
   theme_minimal(base_size = 12) +
