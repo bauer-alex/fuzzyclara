@@ -90,38 +90,50 @@ techniques.
 
 # Combination of fuzzy and CLARA clustering
 To combine the CLARA strategy with the principle of fuzzy clustering,
-we adapt the original CLARA clustering algorithm.
-% which was originally designed as a efficient variant of the partitioning around medoids (PAM) algorithm.
-The CLARA algorithm by Kaufmann and Rousseauw (REFERENCE) consists of the
-following steps:
+we build on the original CLARA clustering algorithm by (REFERENCE). The
+algorithm consists of the following steps given a predefined number of $J$
+clusters.
 
 1. Determination of $k$ random subsamples of the data \
-2. For each subsample: \
-a Application of PAM clustering on each subsample \
-b Assignment of each observation of the whole dataset \
-c Computation of the average distance to the closest clustering medoid as
-clustering criterion:
-3. Selection of the best clustering solution according to the minimal
-clustering criterion
-
-To account for fuzzyness, we adapt this algorithm as follows. Instead of a hard
-clustering method, we apply the fuzzy-k-medoids algorithm [@krishnapuram_1999]
-on each subsample of the data in step 2. Afterwards, each observation is
-assigned a membership score to each cluster according to the fuzzy-k-medoids
-algorithm:
+2. For each subsample $k = 1,..., K$: \
+   (a) Application of PAM clustering on the subsample. \
+   (b) Assignment of each observation of the whole dataset to the cluster with
+the closest medoid. \
+   (c) Computation of the average distance to the closest clustering medoid as
+clustering criterion $C_p$:
 \begin{equation}
-u_{ij} = \frac{1}{\sum} 
+C_p = \frac{1}{n} \sum_{i=1}^n d_{ij_{min}p},
 \end{equation}
-As clustering criterion a weighted average distance taking into
-account all membership scores. Finally, the final clustering solution is
-determined by the subsample solution which minimizes the average weighted
-distance. 
+where $d_{ijp}$ denotes the distance of observation $i$ to the medoid of the
+assigned $j_{min}$ for the clustering solution of subsample $p$.
+3. Selection of the best clustering solution according to the minimal
+clustering criterion.
 
-The CLARANS algorithm does not use random samples of the data, but... The
-implementation of its fuzzy version follows basically the same idea as the
-fuzzy CLARA agorithm. Again, memberships scores are computed according to (1)
-and the weighted average distance to the cluster medoid is uses as selection
-criterion. 
+We account for fuzzyness by adapting this algorithm as follows. Instead of a
+hard clustering method, we apply the fuzzy-k-medoids algorithm
+[@krishnapuram_1999] on each subsample of the data in step 2a. Afterwards,
+each observation of the whole dataset is assigned a membership score to all
+clusters $j$ according to the fuzzy-k-medoids algorithm:
+\begin{equation}
+u_{ijp} = \frac{(\frac{1}{d_{ijp}})^{\frac{1}{m-1}}}{\sum_{j = 1}^J (\frac{1}{d_{ijp}})^{\frac{1}{m-1}}} ,
+\end{equation}
+where $m$ denotes the fuzzyness exponent controlling the degree of fuzziness.
+The clustering criterion is now the weighted sum of distance to the medoids of
+all clusters with weights according to the membership scores:
+\begin{equation}
+C_p = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^K u_{ijp}^m d_{ijp}.
+\end{equation}
+Finally, the clustering solution is determined by the subsample solution which
+minimizes the average weighted distance. The adapted clara algorithm yields
+the original clara algorithm with memberships of 0 and 1 only which corresponds
+to a hard clustering.
+
+The CLARANS algorithm does not use random samples of the data, but random
+pairs of medoids and non-medoids tested for a potential improvement of the
+current clustering. The implementation of its fuzzy version basically follows
+the same idea as the fuzzy CLARA algorithm with the computation of membership
+scores according to (2) and the selection of the best clustering solution over
+all local clusterings based on the minimal weighted average distance.
 
 # General Routine of Cluster Analysis
 
@@ -129,12 +141,20 @@ Wir haben auch hard clustering, verschiedene Visualisierungen, Clusteranzahl, al
 
 
 # Application
-To showcase the functionality of our clustering package, we apply `fuzzyclara`
-clustering to the USArrests [@mcneil_1977] data available in clustering.
-Grpahik 1: Optimale Clusteranzahl
-Graphik 2: Wordcloud, PCA-Plot (differenziert nach Kerncluster)
+We demonstrate the functionality of the `fuzzyclara` package by clustering
+German tourists based on the included `travel` data. The data originates from an
+annual cross-sectional study on pleasure travel and contains information on ...
+travelers between 2011 to 2018. Apart from thetravel year, included variables
+are the number of trips made within a year, the overall amount of travel
+expenses and the maximum travel distance.
+
+As tourists are considered, We apply the fuzzyclara algorithm with 20 randomly
+drawn samples of size 1000 to identify five clusters. 
 
 ![Figure caption \label{fig:description}](figures/USArrests_clustered.png)
+
+Figure 2 highlights 
+![Figure caption \label{fig:pca}](figures/USArrests_clustered.png)
 
 
 
