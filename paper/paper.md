@@ -28,7 +28,7 @@ bibliography: paper.bib
 Cluster analysis identifies optimal groupings of observations that share similar
 characteristics.
 One popular approach is to use medoid-based methods where each cluster center is
-represented by one **typical** observation [@kaufman_rousseeuw_2009].
+represented by one *typical* observation [@kaufman_rousseeuw_2009].
 The R package `fuzzyclara` provides routines to cover the whole workflow for
 real-world clustering applications.
 Beyond general convenience functionalities and visualization techniques,
@@ -39,12 +39,12 @@ estimation on large data feasible.
 
 # Statement of Need
 
-Partitioning clustering algorithms aim to find reasonable groupings (**clusters**)
+Partitioning clustering algorithms aim to find reasonable groupings (*clusters*)
 of a set of observations based on a predefined number of cluster.
-Medoid-based versions of this strategy build clusters based on **medoids**,
+Medoid-based versions of this strategy build clusters based on *medoids*,
 one observation per cluster best representing its typical characteristics.
 The most prominent representative of medoid-based clustering is the
-**partitioning around medoids** (PAM) algorithm, which is considered
+*partitioning around medoids* (PAM) algorithm, which is considered
 a robust method for many data situations [@kaufman_rousseeuw_2009].
 
 The PAM algorithm, however, suffers from two drawbacks.
@@ -59,8 +59,8 @@ CLARANS [@ng_han_2002] make the estimation feasible in such situations.
 Second, PAM is a hard clustering algorithm where each observation is rigidly
 assigned to a single cluster.
 This assumption is not best resembling reality in many data situations where
-observations may share characteristics of several **typical** clusters.
-Such structures are taken into account by **fuzzy clustering** methods which
+observations may share characteristics of several *typical* clusters.
+Such structures are taken into account by *fuzzy clustering* methods which
 compute membership scores for each observation to each cluster.
 
 The statistical software R already provides a wide range of packages containing
@@ -73,8 +73,9 @@ The CLARANS algorithm as an extension of CLARA is implemented in the package
 The package `fastkmedoids` [@R_fastkmedoids] provides fast CLARA and
 CLARANS algorithms (TODO konkreter schreiben was 'fast CLARA' bedeutet).
 A variety of medoid-based fuzzy clustering methods is available in packages
-`vegclust` [@R_vegclust] and `fclust` [@R_fclust] (TODO konkreter schreiben wie sich diese fuzzy-Methoden zu FANNY verhaelt).
-TODO Sind das alle Pakete?
+`vegclust` [@R_vegclust] and `fclust` [@R_fclust] (TODO konkreter schreiben wie sich diese fuzzy-Methoden zu FANNY verhaelt).  
+TODO Sind das alle Pakete?  
+TODO Welche anderen Pakete beschaeftigen sich mit dem kompletten Workflow von Clustering?
 
 All of the above implementations have in common that they either alllow for the
 application of fuzzy clustering or of subsampling approaches, but not both
@@ -124,12 +125,16 @@ criterion.
 
 # General Routine of Cluster Analysis
 
+Wir haben auch hard clustering, verschiedene Visualisierungen, Clusteranzahl, alle Distanzfunktionen
+
+
 # Application
-To showcase the functionality of our clustering package, we apply fuzzyclara
-clustering to the USArrests data available in clustering.
+To showcase the functionality of our clustering package, we apply `fuzzyclara`
+clustering to the USArrests [@mcneil_1977] data available in clustering.
 Grpahik 1: Optimale Clusteranzahl
 Graphik 2: Wordcloud, PCA-Plot (differenziert nach Kerncluster)
 
+![Figure caption \label{fig:description}](figures/USArrests_clustered.png)
 
 
 
