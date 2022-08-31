@@ -130,7 +130,8 @@ to a hard clustering.
 
 The CLARANS algorithm does not use random samples of the data, but random
 pairs of medoids and non-medoids tested for a potential improvement of the
-current clustering. The implementation of its fuzzy version basically follows
+current clustering (REFERENCE).
+The implementation of its fuzzy version basically follows
 the same idea as the fuzzy CLARA algorithm with the computation of membership
 scores according to (2) and the selection of the best clustering solution over
 all local clusterings based on the minimal weighted average distance.
