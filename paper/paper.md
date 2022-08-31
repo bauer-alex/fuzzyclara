@@ -144,17 +144,17 @@ Wir haben auch hard clustering, verschiedene Visualisierungen, Clusteranzahl, al
 We demonstrate the functionality of the `fuzzyclara` package by clustering
 German tourists based on the included `travel` data. The data originates from an
 annual cross-sectional study on pleasure travel and contains information on ...
-travelers between 2011 to 2018. Apart from thetravel year, included variables
+travelers between 2009 to 2018. Apart from thetravel year, included variables
 are the number of trips made within a year, the overall amount of travel
 expenses and the maximum travel distance.
 
 As tourists are considered, We apply the fuzzyclara algorithm with 20 randomly
 drawn samples of size 1000 to identify five clusters. 
 
-![Figure caption \label{fig:description}](figures/USArrests_clustered.png)
+![Figure caption \label{fig:description}](figures/travel_clustered.png)
 
 Figure 2 highlights 
-![Figure caption \label{fig:pca}](figures/USArrests_clustered.png)
+![Figure caption \label{fig:pca}](figures/travel_clustered.png)
 
 
 
