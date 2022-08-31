@@ -57,7 +57,7 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
                                      algorithm = "clara", samples = 10,
                                      sample_size = NULL, num_local = 5,
                                      max_neighbors = 100, type = "hard",
-                                     cores = 1, seed = 1234, m = 2,
+                                     cores = 1, seed = 1234, m = 1.5,
                                      scale = TRUE, build = FALSE,
                                      verbose = 1, plot = TRUE,
                                      return_results = FALSE, ...) {

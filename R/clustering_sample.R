@@ -22,7 +22,7 @@
 #'
 clustering_sample <- function(data, sample_ids, dist, clusters = 5,
                               metric = "euclidean", sample_size = NULL,
-                              type = "hard", m = 2, verbose = 1,
+                              type = "hard", m = 1.5, verbose = 1,
                               verbose_toLogFile = FALSE, build = FALSE, ...) {
 
   checkmate::assert_data_frame(data)

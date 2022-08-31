@@ -27,7 +27,7 @@
 #'
 clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                              samples = 10, sample_size = NULL, type = "hard",
-                             cores = 1, seed = 1234, m = 2, verbose = 1,
+                             cores = 1, seed = 1234, m = 1.5, verbose = 1,
                              build = FALSE, ...) {
 
   checkmate::assert_data_frame(data)

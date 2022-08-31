@@ -23,7 +23,7 @@
 clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
                                type = "hard", num_local = 5,
                                max_neighbors = 100, cores = 1, seed = 1234,
-                               m = 2, verbose = 1, ...) {
+                               m = 1.5, verbose = 1, ...) {
 
   checkmate::assert_data_frame(data)
   checkmate::assert_vector(clusters)
@@ -195,7 +195,7 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
 #'
 clustering_local <- function(data, sample_local, clusters = 5,
                              metric = "euclidean", max_neighbors = 100,
-                             type = "hard", m = 2, verbose = 1,
+                             type = "hard", m = 1.5, verbose = 1,
                              verbose_toLogFile = FALSE, ...) {
 
   checkmate::assert_data_frame(data)

@@ -51,7 +51,7 @@
 fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
                        algorithm = "clara", samples = 10, sample_size = NULL,
                        max_neighbors = 100, num_local = 10, type = "hard",
-                       cores = 1, seed = 1234, m = 2, verbose = 1, # TODO alle seeds auf default 42 aendern? Waere etwas interessanter als 1234. ;)
+                       cores = 1, seed = 1234, m = 1.5, verbose = 1, # TODO alle seeds auf default 42 aendern? Waere etwas interessanter als 1234. ;)
                        scale = TRUE, build = FALSE, ...) {
 
   checkmate::assert(checkmate::check_data_frame(data),
