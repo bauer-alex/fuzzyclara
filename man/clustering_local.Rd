@@ -11,7 +11,7 @@ clustering_local(
   metric = "euclidean",
   max_neighbors = 100,
   type = "hard",
-  m = 2,
+  m = 1.5,
   verbose = 1,
   verbose_toLogFile = FALSE,
   ...

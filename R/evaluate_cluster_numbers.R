@@ -97,7 +97,11 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
     y <- clustering_clara(data, clusters = clusters_range, metric = metric,
                           sample_size = sample_size, samples = samples,
                           build = build, type = type, seed = seed, m = m,
-                          verbose = verbose, cores = cores, ...)
+                          verbose = verbose, cores = cores)
+    # Change criteria for fuzzy clustering with a single cluster:
+    if (type == "fuzzy") {
+      names(y[[1]])[3] <- "avg_weighted_dist"
+    }
   }
   if (algorithm == "clarans") {
     y <- clustering_clarans(data, clusters = clusters_range, metric = metric,

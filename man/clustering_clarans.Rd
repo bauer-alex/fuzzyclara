@@ -13,7 +13,7 @@ clustering_clarans(
   max_neighbors = 100,
   cores = 1,
   seed = 1234,
-  m = 2,
+  m = 1.5,
   verbose = 1,
   ...
 )

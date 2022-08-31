@@ -12,7 +12,7 @@ clustering_sample(
   metric = "euclidean",
   sample_size = NULL,
   type = "hard",
-  m = 2,
+  m = 1.5,
   verbose = 1,
   verbose_toLogFile = FALSE,
   build = FALSE,

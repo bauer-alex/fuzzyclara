@@ -16,7 +16,7 @@ evaluate_cluster_numbers(
   type = "hard",
   cores = 1,
   seed = 1234,
-  m = 2,
+  m = 1.5,
   scale = TRUE,
   build = FALSE,
   verbose = 1,

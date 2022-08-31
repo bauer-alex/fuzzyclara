@@ -74,10 +74,14 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
 
   # Use pam clustering if m = 1 or only a single cluster is used:
   change_output_style <- FALSE
-  if ((type == "fuzzy" & m == 1) | (type == "fuzzy" & length(clusters == 1) &
-                                    clusters[1] == 1)) {
+  if ((type == "fuzzy" & m == 1) | (type == "fuzzy" & length(clusters) == 1 &
+      clusters[1] == 1)) {
     type <- "hard"
     change_output_style <- TRUE
+  }
+  type <- rep(type, length.out = length(clusters))
+  if (clusters[1] == 1) {
+    type[1] <- "hard"
   }
   # The resulting output, however, should look the usual fuzzy output.
 
@@ -98,13 +102,13 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
       # Perform actual clustering:
       if (verbose >= 1) { message("--- Performing calculations for subsample ", i) }
       # Perform clustering with different cluster numbers:
-      clustering_numbers_list <- lapply(X = clusters, FUN = function(j) {
+      clustering_numbers_list <- lapply(X = seq_along(clusters), FUN = function(j) {
         clustering <- clustering_sample(data = data,
                                         sample_ids = sample_ids[[i]],
-                                        dist = dist_matrix, clusters = j,
+                                        dist = dist_matrix, clusters = clusters[j],
                                         metric = metric, m = m,
                                         sample_size = sample_size,
-                                        type = type, verbose = verbose,
+                                        type = type[j], verbose = verbose,
                                         build = build, ...)
         return(clustering)
       })
@@ -137,13 +141,13 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                                              # Perform actual clustering:
                                              if (verbose >= 1) { message("--- Performing calculations for subsample ", i) }
                                              # Perform clustering with different cluster numbers:
-                                             clustering_numbers_list <- lapply(X = clusters, FUN = function(j) {
+                                             clustering_numbers_list <- lapply(X = seq_along(clusters), FUN = function(j) {
                                                clustering <- clustering_sample(data = data,
                                                                                sample_ids = sample_ids[[i]],
-                                                                               dist = dist_matrix, clusters = j,
+                                                                               dist = dist_matrix, clusters = clusters[j],
                                                                                metric = metric, m = m,
                                                                                sample_size = sample_size,
-                                                                               type = type, verbose = verbose,
+                                                                               type = type[j], verbose = verbose,
                                                                                build = build, ...)
                                                return(clustering)
                                              })
@@ -166,10 +170,10 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
         clustering_numbers_list <- lapply(X = clusters, FUN = function(j) {
           clustering <- clustering_sample(data = data,
                                           sample_ids = sample_ids[[i]],
-                                          dist = dist_matrix, clusters = j,
+                                          dist = dist_matrix, clusters = clusters[j],
                                           metric = metric, m = m,
                                           sample_size = sample_size,
-                                          type = type, verbose = verbose,
+                                          type = type[j], verbose = verbose,
                                           build = build, ...)
           return(clustering)
         })
@@ -189,7 +193,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
     # Selection of best clustering solution (according to smallest average
     # distance to closest cluster medoid):
     min_distance_list <- lapply(X = 1:samples, FUN = function(i) {
-      if (type == "hard") {
+      if (type[[j]] == "hard") {
         dist <- clustering_results_list[[i]][[j]]$avg_min_dist
       } else { # type = "fuzzy"
         dist <- clustering_results_list[[i]][[j]]$avg_weighted_dist
@@ -198,8 +202,8 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
     })
     min_distance <- which.min(min_distance_list)
     best_solution <- clustering_results_list[[min_distance]][[j]]
-    best_solution[["type"]] <- type
-    if (type == "hard") {
+    best_solution[["type"]] <- type[j]
+    if (type[[j]] == "hard") {
       m <- 1
     }
     best_solution[["fuzzyness"]] <- m
@@ -209,7 +213,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
     # Attach the distance-to-medoids matrix of the full dataset to the result:
     clustering_results <- assign_cluster(data = data,
                                          medoids = best_solution$medoids,
-                                         metric = metric, type = type, m = m,
+                                         metric = metric, type = type[j], m = m,
                                          return_distMatrix = TRUE,
                                          return_data_medoids = TRUE)
     best_solution$distance_to_medoids <- clustering_results$distance_to_medoids
@@ -218,7 +222,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
     # Change output style if pam was used for type "fuzzy":
     if (change_output_style == TRUE) {
       # Type:
-      best_solution$type <- "fuzzy"
+      best_solution$type[j] <- "fuzzy"
       # Weighted distance:
       names(best_solution)[[3]] <- "avg_weighted_dist"
       # Membership scores:
