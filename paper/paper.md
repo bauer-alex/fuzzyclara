@@ -109,11 +109,11 @@ assigned $j_{min}$ for the clustering solution of subsample $p$.
 3. Selection of the best clustering solution according to the minimal
 clustering criterion.
 
-We account for fuzzyness by adapting this algorithm as follows. Instead of a
-hard clustering method, we apply the fuzzy-k-medoids algorithm
-[@krishnapuram_1999] on each subsample of the data in step 2a. Afterwards,
-each observation of the whole dataset is assigned a membership score to all
-clusters $j$ according to the fuzzy-k-medoids algorithm:
+We account for fuzzyness by adapting this algorithm as follows.
+Instead of a hard clustering method, we apply the fuzzy-k-medoids algorithm
+[@krishnapuram_1999] on each subsample of the data in step 2a.
+Afterwards, each observation of the whole dataset is assigned a membership score
+to all clusters $j$ according to the fuzzy-k-medoids algorithm:
 \begin{equation}
 u_{ijp} = \frac{(\frac{1}{d_{ijp}})^{\frac{1}{m-1}}}{\sum_{j = 1}^J (\frac{1}{d_{ijp}})^{\frac{1}{m-1}}} ,
 \end{equation}
@@ -124,8 +124,8 @@ all clusters with weights according to the membership scores:
 C_p = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^K u_{ijp}^m d_{ijp}.
 \end{equation}
 Finally, the clustering solution is determined by the subsample solution which
-minimizes the average weighted distance. The adapted clara algorithm yields
-the original clara algorithm with memberships of 0 and 1 only which corresponds
+minimizes the average weighted distance. The adapted CLARA algorithm yields
+the original CLARA algorithm with memberships of 0 and 1 only which corresponds
 to a hard clustering.
 
 The CLARANS algorithm does not use random samples of the data, but random
