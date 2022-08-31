@@ -87,7 +87,8 @@ basic steps:
 a Application of PAM clustering on each subsample \
 b Assignment of each observation of the whole dataset \
 c Computation of the average distance to the closest clustering medoid as
-clustering criterion
+clustering criterion:
+\begin{equatin}
 3. Selection of the best clustering solution according to the minimal
 clustering criterion
 
@@ -97,7 +98,7 @@ on each subsample of the data in step 2. Afterwards, each observation is
 assigned a membership score to each cluster according to the fuzzy-k-medoids
 algorithm:
 \begin{equation}
-m = 
+u_{ij} = \frac{1}{\sum} 
 \end{equation}
 As clustering criterion a weighted average distance taking into
 account all membership scores. Finally, the final clustering solution is
