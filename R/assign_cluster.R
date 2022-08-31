@@ -107,7 +107,7 @@ assign_cluster <- function(data, metric, medoids, dist_matrix = NULL,
   }
 
   if (return_data_medoids) {
-    row.names(data_medoids)             <- data_medoids[, 1]
+    row.names(data_medoids)             <- data_medoids[[1]]
     clustering_result[["data_medoids"]] <- data_medoids[, -1]
   }
 
