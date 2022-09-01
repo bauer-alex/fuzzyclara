@@ -125,7 +125,7 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
   checkmate::assert_logical(na.omit, len = 1)
   
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
-  cluster <- NULL
+  cluster <- max_memb_score <- NULL
   
   # Select observations based on confidence_threshold:
   if (x$type == "fuzzy") {
@@ -185,7 +185,7 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
 
 
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
-  cluster <- NULL
+  cluster <- max_memb_score <- NULL
   
   # Select observations based on confidence_threshold:
   if (x$type == "fuzzy") {

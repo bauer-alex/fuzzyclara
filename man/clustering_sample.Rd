@@ -12,6 +12,7 @@ clustering_sample(
   metric = "euclidean",
   sample_size = NULL,
   type = "hard",
+  seed = 1234,
   m = 1.5,
   verbose = 1,
   verbose_toLogFile = FALSE,
@@ -38,6 +39,8 @@ full details.}
 
 \item{type}{One of \code{c("hard","fuzzy")}, specifying the type of
 clustering to be performed.}
+
+\item{seed}{Random number seed. Defaults to 1234.}
 
 \item{m}{Fuzziness exponent (only for \code{type = "fuzzy"}), which has to be
 a numeric of minimum 1. Defaults to 2.}

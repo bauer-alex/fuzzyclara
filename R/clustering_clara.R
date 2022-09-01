@@ -106,10 +106,10 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
         clustering <- clustering_sample(data = data,
                                         sample_ids = sample_ids[[i]],
                                         dist = dist_matrix, clusters = clusters[j],
-                                        metric = metric, m = m,
+                                        metric = metric, m = m, seed = seed,
                                         sample_size = sample_size,
                                         type = type[j], verbose = verbose,
-                                        build = build, ...)
+                                        build = build)
         return(clustering)
       })
       return(clustering_numbers_list)
@@ -145,7 +145,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                                                clustering <- clustering_sample(data = data,
                                                                                sample_ids = sample_ids[[i]],
                                                                                dist = dist_matrix, clusters = clusters[j],
-                                                                               metric = metric, m = m,
+                                                                               metric = metric, m = m, seed = seed,
                                                                                sample_size = sample_size,
                                                                                type = type[j], verbose = verbose,
                                                                                build = build, ...)
@@ -171,7 +171,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
           clustering <- clustering_sample(data = data,
                                           sample_ids = sample_ids[[i]],
                                           dist = dist_matrix, clusters = clusters[j],
-                                          metric = metric, m = m,
+                                          metric = metric, m = m, seed = seed,
                                           sample_size = sample_size,
                                           type = type[j], verbose = verbose,
                                           build = build, ...)

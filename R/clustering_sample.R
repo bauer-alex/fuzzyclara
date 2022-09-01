@@ -22,8 +22,11 @@
 #'
 clustering_sample <- function(data, sample_ids, dist, clusters = 5,
                               metric = "euclidean", sample_size = NULL,
-                              type = "hard", m = 1.5, verbose = 1,
+                              type = "hard", seed = 1234, m = 1.5, verbose = 1,
                               verbose_toLogFile = FALSE, build = FALSE, ...) {
+  
+  # Set a seed for random initialization in vegclust:
+  set.seed(seed)
 
   checkmate::assert_data_frame(data)
   # TODO how to check 'sample_ids'?
