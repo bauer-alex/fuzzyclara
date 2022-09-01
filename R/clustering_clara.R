@@ -109,7 +109,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                                         metric = metric, m = m, seed = seed,
                                         sample_size = sample_size,
                                         type = type[j], verbose = verbose,
-                                        build = build)
+                                        build = build, ...)
         return(clustering)
       })
       return(clustering_numbers_list)
