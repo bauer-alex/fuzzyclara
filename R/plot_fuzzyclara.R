@@ -141,7 +141,7 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
     data <- data %>% filter(!is.na(!!sym(variable)))
   }
 
-  if (class(data[, variable]) == "numeric"){
+  if (is.numeric(as.data.frame(data)[, variable])){
     stop("The specified 'variable' has to be non-numeric.")
   }
 
@@ -201,7 +201,7 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
     data <- data %>% filter(!is.na(!!sym(variable)))
   }
 
-  if (class(data[, variable]) != "numeric"){
+  if (!is.numeric(as.data.frame(data)[, variable])){
     stop("The specified 'variable' has to be numeric.")
   }
 

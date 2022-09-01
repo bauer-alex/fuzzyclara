@@ -4,8 +4,16 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-# TODO make the RA dataset part of the package and call it with 'data()'
-dat <- readRDS("~/LRZ Sync+Share/TourIST_neu/TourIST_2021-03-07T0005/Paper/7_fuzzyclara/1_RAsampleData/Reiseanalyse_sample.rds")
+# TODO make the RA dataset part of the package and call it with 'data()'s
+setwd("fuzzyclara/paper/figures")
+user <- "max"
+if (user == "max") {
+  dat <- readRDS("C:/Users/ri87nix/LRZ Sync+Share/TourIST_neu/TourIST_2021-03-07T0005/Paper/7_fuzzyclara/1_RAsampleData/Reiseanalyse_sample.rds")
+
+}  
+if (user == "alex") {
+  dat <- readRDS("~/LRZ Sync+Share/TourIST_neu/TourIST_2021-03-07T0005/Paper/7_fuzzyclara/1_RAsampleData/Reiseanalyse_sample.rds")
+}
 
 
 
@@ -85,6 +93,18 @@ ggplot(mapping = aes(x = variable, y = value, group = traveler_id, col = cluster
         legend.position = "none",
         axis.text.x     = element_text(angle = 45, hjust = 1))
 ggsave("travel_clustered.png", bg = "white", width = 10, height = 4)
+
+
+
+# boxplots of travel expenses
+
+library(ggpubr)
+plot1 <- plot(x = choice$cluster_results[[4]], data = dat, type = "boxplot",
+     variable = "totalExpenses")# + ylim(0, 6000)
+plot2 <- plot(x = choice$cluster_results[[4]], data = dat, type = "boxplot",
+     variable = "totalExpenses", confidence_threshold = 0.4) #+ ylim(0, 6000)
+ggarrange(plot1, plot2)
+
 
 
 # PCA plot

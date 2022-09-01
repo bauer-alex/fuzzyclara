@@ -92,7 +92,7 @@ techniques.
 To combine the CLARA strategy with the principle of fuzzy clustering,
 we build on the original CLARA clustering algorithm by (REFERENCE). The
 algorithm consists of the following steps given a predefined number of $J$
-clusters.
+clusters:
 
 1. Determination of $k$ random subsamples of the data \
 2. For each subsample $k = 1,..., K$: \
@@ -135,32 +135,60 @@ The implementation of its fuzzy version basically follows
 the same idea as the fuzzy CLARA algorithm with the computation of membership
 scores according to (2) and the selection of the best clustering solution over
 all local clusterings based on the minimal weighted average distance.
+TODO: noch einzubauen: Funktion fuzzyclara, Verwendung von vegclust für clara
 
 # General Routine of Cluster Analysis
 
-Wir haben auch hard clustering, verschiedene Visualisierungen, Clusteranzahl, alle Distanzfunktionen
+Apart from the combination of fuzzy clustering and subsampling approaches,
+`fuzzyclara` aims to provide a flexible toolbox for medoid-based clustering in
+general which covers the whole clustering workflow. This also includes the
+option to perform hard clustering using the classical pam algorithm. All
+implemented algorithm may be used with any kind of dissimilarity metric. The
+user may rely on a set of pre-defined common metrics
+(which are used by `proxy::dist`) or use a self-defined metric. 
 
+The package contains a wide set of routines for post-analysis of the clustering
+solutions including descriptive visualizations, principal components plots or
+the analysis of silhouettes. The focus of the graphical visualization tools
+is also on the representation of the fuzzyness of the resulting
+clusters. Individual membership scores are integrated into `clara_pca`,
+`clara_parcoord` and `clara_scatterplot`. For other plot functions such 
+as `clara_boxplot` and `clara_barplot`, an optional threshold can be set to
+only visualize the core observations of the clusters with high memberships
+scores. The optimal number of clusters may be determined by the function
+`evaluate_cluster_numbers` which repeatedly performs the clustering with
+different clusters based on the same random samples.
 
 # Application
 We demonstrate the functionality of the `fuzzyclara` package by clustering
 German tourists based on the included `travel` data. The data originates from an
-annual cross-sectional study on pleasure travel and contains information on ...
-travelers between 2009 to 2018. Apart from thetravel year, included variables
+annual cross-sectional study on pleasure travel and contains information on
+11871 travelers between 2009 to 2018. Apart from the travel year, included variables
 are the number of trips made within a year, the overall amount of travel
 expenses and the maximum travel distance.
 
-As tourists are considered, We apply the fuzzyclara algorithm with 20 randomly
-drawn samples of size 1000 to identify five clusters. 
+Due to the rather large data size, we apply the clara algorithm with 20
+randomly drawn samples of size 1000. As tourists are likely to share
+characteristics of several tourist types, we use the fuzzy version with a
+membership exponent of $m = 1.5$. Based on the minimum average weighted
+dissimilarity, the elbow criterion (see \autoref{fig:modelEffects})
+shows recommends us to choose the solution with four different clusters.
 
-![Figure caption \label{fig:description}](figures/travel_clustered.png)
+![Elbow plot of best clustering solutions with 1 to 10 clusters according to the minial average weighted distance.\label{fig:description}](figures/travel_ellbow.png)
 
-Figure 2 highlights 
-![Figure caption \label{fig:pca}](figures/travel_clustered.png)
+\autoref{fig:parcoord} highlights the chracteristics of the different clusters
+showing the individual paths of 500 randomly sampled observations including the
+medoid. Whereas cluster 1 shows a tendency to trips of shorter length, lower
+distance and lower costs, the tourists of cluster 2 tend to travel most
+frequently and spend the most money for travelling. Between the clusters 3 and
+4, there are only minor differences regarding travel distances and expenses.
 
-
+![Parallel coordinate plot showing individual paths of 500 randomly sampled observations over the standardized variables. The path of medoids are highlighted with the black line. The transparency of the line represents the membership score of the observation to the assigned cluster where a thicker line stands for a lower degree of fuzzyness. \label{fig:parcoord}](figures/travel_clustered.png)
 
 # Acknowledgments
 
-This work has been partially funded by the German Research Foundation (DFG) under Grant No. KU 1359/4-1 and by the German Federal Ministry of Education and Research (BMBF) under Grant No. 01IS18036A.
+This work has been partially funded by the German Research Foundation (DFG)
+under Grant No. KU 1359/4-1 and by the German Federal Ministry of Education and
+Research (BMBF) under Grant No. 01IS18036A.
 
 # References

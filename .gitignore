@@ -6,3 +6,4 @@ inst/doc
 .Rhistory
 *.log
 /paper/paper.html
+clustering_progress.log
