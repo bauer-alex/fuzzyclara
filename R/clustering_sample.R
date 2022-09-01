@@ -46,14 +46,14 @@ clustering_sample <- function(data, sample_ids, dist, clusters = 5,
     print_logMessage("Perform the main clustering step...",
                      verbose_toLogFile = verbose_toLogFile)
   }
-  clustering_results_sample <- perform_sample_clustering(dist = dist,
-                                                         data = data_sample,
+  clustering_results_sample <- perform_sample_clustering(dist     = dist,
+                                                         data     = data_sample,
                                                          clusters = clusters,
-                                                         type = type,
-                                                         metric = metric,
-                                                         names = data_sample$Name,
-                                                         m = m,
-                                                         build = build,
+                                                         type     = type,
+                                                         metric   = metric,
+                                                         names    = data_sample$Name,
+                                                         m        = m,
+                                                         build    = build,
                                                          ...)
 
   # Assignment of each observations of the entire dataset to closest medoid
@@ -62,14 +62,16 @@ clustering_sample <- function(data, sample_ids, dist, clusters = 5,
     print_logMessage("Assigning each observation to a cluster...",
                      verbose_toLogFile = verbose_toLogFile)
   }
-  clustering_results <- assign_cluster(data = data,
+  clustering_results <- assign_cluster(data    = data,
                                        medoids = clustering_results_sample$medoid,
-                                       metric = metric, type = type, m = m)
+                                       metric  = metric,
+                                       type    = type,
+                                       m       = m)
 
   # Add information about subsample, distance matrix, clustering of subsample
   # for silhouette plot:
-  clustering_results[["subsample_ids"]] <- sample_ids
-  clustering_results[["dist_matrix"]] <- dist
+  clustering_results[["subsample_ids"]]        <- sample_ids
+  clustering_results[["dist_matrix"]]          <- dist
   clustering_results[["subsample_clustering"]] <- clustering_results[["clustering"]][sample_ids]
 
 
@@ -184,9 +186,12 @@ perform_sample_clustering <- function(dist, data, clusters, type, metric,
         non_medoids <- names[!names %in% starting_medoids]
         costs <- lapply(X = non_medoids, FUN = function(non_medoid) {
           medoids <- c(starting_medoids, non_medoid)
-          cost <- assign_cluster(data = data, medoids = medoids,
-                                 metric = metric, dist_matrix = dist,
-                                 type = "fuzzy", m = m)$avg_weighted_dist
+          cost    <- assign_cluster(data        = data,
+                                    medoids     = medoids,
+                                    metric      = metric,
+                                    dist_matrix = dist,
+                                    type        = "fuzzy",
+                                    m           = m)$avg_weighted_dist
           return(cost)
         })
         starting_medoids <- c(starting_medoids, non_medoids[which.min(costs)])
@@ -195,14 +200,20 @@ perform_sample_clustering <- function(dist, data, clusters, type, metric,
       starting_medoids <- which(names %in% starting_medoids)
       dist <- proxy::as.dist(dist)
       attributes(dist)[["Labels"]] <- as.character(1:nrow(data))
-      fuzzy_sample <- vegclustdist(x = dist, mobileMemb = starting_medoids,
-                                      method = "FCMdd", m = m, ...)
+      fuzzy_sample <- vegclustdist(x          = dist,
+                                   mobileMemb = starting_medoids,
+                                   method     = "FCMdd",
+                                   m          = m,
+                                   ...)
     }
 
     if (build == FALSE) {
       attributes(dist)[["Labels"]] <- as.character(1:nrow(data))
-      fuzzy_sample <- vegclustdist(x = dist, mobileMemb = clusters,
-                                      method = "FCMdd", m = m, ...)
+      fuzzy_sample <- vegclustdist(x          = dist,
+                                   mobileMemb = clusters,
+                                   method     = "FCMdd",
+                                   m          = m,
+                                   ...)
     }
 
     medoids          <- names[as.numeric(fuzzy_sample$mobileCenters)]
@@ -211,13 +222,8 @@ perform_sample_clustering <- function(dist, data, clusters, type, metric,
     clustering       <- as.numeric(clustering_df)
   }
 
-  # Return of clustering information:
-  clustering_result <- list("medoids" = medoids, "clustering" = clustering)
+  # Return clustering information:
+  clustering_result <- list("medoids"    = medoids,
+                            "clustering" = clustering)
   return(clustering_result)
 }
-
-
-
-
-
-

@@ -148,6 +148,3 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
     }
   }
 }
-
-
-

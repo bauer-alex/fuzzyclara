@@ -57,12 +57,12 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   # Warning if sample size is larger than number of observations:
   if (sample_size == nrow(data)) {
     sample_size <- nrow(data)
-    samples <- 1
-    sample_ids <- list(1:nrow(data))
+    samples     <- 1
+    sample_ids  <- list(1:nrow(data))
     warning("The specified sample size is equal to the number of
     observations in the data. PAM clustering is performed on the entire data.")
-  }
-  else {
+    
+  } else {
     # Random generation of subsamples of size sample_size:
     sample_ids <- lapply(X = 1:samples, FUN = function(i) {
       sample <- sample(x = 1:nrow(data), size = sample_size, replace = FALSE)
@@ -248,5 +248,3 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   }
   return(results_list)
 }
-
-
