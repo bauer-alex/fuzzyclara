@@ -132,14 +132,14 @@
 <pre><code><span><span class="co">## Clustering results</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Medoids</span></span>
-<span><span class="co">## [1] "Oklahoma"  "Idaho"     "Tennessee"</span></span>
+<span><span class="co">## [1] "Oklahoma"  "Arizona"   "Tennessee"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Clustering</span></span>
-<span><span class="co">##  [1] 3 3 2 2 3 3 2 2 3 3 2 1 2 2 1 2 2 3 1 3 2 3 1 3 2 1 1 3 1 2 3 3 3 1 2 2 2 2</span></span>
-<span><span class="co">## [39] 2 3 1 3 3 2 1 2 2 1 1 2</span></span>
+<span><span class="co">##  [1] 3 3 1 2 1 1 2 2 1 3 2 2 1 2 2 2 2 3 2 1 2 1 2 3 2 2 2 1 2 2 1 1 3 2 2 2 2 2</span></span>
+<span><span class="co">## [39] 2 3 2 3 3 2 2 2 2 2 2 2</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Minimum average weighted distance</span></span>
-<span><span class="co">## [1] 1.830885</span></span></code></pre>
+<span><span class="co">## [1] 1.94242</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="clustering-with-self-defined-distance-function-and-other-distance-functions">Clustering with self-defined distance function and other distance functions<a class="anchor" aria-label="anchor" href="#clustering-with-self-defined-distance-function-and-other-distance-functions"></a>
@@ -162,14 +162,14 @@
 <pre><code><span><span class="co">## Clustering results</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Medoids</span></span>
-<span><span class="co">## [1] "Oklahoma"  "Idaho"     "Tennessee"</span></span>
+<span><span class="co">## [1] "Oklahoma"  "Arizona"   "Tennessee"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Clustering</span></span>
-<span><span class="co">##  [1] 3 3 2 2 3 3 2 2 3 3 2 1 2 2 1 2 2 3 1 3 2 3 1 3 2 1 1 3 1 2 3 3 3 1 2 2 2 2</span></span>
-<span><span class="co">## [39] 2 3 1 3 3 2 1 2 2 1 1 2</span></span>
+<span><span class="co">##  [1] 3 3 1 2 1 1 2 2 1 3 2 2 1 2 2 2 2 3 2 1 2 1 2 3 2 2 2 1 2 2 1 1 3 2 2 2 2 2</span></span>
+<span><span class="co">## [39] 2 3 2 3 3 2 2 2 2 2 2 2</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Minimum average weighted distance</span></span>
-<span><span class="co">## [1] 1.830885</span></span></code></pre>
+<span><span class="co">## [1] 1.94242</span></span></code></pre>
 <p>You can also use other distance functions from the proxy package like Gower, Manhattan etc. In order to specify arguments of the distance metric (e. g. <em>p</em> for Minkowski distance), you can use a self-defined distance function.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cc_manh</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fuzzyclara.html">fuzzyclara</a></span><span class="op">(</span>data        <span class="op">=</span> <span class="va">USArrests</span>,</span>
@@ -343,20 +343,27 @@
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
 <span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span>, confidence_threshold <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning in qt((1 - level)/2, df): NaNs produced</span></span></code></pre>
+<pre><code><span><span class="co">## Warning in max(ids, na.rm = TRUE): no non-missing arguments to max; returning</span></span>
+<span><span class="co">## -Inf</span></span></code></pre>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-10-2.png" width="576"></p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
 <span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span>, confidence_threshold <span class="op">=</span> <span class="fl">0.5</span>, plot_all_fuzzy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning in qt((1 - level)/2, df): NaNs produced</span></span>
+<span></span>
+<span><span class="co">## Warning in qt((1 - level)/2, df): no non-missing arguments to max; returning</span></span>
+<span><span class="co">## -Inf</span></span></code></pre>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-10-3.png" width="576"></p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span>
 <span>     group_by <span class="op">=</span> <span class="st">"Area"</span>, confidence_threshold <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-11-1.png" width="576"></p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span>
 <span>     group_by <span class="op">=</span> <span class="st">"Area"</span>, confidence_threshold <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-11-2.png" width="576"></p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span>
 <span>     group_by <span class="op">=</span> <span class="st">"Area"</span>, confidence_threshold <span class="op">=</span> <span class="fl">0.5</span>, plot_all_fuzzy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-11-3.png" width="576"></p>

@@ -133,14 +133,14 @@
 <pre><code><span><span class="co">## Clustering results</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Medoids</span></span>
-<span><span class="co">## [1] "Oklahoma"  "Idaho"     "Tennessee"</span></span>
+<span><span class="co">## [1] "Oklahoma"  "Arizona"   "Tennessee"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Clustering</span></span>
-<span><span class="co">##  [1] 3 3 2 2 3 3 2 2 3 3 2 1 2 2 1 2 2 3 1 3 2 3 1 3 2 1 1 3 1 2 3 3 3 1 2 2 2 2</span></span>
-<span><span class="co">## [39] 2 3 1 3 3 2 1 2 2 1 1 2</span></span>
+<span><span class="co">##  [1] 3 3 1 2 1 1 2 2 1 3 2 2 1 2 2 2 2 3 2 1 2 1 2 3 2 2 2 1 2 2 1 1 3 2 2 2 2 2</span></span>
+<span><span class="co">## [39] 2 3 2 3 3 2 2 2 2 2 2 2</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Minimum average weighted distance</span></span>
-<span><span class="co">## [1] 1.830885</span></span></code></pre>
+<span><span class="co">## [1] 1.94242</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="section-clustering-with-self-defined-distance-function-and-other-distance-functions">Clustering with self-defined distance function and other distance functions<a class="anchor" aria-label="anchor" href="#section-clustering-with-self-defined-distance-function-and-other-distance-functions"></a>
@@ -163,14 +163,14 @@
 <pre><code><span><span class="co">## Clustering results</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Medoids</span></span>
-<span><span class="co">## [1] "Oklahoma"  "Idaho"     "Tennessee"</span></span>
+<span><span class="co">## [1] "Oklahoma"  "Arizona"   "Tennessee"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Clustering</span></span>
-<span><span class="co">##  [1] 3 3 2 2 3 3 2 2 3 3 2 1 2 2 1 2 2 3 1 3 2 3 1 3 2 1 1 3 1 2 3 3 3 1 2 2 2 2</span></span>
-<span><span class="co">## [39] 2 3 1 3 3 2 1 2 2 1 1 2</span></span>
+<span><span class="co">##  [1] 3 3 1 2 1 1 2 2 1 3 2 2 1 2 2 2 2 3 2 1 2 1 2 3 2 2 2 1 2 2 1 1 3 2 2 2 2 2</span></span>
+<span><span class="co">## [39] 2 3 2 3 3 2 2 2 2 2 2 2</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Minimum average weighted distance</span></span>
-<span><span class="co">## [1] 1.830885</span></span></code></pre>
+<span><span class="co">## [1] 1.94242</span></span></code></pre>
 <p>You can also use other distance functions from the proxy package like Gower, Manhattan etc. In order to specify arguments of the distance metric (e. g. <em>p</em> for Minkowski distance), you can use a self-defined distance function.</p>
 <div class="sourceCode" id="section-cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cc_manh</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fuzzyclara.html">fuzzyclara</a></span><span class="op">(</span>data        <span class="op">=</span> <span class="va">USArrests</span>,</span>
@@ -233,7 +233,7 @@
 <span>                       verbose         <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">cc_number</span></span></code></pre></div>
 <p><img src="vignette_shiny_files/figure-html/optimal%20number%20clusters-1.png" width="576"></p>
-<iframe data-deferred-src="app5f17dc2c74edcaa6b7c2384b3b61cb96/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
+<iframe data-deferred-src="app43cc8c436d0f2f33a7ce88af5d522dfa/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
 </div>
 </div>
 <div class="section level2">
@@ -265,7 +265,7 @@
 <div class="sourceCode" id="section-cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, variable <span class="op">=</span> <span class="st">"Assault"</span><span class="op">)</span> </span></code></pre></div>
 <p><img src="vignette_shiny_files/figure-html/unnamed-chunk-1-1.png" width="576"></p>
-<iframe data-deferred-src="app1dda65db1b88cddf9998218a5163911b/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
+<iframe data-deferred-src="appc9ee34e27f5ae3d08f80638ac17cc563/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
 </div>
 <div class="section level3">
 <h3 id="section-barplot">Barplot<a class="anchor" aria-label="anchor" href="#section-barplot"></a>
@@ -273,7 +273,7 @@
 <div class="sourceCode" id="section-cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, variable <span class="op">=</span> <span class="st">"Area"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette_shiny_files/figure-html/unnamed-chunk-3-1.png" width="576"></p>
-<iframe data-deferred-src="appfc1000cb04459c7d7908d052a3eb5b50/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
+<iframe data-deferred-src="app0da2fd0e3b48e986bb88b6afb8c6f3b2/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
 </div>
 <div class="section level3">
 <h3 id="section-wordcloud">Wordcloud<a class="anchor" aria-label="anchor" href="#section-wordcloud"></a>
@@ -291,7 +291,7 @@
 <span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## `geom_smooth()` using formula 'y ~ x'</span></span></code></pre>
 <p><img src="vignette_shiny_files/figure-html/unnamed-chunk-6-1.png" width="576"></p>
-<iframe data-deferred-src="app0b926b70d524e346eb2b4aa0d68caedd/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
+<iframe data-deferred-src="app142ceaff298adbe81fe48d46c4af99d3/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
 <div class="sourceCode" id="section-cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
 <span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span>, </span>
@@ -305,7 +305,7 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span>
 <span>     group_by <span class="op">=</span> <span class="st">"Area"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette_shiny_files/figure-html/unnamed-chunk-9-1.png" width="576"></p>
-<iframe data-deferred-src="app86c7c8f7846e06189fc2f181472181b0/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
+<iframe data-deferred-src="app9aec20da6e7be06f835ad1d7244a5ef2/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
 <div class="sourceCode" id="section-cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span>
 <span>     focus <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
@@ -317,9 +317,9 @@
 <div class="sourceCode" id="section-cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests</span>, type <span class="op">=</span> <span class="st">"silhouette"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   cluster size ave.sil.width</span></span>
-<span><span class="co">## 1       1   12          0.47</span></span>
-<span><span class="co">## 2       2   21          0.21</span></span>
-<span><span class="co">## 3       3   17          0.24</span></span></code></pre>
+<span><span class="co">## 1       1   10          0.38</span></span>
+<span><span class="co">## 2       2   31          0.38</span></span>
+<span><span class="co">## 3       3    9          0.24</span></span></code></pre>
 <p><img src="vignette_shiny_files/figure-html/unnamed-chunk-12-1.png" width="576"></p>
 </div>
 </div>
