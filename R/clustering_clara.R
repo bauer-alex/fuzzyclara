@@ -61,7 +61,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
     sample_ids  <- list(1:nrow(data))
     warning("The specified sample size is equal to the number of
     observations in the data. PAM clustering is performed on the entire data.")
-    
+
   } else {
     # Random generation of subsamples of size sample_size:
     sample_ids <- lapply(X = 1:samples, FUN = function(i) {
@@ -133,13 +133,15 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
                                            fun = function(i) {
 
                                              # Create distance matrix for clustering sample:
-                                             if (verbose >= 1) { message("--- Calculating the distance matrix for subsample ", i)}
+                                             if (verbose >= 1) { print_logMessage(paste0("--- Calculating the distance matrix for subsample ",i),
+                                                                                  verbose_toLogFile = TRUE)}
                                              dist_matrix <- compute_distance_matrix(data = data,
                                                                                     sample_ids = sample_ids[[i]],
                                                                                     metric = metric)
 
                                              # Perform actual clustering:
-                                             if (verbose >= 1) { message("--- Performing calculations for subsample ", i) }
+                                             if (verbose >= 1) { print_logMessage(paste0("--- Performing calculations for subsample ",i),
+                                                                                  verbose_toLogFile = TRUE) }
                                              # Perform clustering with different cluster numbers:
                                              clustering_numbers_list <- lapply(X = seq_along(clusters), FUN = function(j) {
                                                clustering <- clustering_sample(data = data,
@@ -159,13 +161,15 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
 
       clustering_results_list <- mclapply(X = 1:samples, FUN = function(i) {
         # Create distance matrix for clustering sample:
-        if (verbose >= 1) { message("--- Calculating the distance matrix for subsample ", i)}
+        if (verbose >= 1) { print_logMessage(paste0("--- Calculating the distance matrix for subsample ",i),
+                                             verbose_toLogFile = TRUE)}
         dist_matrix <- compute_distance_matrix(data = data,
                                                sample_ids = sample_ids[[i]],
                                                metric = metric)
 
         # Perform actual clustering:
-        if (verbose >= 1) { message("--- Performing calculations for subsample ", i) }
+        if (verbose >= 1) { print_logMessage(paste0("--- Performing calculations for subsample ",i),
+                                             verbose_toLogFile = TRUE) }
         # Perform clustering with different cluster numbers:
         clustering_numbers_list <- lapply(X = clusters, FUN = function(j) {
           clustering <- clustering_sample(data = data,
