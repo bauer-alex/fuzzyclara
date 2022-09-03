@@ -171,7 +171,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
         if (verbose >= 1) { print_logMessage(paste0("--- Performing calculations for subsample ",i),
                                              verbose_toLogFile = TRUE) }
         # Perform clustering with different cluster numbers:
-        clustering_numbers_list <- lapply(X = clusters, FUN = function(j) {
+        clustering_numbers_list <- lapply(X = seq_along(clusters), FUN = function(j) {
           clustering <- clustering_sample(data = data,
                                           sample_ids = sample_ids[[i]],
                                           dist = dist_matrix, clusters = clusters[j],
