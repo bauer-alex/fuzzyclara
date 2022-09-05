@@ -139,25 +139,30 @@ TODO: noch einzubauen: Funktion fuzzyclara, Verwendung von vegclust für clara
 
 # General Routine of Cluster Analysis
 
-Apart from the combination of fuzzy clustering and subsampling approaches,
-`fuzzyclara` aims to provide a flexible toolbox for medoid-based clustering in
-general which covers the whole clustering workflow. This also includes the
-option to perform hard clustering using the classical pam algorithm. All
-implemented algorithm may be used with any kind of dissimilarity metric. The
-user may rely on a set of pre-defined common metrics
-(which are used by `proxy::dist`) or use a self-defined metric. 
+TODO Den einen Satz zum hard clustering im nächsten Absatz würde ich
+schon vorher mal bringen. Hier Fokus auf weitere Funktionalitäten.
 
-The package contains a wide set of routines for post-analysis of the clustering
-solutions including descriptive visualizations, principal components plots or
-the analysis of silhouettes. The focus of the graphical visualization tools
-is also on the representation of the fuzzyness of the resulting
-clusters. Individual membership scores are integrated into `clara_pca`,
-`clara_parcoord` and `clara_scatterplot`. For other plot functions such 
-as `clara_boxplot` and `clara_barplot`, an optional threshold can be set to
-only visualize the core observations of the clusters with high memberships
-scores. The optimal number of clusters may be determined by the function
+Beyond the efficient estimation of (fuzzy) clustering through subsampling approaches,
+`fuzzyclara` 
+<!--aims to provide a flexible toolbox for medoid-based clustering in
+general which covers the whole clustering workflow.-->
+comprises functionalities that cover the whole clustering workflow.
+This also includes the
+option to perform hard clustering using the classical PAM algorithm. All
+implemented algorithms may be used with any kind of dissimilarity metric.
+<!--The user may rely on a set of pre-defined common metrics
+(which are used by `proxy::dist`) or use a self-defined metric.--> 
+
+The package contains a wide set of routines for (visually) evaluating the clustering
+solutions, including principal components plots, the analysis of silhouette scores
+or the determination of the number of clusters.
+Using the implemented visualizations, the fuzzyness of a clustering solution can either be visualized
+based on the estimated membership scores
+<!--(`clara_pca`, `clara_parcoord` and `clara_scatterplot`)-->
+or by restricting on *core cluster observations* with some minimal membership score threshold.
+<!--The optimal number of clusters may be determined by the function
 `evaluate_cluster_numbers` which repeatedly performs the clustering with
-different clusters based on the same random samples.
+different clusters based on the same random samples.-->
 
 # Application
 We demonstrate the functionality of the `fuzzyclara` package by clustering
