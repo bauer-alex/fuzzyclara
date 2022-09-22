@@ -26,8 +26,9 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
   checkmate::assert(checkmate::check_data_frame(data),
                     checkmate::check_matrix(data), combine = "or")
   checkmate::assert_choice(type,
-                           choices = c("boxplot","wordclouds", "silhouette",
-                                       "pca", "scatterplot"), null.ok = TRUE)
+                           choices = c("barplot","boxplot","wordclouds",
+                                       "silhouette","pca", "scatterplot"),
+                           null.ok = TRUE)
   checkmate::assert_character(variable, null.ok = TRUE)
   checkmate::assert_logical(na.omit, len = 1)
 
@@ -507,7 +508,7 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
   max_memb_score <- variable <- cluster <- prob <- NULL
   
   
-  if (((!(!is.null(x_var) & !is.null(y_var)) ) | !(class(data[, x_var]) == "numeric" & class(data[, y_var]) == "numeric"))) {
+  if (((!(!is.null(x_var) & !is.null(y_var)) ) | !(class(data[[x_var]]) == "numeric" & class(data[[y_var]]) == "numeric"))) {
     stop("Please specify the variables correctly. Both variable and group_by should contain the names of metric variables.")
   }
   
