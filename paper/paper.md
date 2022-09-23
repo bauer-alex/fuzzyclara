@@ -40,18 +40,18 @@ estimation on large data feasible.
 # Statement of Need
 
 Partitioning clustering algorithms aim to find reasonable groupings (*clusters*)
-of a set of observations based on a predefined number of cluster.
+of a set of observations based on a predefined number of clusters.
 Medoid-based versions of this strategy build clusters based on *medoids*,
-one observation per cluster best representing its typical characteristics.
+i.e. one observation per cluster best representing its typical characteristics.
 The most prominent representative of medoid-based clustering is the
-*partitioning around medoids* (PAM) algorithm, which is considered
-a robust method for many data situations [@kaufman_rousseeuw_2009].
+*partitioning around medoids* (PAM) algorithm, which is robust applicable to
+many data situations [@kaufman_rousseeuw_2009].
 
 The PAM algorithm, however, suffers from two drawbacks.
-First, the estimation is often only hardly or not at all feasible in large data
+First, its estimation is often only hardly or not at all feasible in large data
 situations with thousands of observations.
 The algorithm requires the computation of a (dis)similarity matrix between all
-observations which scales quadratically ($O(n^2)$) in terms of runtime and
+observations, scaling quadratically ($O(n^2)$) in terms of runtime and
 memory usage.
 Sampling-based algorithms such as CLARA
 (TODO Kaufman Rousseeuw 1986, so zitiert wie in deren 2009'er Buch) or
@@ -80,12 +80,12 @@ TODO Welche anderen Pakete beschaeftigen sich mit dem kompletten Workflow von Cl
 All of the above implementations have in common that they either alllow for the
 application of fuzzy clustering or of subsampling approaches, but not both
 simultaneously.
-The 'fuzzyclara' package makes it possible to simultaneously analyze large and
-fuzzy data, by combining the CLARA and CLARANS algorithms with the
-fuzzy-k-medoids algorithm by Krishnapuram [@krishnapuram_1999].
+The *fuzzyclara* package allows for simultaneously analyzing large and
+fuzzy data, by combining the CLARA / CLARANS algorithms with the
+fuzzy-k-medoids algorithm by @krishnapuram_1999.
 Beyond this, the package provides routines to cover the whole workflow for
-real-world clustering applications including the choice of the optimal number of
-clusters, the use of user-defined distance functions and diverse visualization
+real-world clustering applications, including the use of user-defined distance functions,
+the choice of the optimal number of clusters and diverse visualization
 techniques.
 
 # Combination of fuzzy and CLARA clustering
@@ -94,45 +94,45 @@ we build on the original CLARA clustering algorithm by (REFERENCE). The
 algorithm consists of the following steps given a predefined number of $J$
 clusters:
 
-1. Determination of $k$ random subsamples of the data \
+1. Determination of $K$ random subsamples of the data \
 2. For each subsample $k = 1,..., K$: \
    (a) Application of PAM clustering on the subsample. \
-   (b) Assignment of each observation of the whole dataset to the cluster with
-the closest medoid. \
-   (c) Computation of the average distance to the closest clustering medoid as
-clustering criterion $C_p$:
+   (b) Assignment of each observation in the complete dataset to the cluster
+   with the closest medoid. \
+   (c) Computation of the average distance of each observation to its closest
+   clustering medoid as clustering criterion $C_p$:
 \begin{equation}
 C_p = \frac{1}{n} \sum_{i=1}^n d_{ij_{min}p},
 \end{equation}
-where $d_{ijp}$ denotes the distance of observation $i$ to the medoid of the
-assigned $j_{min}$ for the clustering solution of subsample $p$.
-3. Selection of the best clustering solution according to the minimal
+where $d_{ijp}$ denotes the distance of observation $i$ to its closest medoid
+(i.e. observation $j_{min}$) based on the clustering solution of subsample $k$.
+3. Selection of the optimal set of clusters according to the minimal
 clustering criterion.
 
-We account for fuzzyness by adapting this algorithm as follows.
+We further allow for fuzzyness in the algorithm by adapting it as follows.
 Instead of a hard clustering method, we apply the fuzzy-k-medoids algorithm
 [@krishnapuram_1999] on each subsample of the data in step 2a.
-Afterwards, each observation of the whole dataset is assigned a membership score
+Each observation of the complete dataset is then assigned a membership score
 to all clusters $j$ according to the fuzzy-k-medoids algorithm:
 \begin{equation}
 u_{ijp} = \frac{(\frac{1}{d_{ijp}})^{\frac{1}{m-1}}}{\sum_{j = 1}^J (\frac{1}{d_{ijp}})^{\frac{1}{m-1}}} ,
 \end{equation}
-where $m$ denotes the fuzzyness exponent controlling the degree of fuzziness.
-The clustering criterion is now the weighted sum of distance to the medoids of
-all clusters with weights according to the membership scores:
+where $m$ denotes the fuzziness exponent controlling the degree of fuzziness.
+The clustering criterion $C_p$ is accordingly defined as the weighted sum of all distances
+to the medoids of all clusters, with weights according to the membership scores:
 \begin{equation}
 C_p = \frac{1}{n} \sum_{i=1}^n\sum_{k=1}^K u_{ijp}^m d_{ijp}.
 \end{equation}
-Finally, the clustering solution is determined by the subsample solution which
-minimizes the average weighted distance. The adapted CLARA algorithm yields
-the original CLARA algorithm with memberships of 0 and 1 only which corresponds
-to a hard clustering.
+The optimal cluster solution is the subsample solution which
+minimizes this average weighted distance.
+Note that this adapted CLARA algorithm simplifies to the original, hard clustering CLARA
+algorithm when only allowing for memberships of 0 and 1.
 
-The CLARANS algorithm does not use random samples of the data, but random
-pairs of medoids and non-medoids tested for a potential improvement of the
-current clustering (REFERENCE).
-The implementation of its fuzzy version basically follows
-the same idea as the fuzzy CLARA algorithm with the computation of membership
+In contrast to the CLARA algorithm, the CLARANS algorithm does not evaluate a
+set random samples, but random pairs of medoids and non-medoids to iteratively
+check for a potential improvement of the current clustering solution (REFERENCE).
+The implementation of its fuzzy version follows
+the same scheme as the fuzzy CLARA algorithm with the computation of membership
 scores according to (2) and the selection of the best clustering solution over
 all local clusterings based on the minimal weighted average distance.
 TODO: noch einzubauen: Funktion fuzzyclara, Verwendung von vegclust für clara
@@ -149,7 +149,7 @@ general which covers the whole clustering workflow.-->
 comprises functionalities that cover the whole clustering workflow.
 This also includes the
 option to perform hard clustering using the classical PAM algorithm. All
-implemented algorithms may be used with any kind of dissimilarity metric.
+implemented algorithms may be used with any kind of (dis)similarity metric.
 <!--The user may rely on a set of pre-defined common metrics
 (which are used by `proxy::dist`) or use a self-defined metric.--> 
 
@@ -179,7 +179,7 @@ membership exponent of $m = 1.5$. Based on the minimum average weighted
 dissimilarity, the elbow criterion (see \autoref{fig:modelEffects})
 shows recommends us to choose the solution with four different clusters.
 
-![Elbow plot of best clustering solutions with 1 to 10 clusters according to the minial average weighted distance.\label{fig:description}](figures/travel_ellbow.png)
+![Elbow plot of best clustering solutions with 1 to 10 clusters according to the minial average weighted distance.\label{fig:description}](figures/travel_elbow.png)
 
 \autoref{fig:parcoord} highlights the chracteristics of the different clusters
 showing the individual paths of 500 randomly sampled observations including the

@@ -4,22 +4,13 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-# TODO make the RA dataset part of the package and call it with 'data()'s
-setwd("fuzzyclara/paper/figures")
-user <- "max"
-if (user == "max") {
-  dat <- readRDS("C:/Users/ri87nix/LRZ Sync+Share/TourIST_neu/TourIST_2021-03-07T0005/Paper/7_fuzzyclara/1_RAsampleData/Reiseanalyse_sample.rds")
-
-}  
-if (user == "alex") {
-  dat <- readRDS("~/LRZ Sync+Share/TourIST_neu/TourIST_2021-03-07T0005/Paper/7_fuzzyclara/1_RAsampleData/Reiseanalyse_sample.rds")
-}
+data(travel)
 
 
 
 # data prep ---------------------------------------------------------------
 # reformat to long format
-dat_long <- dat %>% 
+dat_long <- travel %>% 
   mutate(traveler_id = 1:nrow(.)) %>% 
   tidyr::pivot_longer(cols = 2:5, names_to = "variable")
 
@@ -49,7 +40,7 @@ ggsave("travel_description.png", bg = "white", width = 5, height = 4)
 
 # cluster data ------------------------------------------------------------
 # select number of clusters
-choice <- evaluate_cluster_numbers(data           = dat,
+choice <- evaluate_cluster_numbers(data           = travel,
                                    clusters_range = 1:10,
                                    metric         = "euclidean",
                                    samples        = 20,
@@ -61,11 +52,11 @@ choice <- evaluate_cluster_numbers(data           = dat,
                                    plot           = TRUE,
                                    return_results = TRUE)
 choice$plot
-ggsave("travel_ellbow.png", bg = "white", width = 10, height = 4)
+ggsave("travel_elbow.png", bg = "white", width = 10, height = 4)
 
 
 # choose the solution with 4 clusters
-n_clusters <- 4
+n_clusters <- 5
 dat_long <- dat_long %>% 
   mutate(cluster    = paste("Cluster", rep(choice$cluster_results[[n_clusters]]$clustering, each = 4)),
          memb_score = rep(apply(choice$cluster_results[[n_clusters]]$membership_scores, 1, max), each = 4),
@@ -99,16 +90,16 @@ ggsave("travel_clustered.png", bg = "white", width = 10, height = 4)
 # boxplots of travel expenses
 
 library(ggpubr)
-plot1 <- plot(x = choice$cluster_results[[4]], data = dat, type = "boxplot",
+plot1 <- plot(x = choice$cluster_results[[4]], data = travel, type = "boxplot",
      variable = "totalExpenses")# + ylim(0, 6000)
-plot2 <- plot(x = choice$cluster_results[[4]], data = dat, type = "boxplot",
+plot2 <- plot(x = choice$cluster_results[[4]], data = travel, type = "boxplot",
      variable = "totalExpenses", confidence_threshold = 0.4) #+ ylim(0, 6000)
 ggarrange(plot1, plot2)
 
 
 
 # PCA plot
-plot(choice$cluster_results[[n_clusters]], data = dat[,2:5], type = "pca")
+plot(choice$cluster_results[[n_clusters]], data = travel[,2:5], type = "pca")
 
 
 
