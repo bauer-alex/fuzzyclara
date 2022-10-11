@@ -39,4 +39,9 @@ reference:
     contents:
       - print.fuzzyclara
       - predict.fuzzyclara
+  - title: "Datasets"
+    desc: "Internal datasets to showcase the package functionalities."
+    contents:
+      - travel
+      
   
