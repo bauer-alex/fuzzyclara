@@ -245,6 +245,11 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
     class(best_solution) <- c("fuzzyclara", class(best_solution))
     return(best_solution)
   })
+  
+  if (verbose >= 1) {
+    print_logMessage("--- Clustering process completed!",
+                     verbose_toLogFile = (cores > 1))
+  }
 
   # Change output format if only a single cluster is evaluated:
   if (length(clusters) == 1) {
