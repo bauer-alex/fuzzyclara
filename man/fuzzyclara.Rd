@@ -85,6 +85,77 @@ a self-defined distance function.
 If the clustering is run on mulitple cores, the verbose messages are printed
 in a file \code{clustering_progress.log} (if \code{verbose > 0}).
 }
+\examples{
+ 
+#' #Hard clustering
+cc_hard <- fuzzyclara(data        = USArrests,
+                      clusters    = 3,
+                      metric      = "euclidean",
+                      samples     = 1,
+                      sample_size = NULL,
+                      type        = "hard",
+                      seed        = 3526,
+                      verbose     = 0)
+cc_hard
+
+#Fuzzy clustering
+cc_fuzzy <- fuzzyclara(data        = USArrests,
+                      clusters    = 3,
+                      metric      = "euclidean",
+                      samples     = 1,
+                      sample_size = NULL,
+                      type        = "fuzzy",
+                      m           = 2,
+                      seed        = 3526,
+                      verbose     = 0)
+cc_fuzzy
+
+#Fuzzy clustering with self-defined distance function
+dist_function <- function(x, y) {
+sqrt(sum((x - y)^2))
+}
+
+cc_dist <- fuzzyclara(data        = USArrests,
+                     clusters    = 3,
+                     metric      = dist_function,
+                     samples     = 1,
+                     sample_size = NULL,
+                     type        = "fuzzy",
+                     m           = 2,
+                     seed        = 3526,
+                     verbose     = 0)
+cc_dist
+
+#Hard clustering with other distance function
+cc_manh <- fuzzyclara(data        = USArrests,
+                     clusters    = 3,
+                     metric      = "manhattan",
+                     samples     = 1,
+                     sample_size = NULL,
+                     type        = "hard",
+                     seed        = 3526,
+                     verbose     = 0)
+
+cc_manh
+
+#Hard clustering with Minkowski distance
+     #In order to specify arguments of the distance metric (e. g. p for Minkowski distance), 
+     #you can use a self-defined distance function.
+
+dist_mink <- function(x, y) {
+proxy::dist(list(x, y), method = "minkowski", p = 1)
+}
+cc_mink <- fuzzyclara(data        = USArrests,
+                     clusters    = 3,
+                     metric      = dist_mink,
+                     samples     = 1,
+                     sample_size = NULL,
+                     type        = "hard",
+                     seed        = 3526,
+                     verbose     = 0)
+cc_mink
+
+}
 \references{
 TODO add CLARA and CLARANS papers, and maybe something else?
 }
