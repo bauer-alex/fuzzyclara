@@ -107,6 +107,172 @@ be plotted. Must be a number between 0 and 1. Defaults to 0.</p></dd>
 <p>Clustering plot</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Prepare data for example (enrich the USArrest dataset by area and state)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘dplyr’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:stats’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     filter, lag</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:base’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     intersect, setdiff, setequal, union</span>
+<span class="r-in"><span><span class="va">USArrests_enriched</span> <span class="op">&lt;-</span> <span class="va">USArrests</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>State <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">USArrests</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>         Area  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span><span class="va">State</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Washington"</span>, <span class="st">"Oregon"</span>,</span></span>
+<span class="r-in"><span>                                               <span class="st">"California"</span>, <span class="st">"Nevada"</span>, <span class="st">"Arizona"</span>, <span class="st">"Idaho"</span>, <span class="st">"Montana"</span>,</span></span>
+<span class="r-in"><span>                                               <span class="st">"Wyoming"</span>, <span class="st">"Colorado"</span>, <span class="st">"New Mexico"</span>, <span class="st">"Utah"</span>, <span class="st">"Hawaii"</span>,</span></span>
+<span class="r-in"><span>                                               <span class="st">"Alaska"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"West"</span>,</span></span>
+<span class="r-in"><span>                                  <span class="va">State</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Texas"</span>, <span class="st">"Oklahoma"</span>, <span class="st">"Arkansas"</span>, <span class="st">"Louisiana"</span>,</span></span>
+<span class="r-in"><span>                                               <span class="st">"Mississippi"</span>, <span class="st">"Alabama"</span>, <span class="st">"Tennessee"</span>, <span class="st">"Kentucky"</span>, <span class="st">"Georgia"</span>,</span></span>
+<span class="r-in"><span>                                               <span class="st">"Florida"</span>, <span class="st">"South Carolina"</span>, <span class="st">"North Carolina"</span>, <span class="st">"Virginia"</span>,</span></span>
+<span class="r-in"><span>                                               <span class="st">"West Virginia"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"South"</span>,</span></span>
+<span class="r-in"><span>                                  <span class="va">State</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Kansas"</span>, <span class="st">"Nebraska"</span>, <span class="st">"South Dakota"</span>,</span></span>
+<span class="r-in"><span>                                               <span class="st">"North Dakota"</span>, <span class="st">"Minnesota"</span>, <span class="st">"Missouri"</span>, <span class="st">"Iowa"</span>, <span class="st">"Illinois"</span>,</span></span>
+<span class="r-in"><span>                                               <span class="st">"Indiana"</span>, <span class="st">"Michigan"</span>, <span class="st">"Wisconsin"</span>, <span class="st">"Ohio"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Midwest"</span>,</span></span>
+<span class="r-in"><span>                                  <span class="va">State</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Maine"</span>, <span class="st">"New Hampshire"</span>, <span class="st">"New York"</span>,</span></span>
+<span class="r-in"><span>                                               <span class="st">"Massachusetts"</span>, <span class="st">"Rhode Island"</span>, <span class="st">"Vermont"</span>, <span class="st">"Pennsylvania"</span>,</span></span>
+<span class="r-in"><span>                                               <span class="st">"New Jersey"</span>, <span class="st">"Connecticut"</span>, <span class="st">"Delaware"</span>, <span class="st">"Maryland"</span><span class="op">)</span> <span class="op">~</span></span></span>
+<span class="r-in"><span>                                    <span class="st">"Northeast"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Determine clusters that will be plotted                                 </span></span></span>
+<span class="r-in"><span><span class="va">cc_hard</span> <span class="op">&lt;-</span> <span class="fu"><a href="fuzzyclara.html">fuzzyclara</a></span><span class="op">(</span>data        <span class="op">=</span> <span class="va">USArrests</span>,</span></span>
+<span class="r-in"><span>                      clusters    <span class="op">=</span> <span class="fl">3</span>,</span></span>
+<span class="r-in"><span>                      metric      <span class="op">=</span> <span class="st">"euclidean"</span>,</span></span>
+<span class="r-in"><span>                      samples     <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>                      sample_size <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
+<span class="r-in"><span>                      type        <span class="op">=</span> <span class="st">"hard"</span>,</span></span>
+<span class="r-in"><span>                      seed        <span class="op">=</span> <span class="fl">3526</span>,</span></span>
+<span class="r-in"><span>                      verbose     <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cc_hard</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Clustering results</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Medoids</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "New Mexico"    "Oklahoma"      "New Hampshire"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Clustering</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 2 2 2 3 2 2 3 3 2 2 3 1 2 3 1 3 3 2 1 2 3 2 1 2 3 3 3 2 1 3 2 2 2 1 3 3 3 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [39] 3 2 1 2 2 3 1 3 3 1 1 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Minimum average distance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.180717</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">cc_fuzzy</span> <span class="op">&lt;-</span> <span class="fu"><a href="fuzzyclara.html">fuzzyclara</a></span><span class="op">(</span>data        <span class="op">=</span> <span class="va">USArrests</span>,</span></span>
+<span class="r-in"><span>                      clusters    <span class="op">=</span> <span class="fl">3</span>,</span></span>
+<span class="r-in"><span>                      metric      <span class="op">=</span> <span class="st">"euclidean"</span>,</span></span>
+<span class="r-in"><span>                      samples     <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>                      sample_size <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
+<span class="r-in"><span>                      type        <span class="op">=</span> <span class="st">"fuzzy"</span>,</span></span>
+<span class="r-in"><span>                      m           <span class="op">=</span> <span class="fl">2</span>,</span></span>
+<span class="r-in"><span>                      seed        <span class="op">=</span> <span class="fl">3526</span>,</span></span>
+<span class="r-in"><span>                      verbose     <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cc_fuzzy</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Clustering results</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Medoids</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Oklahoma"  "Arizona"   "Tennessee"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Clustering</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 3 3 1 2 1 1 2 2 1 3 2 2 1 2 2 2 2 3 2 1 2 1 2 3 2 2 2 1 2 2 1 1 3 2 2 2 2 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [39] 2 3 2 3 3 2 2 2 2 2 2 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Minimum average weighted distance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.94242</span>
+<span class="r-in"><span>                                    </span></span>
+<span class="r-in"><span><span class="co"># Boxplot</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_hard</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, variable <span class="op">=</span> <span class="st">"Assault"</span><span class="op">)</span> </span></span>
+<span class="r-plt img"><img src="plot.fuzzyclara-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Barplot</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_hard</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, variable <span class="op">=</span> <span class="st">"Area"</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot.fuzzyclara-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Wordcloud</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_hard</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, variable <span class="op">=</span> <span class="st">"State"</span>, type <span class="op">=</span> <span class="st">"wordclouds"</span><span class="op">)</span>                                    </span></span>
+<span class="r-plt img"><img src="plot.fuzzyclara-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span>                                    </span></span>
+<span class="r-in"><span><span class="co"># Scatterplot</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_hard</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"scatterplot"</span>, x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span><span class="op">)</span>   </span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using formula 'y ~ x'</span>
+<span class="r-plt img"><img src="plot.fuzzyclara-4.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Plot membership probability for fuzzy clustering</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"scatterplot"</span>,</span></span>
+<span class="r-in"><span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span>, </span></span>
+<span class="r-in"><span>     focus <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot.fuzzyclara-5.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Plot membership probability for fuzzy clustering (one cluster only)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"scatterplot"</span>,</span></span>
+<span class="r-in"><span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span>, </span></span>
+<span class="r-in"><span>     focus <span class="op">=</span> <span class="cn">TRUE</span>, focus_clusters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>  </span></span>
+<span class="r-plt img"><img src="plot.fuzzyclara-6.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span>     </span></span>
+<span class="r-in"><span><span class="co"># PCA</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_hard</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span></span>
+<span class="r-in"><span>     group_by <span class="op">=</span> <span class="st">"Area"</span><span class="op">)</span>     </span></span>
+<span class="r-plt img"><img src="plot.fuzzyclara-7.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co"># Plot membership probability for one or more clusters following a PCA    </span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span></span>
+<span class="r-in"><span>     focus <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>     </span></span>
+<span class="r-plt img"><img src="plot.fuzzyclara-8.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span>       </span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span></span>
+<span class="r-in"><span>     focus <span class="op">=</span> <span class="cn">TRUE</span>, focus_clusters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>      </span></span>
+<span class="r-plt img"><img src="plot.fuzzyclara-9.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span>  </span></span>
+<span class="r-in"><span><span class="co"># Silhouette plot</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_hard</span>, data <span class="op">=</span> <span class="va">USArrests</span>, type <span class="op">=</span> <span class="st">"silhouette"</span><span class="op">)</span>  </span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   cluster size ave.sil.width</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   10          0.46</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   19          0.28</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   21          0.28</span>
+<span class="r-plt img"><img src="plot.fuzzyclara-10.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co"># Plot clusters for fuzzy clustering (using threshold for membership scores)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>, variable <span class="op">=</span> <span class="st">"Assault"</span>, confidence_threshold <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> </span></span>
+<span class="r-plt img"><img src="plot.fuzzyclara-11.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span>       </span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>, variable <span class="op">=</span> <span class="st">"Assault"</span>, confidence_threshold <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>       </span></span>
+<span class="r-plt img"><img src="plot.fuzzyclara-12.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span>       </span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"scatterplot"</span>,</span></span>
+<span class="r-in"><span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span>, confidence_threshold <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>  </span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using formula 'y ~ x'</span>
+<span class="r-plt img"><img src="plot.fuzzyclara-13.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span>     </span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"scatterplot"</span>,</span></span>
+<span class="r-in"><span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span>, confidence_threshold <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>     </span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using formula 'y ~ x'</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NaNs produced</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>no non-missing arguments to max; returning -Inf</span>
+<span class="r-plt img"><img src="plot.fuzzyclara-14.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span>  </span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"scatterplot"</span>,</span></span>
+<span class="r-in"><span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span>, confidence_threshold <span class="op">=</span> <span class="fl">0.5</span>, plot_all_fuzzy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  </span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using formula 'y ~ x'</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NaNs produced</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>no non-missing arguments to max; returning -Inf</span>
+<span class="r-plt img"><img src="plot.fuzzyclara-15.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span>  </span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span></span>
+<span class="r-in"><span>     group_by <span class="op">=</span> <span class="st">"Area"</span>, confidence_threshold <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>      </span></span>
+<span class="r-plt img"><img src="plot.fuzzyclara-16.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span>     </span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span></span>
+<span class="r-in"><span>     group_by <span class="op">=</span> <span class="st">"Area"</span>, confidence_threshold <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>     </span></span>
+<span class="r-plt img"><img src="plot.fuzzyclara-17.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span></span>
+<span class="r-in"><span>     group_by <span class="op">=</span> <span class="st">"Area"</span>, confidence_threshold <span class="op">=</span> <span class="fl">0.5</span>, plot_all_fuzzy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>     </span></span>
+<span class="r-plt img"><img src="plot.fuzzyclara-18.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span>     </span></span>
+<span class="r-in"><span>     </span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
