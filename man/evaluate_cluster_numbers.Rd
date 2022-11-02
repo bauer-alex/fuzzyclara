@@ -93,3 +93,16 @@ average distance for every cluster numbers. Detailed fuzzyclara clustering
 results can be returned with return_results = TRUE. For clara clustering,
 the same samples are used for all numbers of clusters.
 }
+\examples{
+# Select optimal number of clusters
+cc_number <- evaluate_cluster_numbers( data            = USArrests,
+                                       clusters_range  = 2:6,
+                                       metric          = "euclidean",
+                                       samples         = 1,
+                                       sample_size     = NULL,
+                                       type            = "hard",
+                                       seed            = 3526,
+                                       verbose         = 0)
+cc_number
+
+}

@@ -87,7 +87,7 @@ in a file \code{clustering_progress.log} (if \code{verbose > 0}).
 }
 \examples{
  
-#' #Hard clustering
+# Hard clustering
 cc_hard <- fuzzyclara(data        = USArrests,
                       clusters    = 3,
                       metric      = "euclidean",
@@ -98,7 +98,7 @@ cc_hard <- fuzzyclara(data        = USArrests,
                       verbose     = 0)
 cc_hard
 
-#Fuzzy clustering
+# Fuzzy clustering
 cc_fuzzy <- fuzzyclara(data        = USArrests,
                       clusters    = 3,
                       metric      = "euclidean",
@@ -110,7 +110,7 @@ cc_fuzzy <- fuzzyclara(data        = USArrests,
                       verbose     = 0)
 cc_fuzzy
 
-#Fuzzy clustering with self-defined distance function
+# Fuzzy clustering with self-defined distance function
 dist_function <- function(x, y) {
 sqrt(sum((x - y)^2))
 }
@@ -126,7 +126,7 @@ cc_dist <- fuzzyclara(data        = USArrests,
                      verbose     = 0)
 cc_dist
 
-#Hard clustering with other distance function
+# Hard clustering with other distance function
 cc_manh <- fuzzyclara(data        = USArrests,
                      clusters    = 3,
                      metric      = "manhattan",
@@ -138,9 +138,9 @@ cc_manh <- fuzzyclara(data        = USArrests,
 
 cc_manh
 
-#Hard clustering with Minkowski distance
+# Hard clustering with Minkowski distance
      #In order to specify arguments of the distance metric (e. g. p for Minkowski distance), 
-     #you can use a self-defined distance function.
+     # you can use a self-defined distance function.
 
 dist_mink <- function(x, y) {
 proxy::dist(list(x, y), method = "minkowski", p = 1)

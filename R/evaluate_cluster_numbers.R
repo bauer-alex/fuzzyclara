@@ -51,7 +51,18 @@
 #' @import checkmate cluster dplyr tibble tidyselect scales
 #' @importFrom stats as.formula prcomp
 #' @export
-#'
+#' @examples 
+#' # Select optimal number of clusters
+#' cc_number <- evaluate_cluster_numbers( data            = USArrests,
+#'                                        clusters_range  = 2:6,
+#'                                        metric          = "euclidean",
+#'                                        samples         = 1,
+#'                                        sample_size     = NULL,
+#'                                        type            = "hard",
+#'                                        seed            = 3526,
+#'                                        verbose         = 0)
+#' cc_number
+#' 
 evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
                                      metric = "euclidean",
                                      algorithm = "clara", samples = 10,

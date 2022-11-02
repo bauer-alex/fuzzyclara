@@ -37,3 +37,107 @@ Clustering plot
 \description{
 Function to provide graphical visualization of distribution
 }
+\examples{
+
+# Prepare data for example (enrich the USArrest dataset by area and state)
+library(dplyr)
+USArrests_enriched <- USArrests \%>\% 
+  mutate(State = as.factor(rownames(USArrests)),
+         Area  = as.factor(case_when(State \%in\% c("Washington", "Oregon",
+                                               "California", "Nevada", "Arizona", "Idaho", "Montana",
+                                               "Wyoming", "Colorado", "New Mexico", "Utah", "Hawaii",
+                                               "Alaska") ~ "West",
+                                  State \%in\% c("Texas", "Oklahoma", "Arkansas", "Louisiana",
+                                               "Mississippi", "Alabama", "Tennessee", "Kentucky", "Georgia",
+                                               "Florida", "South Carolina", "North Carolina", "Virginia",
+                                               "West Virginia") ~ "South",
+                                  State \%in\% c("Kansas", "Nebraska", "South Dakota",
+                                               "North Dakota", "Minnesota", "Missouri", "Iowa", "Illinois",
+                                               "Indiana", "Michigan", "Wisconsin", "Ohio") ~ "Midwest",
+                                  State \%in\% c("Maine", "New Hampshire", "New York",
+                                               "Massachusetts", "Rhode Island", "Vermont", "Pennsylvania",
+                                               "New Jersey", "Connecticut", "Delaware", "Maryland") ~
+                                    "Northeast")))
+# Determine clusters that will be plotted                                 
+cc_hard <- fuzzyclara(data        = USArrests,
+                      clusters    = 3,
+                      metric      = "euclidean",
+                      samples     = 1,
+                      sample_size = NULL,
+                      type        = "hard",
+                      seed        = 3526,
+                      verbose     = 0)
+cc_hard
+
+cc_fuzzy <- fuzzyclara(data        = USArrests,
+                      clusters    = 3,
+                      metric      = "euclidean",
+                      samples     = 1,
+                      sample_size = NULL,
+                      type        = "fuzzy",
+                      m           = 2,
+                      seed        = 3526,
+                      verbose     = 0)
+cc_fuzzy
+                                    
+# Boxplot
+plot(x = cc_hard, data = USArrests_enriched, variable = "Assault") 
+
+# Barplot
+plot(x = cc_hard, data = USArrests_enriched, variable = "Area")
+
+# Wordcloud
+plot(x = cc_hard, data = USArrests_enriched, variable = "State", type = "wordclouds")                                    
+                                    
+# Scatterplot
+plot(x = cc_hard, data = USArrests_enriched, type = "scatterplot", x_var = "Murder", y_var = "Assault")   
+
+# Plot membership probability for fuzzy clustering
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
+     x_var = "Murder", y_var = "Assault", 
+     focus = TRUE)
+
+# Plot membership probability for fuzzy clustering (one cluster only)
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
+     x_var = "Murder", y_var = "Assault", 
+     focus = TRUE, focus_clusters = c(1))  
+     
+# PCA
+plot(x = cc_hard, data = USArrests_enriched, type = "pca",
+     group_by = "Area")     
+ 
+# Plot membership probability for one or more clusters following a PCA    
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
+     focus = TRUE)     
+       
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
+     focus = TRUE, focus_clusters = c(1))      
+  
+# Silhouette plot
+plot(x = cc_hard, data = USArrests, type = "silhouette")  
+ 
+# Plot clusters for fuzzy clustering (using threshold for membership scores)
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca", variable = "Assault", confidence_threshold = 0) 
+       
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca", variable = "Assault", confidence_threshold = 0.5)       
+       
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
+     x_var = "Murder", y_var = "Assault", confidence_threshold = 0)  
+     
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
+     x_var = "Murder", y_var = "Assault", confidence_threshold = 0.5)     
+  
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
+     x_var = "Murder", y_var = "Assault", confidence_threshold = 0.5, plot_all_fuzzy = TRUE)  
+  
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
+     group_by = "Area", confidence_threshold = 0)      
+     
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
+     group_by = "Area", confidence_threshold = 0.5)     
+
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
+     group_by = "Area", confidence_threshold = 0.5, plot_all_fuzzy = TRUE)     
+     
+     
+}
