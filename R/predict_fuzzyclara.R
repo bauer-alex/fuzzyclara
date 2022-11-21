@@ -26,11 +26,13 @@ predict.fuzzyclara <- function(object, newdata, ...){
 
   # Convertion of matrix to data.frame:
   if (!(any(class(newdata) == "data.frame"))) {
-    data <- as.data.frame(data)
+    newdata <- as.data.frame(newdata)
   }
 
   # Adding row.names to column:
   newdata <- newdata %>% tibble::rownames_to_column(var = "Name")
+  object$data_medoids <- object$data_medoids %>%
+    tibble::rownames_to_column(var = "Name")
 
   # Assign clusters to new observations:
   assignments <- assign_cluster(data = newdata,
@@ -38,6 +40,7 @@ predict.fuzzyclara <- function(object, newdata, ...){
                                 metric = object$metric,
                                 type = object$type,
                                 m = object$fuzzyness,
+                                data_medoids = object$data_medoids,
                                 return_distMatrix = TRUE)
 
   # Preparation of output object:

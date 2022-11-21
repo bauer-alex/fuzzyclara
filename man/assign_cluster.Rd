@@ -11,6 +11,7 @@ assign_cluster(
   dist_matrix = NULL,
   type = "hard",
   m = 2,
+  data_medoids = NULL,
   return_distMatrix = FALSE,
   return_data_medoids = FALSE
 )
@@ -34,6 +35,8 @@ clustering to be performed.}
 
 \item{m}{Fuzziness exponent (only for \code{type = "fuzzy"}), which has to be
 a numeric of minimum 1. Defaults to 2.}
+
+\item{data_medoids}{data.frame with variable information of medoids}
 
 \item{return_distMatrix}{Indicator if the distances to the cluster medoids
 should be returned. Defaults to FALSE.}

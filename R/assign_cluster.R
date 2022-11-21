@@ -8,6 +8,7 @@
 #' @param medoids Medoids of the obtained clustering solution for the data
 #' sample
 #' @param dist_matrix Optional dissimilarity matrix (defaults to NULL)
+#' @param data_medoids data.frame with variable information of medoids
 #' @param return_distMatrix Indicator if the distances to the cluster medoids
 #' should be returned. Defaults to FALSE.
 #' @param return_data_medoids Indicator if the medoid data should be returned.
@@ -20,7 +21,8 @@
 #' @import proxy
 #'
 assign_cluster <- function(data, metric, medoids, dist_matrix = NULL,
-                           type = "hard", m = 2, return_distMatrix = FALSE,
+                           type = "hard", m = 2, data_medoids = NULL,
+                           return_distMatrix = FALSE,
                            return_data_medoids = FALSE) {
 
   checkmate::assert_data_frame(data)
@@ -39,9 +41,12 @@ assign_cluster <- function(data, metric, medoids, dist_matrix = NULL,
   # Calculate distance matrix between all observation and the medoids
   # (if not already given to the function):
   if (is.null(dist_matrix)) {
-    # Extraction of obtained medoids of the data:
-    data_medoids <- data %>% filter(Name %in% medoids)
-
+    
+    if (is.null(data_medoids)) {
+      # Extraction of obtained medoids of the data:
+      data_medoids <- data %>% filter(Name %in% medoids)
+    }
+  
     # Calculate the distances to the cluster medoids:
     dist <- proxy::dist(x = data[, -1], y = data_medoids[, -1],
                         method = metric)
