@@ -28,6 +28,13 @@ predict.fuzzyclara <- function(object, newdata, ...){
   if (!(any(class(newdata) == "data.frame"))) {
     newdata <- as.data.frame(newdata)
   }
+  
+  # Scaling of numerical variables:
+  if(is.list(object$scaling)){
+    ind <- unlist(lapply(newdata, is.numeric), use.names = TRUE)
+    newdata[, ind] <- scale(x = newdata[, ind], center = object$scaling$mean,
+                            scale = object$scaling$sd)
+  }
 
   # Adding row.names to column:
   newdata <- newdata %>% tibble::rownames_to_column(var = "Name")

@@ -87,16 +87,18 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
 
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
   cluster_number <- NULL
+  sd <- NULL
 
-
+  # Scaling of numerical variables:
   if(scale == TRUE){
-    # optional: Scaling of numerical (and ordinal) variables:
     ind <- unlist(lapply(data, is.numeric), use.names = TRUE)
-    for (i in ind) {
-      data[, ind] <- scale(data[, ind])
-    }
+    # Store scaling parameters in a list:
+    scaling <- list()
+    scaling$mean <- colMeans(data[, ind])
+    scaling$sd <- apply(X = data, MARGIN = 2, FUN = sd)
+    # Scaling:
+    data[, ind] <- scale(data[, ind])
   }
-
 
   # Create data.frame with criterion results:
   criterion_df <- data.frame(cluster_number = clusters_range,
@@ -149,6 +151,23 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
       } else{
         res <- list(plot_cluster, y)
         names(res) <- c("plot", "cluster_results")
+        
+        # Add scaling parameters to output information:
+        if (scale == TRUE) {
+          res$cluster_results <- lapply(X = seq_along(res$cluster_results), FUN = function(i) {
+            res$cluster_results[[i]]$scaling <- scaling
+            class(res$cluster_results[[i]]) <- c("fuzzyclara", class(res))
+            return(res$cluster_results[[i]])
+          })
+        }
+        if (scale == FALSE) {
+          res$cluster_results <- lapply(X = seq_along(res$cluster_results), FUN = function(i) {
+            res$cluster_results[[i]]$scaling <- FALSE
+            class(res$cluster_results[[i]]) <- c("fuzzyclara", class(res))
+            return(res$cluster_results[[i]])
+          })
+        }
+        
         return(res)
       }
     }

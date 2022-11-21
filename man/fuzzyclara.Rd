@@ -139,7 +139,8 @@ cc_manh <- fuzzyclara(data        = USArrests,
 cc_manh
 
 # Hard clustering with Minkowski distance
-     #In order to specify arguments of the distance metric (e. g. p for Minkowski distance), 
+     # In order to specify arguments of the distance metric (e. g. p for
+     # Minkowski distance), 
      # you can use a self-defined distance function.
 
 dist_mink <- function(x, y) {

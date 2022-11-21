@@ -19,7 +19,7 @@ test_that("fuzzyclara_hard_clara", { # hard CLARA clustering
   expect_s3_class(cc_hard, "fuzzyclara")
   expect_s3_class(cc_hard, "list")
 
-  expect_length(cc_hard, 12)
+  expect_length(cc_hard, 13)
 
 
   # check final cluster distance matrix
@@ -78,7 +78,7 @@ test_that("fuzzyclara_hard_clarans", { # hard CLARANS clustering
   expect_s3_class(cc_hard, "fuzzyclara")
   expect_s3_class(cc_hard, "list")
 
-  expect_length(cc_hard, 9)
+  expect_length(cc_hard, 10)
 
 
   # check final cluster distance matrix
@@ -128,7 +128,7 @@ test_that("fuzzyclara_fuzzy_clara", { # fuzzy clustering
   expect_s3_class(cc_fuzzy, "fuzzyclara")
   expect_s3_class(cc_fuzzy, "list")
 
-  expect_length(cc_fuzzy, 13)
+  expect_length(cc_fuzzy, 14)
 
 
   # check membership scores
@@ -163,7 +163,7 @@ test_that("fuzzyclara_fuzzy_clara_build", { # fuzzy clustering with build algori
   expect_s3_class(cc_fuzzy, "fuzzyclara")
   expect_s3_class(cc_fuzzy, "list")
 
-  expect_length(cc_fuzzy, 13)
+  expect_length(cc_fuzzy, 14)
 
 
   # check membership scores
@@ -198,7 +198,7 @@ test_that("fuzzyclara_fuzzy_clarans", { # fuzzy clustering
   expect_s3_class(cc_fuzzy, "fuzzyclara")
   expect_s3_class(cc_fuzzy, "list")
 
-  expect_length(cc_fuzzy, 10)
+  expect_length(cc_fuzzy, 11)
 
 
   # check membership scores
