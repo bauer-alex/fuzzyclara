@@ -409,7 +409,4 @@ test_that("fuzzyclara_scale", { # scaling of variables
 
   expect_identical(round(matrix(dist_matrix), 2), round(matrix(cc_hard$dist_matrix), 2))
 
-
-
-
 })
