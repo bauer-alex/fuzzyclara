@@ -1,8 +1,8 @@
-pandoc: 2.7.3
+pandoc: 2.19.2
 pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   main_functionality: main_functionality.html
   vignette_shiny: vignette_shiny.html
-last_built: 2022-12-02T15:26Z
+last_built: 2022-12-02T16:05Z
 
