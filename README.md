@@ -1,12 +1,11 @@
 
 # fuzzyclara <img src="man/figures/hex-sticker/fuzzyclara.png" align="right" width="200"/>
 
-<!-- badges: start
+<!-- badges: start -->
+
 [![R build status](https://github.com/MaxWeigert/fuzzyclara/workflows/R-CMD-check/badge.svg)](https://github.com/MaxWeigert/fuzzyclara/actions)
 [![Codecov test coverage](https://codecov.io/gh/MaxWeigert/fuzzyclara/branch/main/graph/badge.svg?token=KrjDYWRi2W)](https://app.codecov.io/gh/MaxWeigert/fuzzyclara)
 [![](https://cranlogs.r-pkg.org/badges/grand-total/fuzzyclara)](https://cran.r-project.org/package=fuzzyclara)
--->
-
 [![MIT
 license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->
