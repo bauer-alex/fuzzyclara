@@ -370,7 +370,12 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42,
   checkmate::assert_logical(na.omit, len = 1)
   
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
-  cluster <- var <- angle <- NULL
+  cluster <- var <- angle <- max_memb_score <- NULL
+  
+  # Remove missing values if specified:
+  if (na.omit == TRUE) {
+    data <- data %>% filter(!is.na(!!sym(variable)))
+  }
   
   # Select observations based on confidence_threshold:
   if (x$type == "fuzzy") {
@@ -379,13 +384,7 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42,
       mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
                                               na.rm = TRUE))) %>%
       filter(max_memb_score >= confidence_threshold)
-    data <- data %>%
-      dplyr::filter(!(row.names(data) %in% rownames(relevant_obs)))
-  }
-  
-  # Remove missing values if specified:
-  if (na.omit == TRUE) {
-    data <- data %>% filter(!is.na(!!sym(variable)))
+    data <- data %>% dplyr::filter(row.names(data) %in% rownames(relevant_obs))
   }
 
   data$var <- data[, variable] # dplyr::count() doesn't work with !!ensym(variable)
