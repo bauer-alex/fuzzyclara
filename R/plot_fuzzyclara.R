@@ -352,13 +352,16 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
 #' @param na.omit Should missing values be excluded for plotting? Defaults to
 #' FALSE.
 #' @param seed Random number seed. Defaults to 42.
+#' @param confidence_threshold Threshold for fuzzy clustering observations to
+#' be plotted. Must be a number between 0 and 1. Defaults to 0.
 #'
 #' @return wordcloud plot
 #'
 #' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggwordcloud
 #' @export
 #'
-clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42){
+clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42,
+                            confidence_threshold = 0){
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)

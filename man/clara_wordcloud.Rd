@@ -4,7 +4,14 @@
 \alias{clara_wordcloud}
 \title{Plot function wordcloud}
 \usage{
-clara_wordcloud(x, data, variable, na.omit = na.omit, seed = 42)
+clara_wordcloud(
+  x,
+  data,
+  variable,
+  na.omit = na.omit,
+  seed = 42,
+  confidence_threshold = 0
+)
 }
 \arguments{
 \item{x}{An object of class "fuzzyclara"}
@@ -17,6 +24,9 @@ clara_wordcloud(x, data, variable, na.omit = na.omit, seed = 42)
 FALSE.}
 
 \item{seed}{Random number seed. Defaults to 42.}
+
+\item{confidence_threshold}{Threshold for fuzzy clustering observations to
+be plotted. Must be a number between 0 and 1. Defaults to 0.}
 }
 \value{
 wordcloud plot
