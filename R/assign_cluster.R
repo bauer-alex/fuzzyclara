@@ -136,7 +136,7 @@ assign_cluster <- function(data, metric, medoids, dist_matrix = NULL,
 #'
 calculate_memb_score <- function(dist_med, m = 2) {
 
-  # TODO what checkmate checks to run on 'dist_med'? The documentation above should also be more specific.
+  checkmate::assert_numeric(dist_med, lower = 0)
   checkmate::assert_number(m, lower = 1)
 
 
