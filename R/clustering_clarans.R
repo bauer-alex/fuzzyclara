@@ -71,7 +71,8 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
     clustering_results_list <- lapply(X = 1:num_local, FUN = function(i) {
       if (verbose >= 1) { message("--- Performing calculations for local iteration ", i) }
       clustering_numbers_list <- lapply(X = seq_along(clusters), FUN = function(j) {
-        clustering <- clustering_local(data = data, sample_local = samples_local[[i]][[j]],
+        clustering <- clustering_local(data = data,
+                                       sample_local = samples_local[[i]][[j]],
                                        clusters = clusters[j], metric = metric,
                                        m = m, max_neighbors = max_neighbors,
                                        type = type, verbose = verbose,
@@ -116,11 +117,12 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
 
       clustering_results_list <- mclapply(X = 1:num_local, FUN = function(i) {
         if (verbose >= 1) {
-          print_logMessage(paste0("--- Performing calculations for subsample ",i),
+          print_logMessage(paste0("--- Performing calculations for subsample ", i),
                            verbose_toLogFile = TRUE)
         }
         clustering_numbers_list <- lapply(X = seq_along(clusters), FUN = function(j) {
-          clustering <- clustering_local(data = data, sample_local = samples_local[[i]][[j]],
+          clustering <- clustering_local(data = data,
+                                         sample_local = samples_local[[i]][[j]],
                                          clusters = clusters[j], metric = metric,
                                          m = m, max_neighbors = max_neighbors,
                                          type = type, verbose = verbose,
@@ -199,7 +201,7 @@ clustering_local <- function(data, sample_local, clusters = 5,
                              verbose_toLogFile = FALSE, ...) {
 
   checkmate::assert_data_frame(data)
-  # TODO how to check 'samples_local'?
+  checkmate::assert_list(sample_local, len = 3)
   checkmate::assert_vector(clusters)
   checkmate::assert_choice(type, choices = c("hard","fuzzy"))
   checkmate::assert_number(m, lower = 1)

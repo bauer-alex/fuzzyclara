@@ -30,5 +30,12 @@ print.fuzzyclara <- function(x, ...) {
   } else if (x$type == "fuzzy") {
     cat("Minimum average weighted distance\n")
     print(x$avg_weighted_dist)
+    cat("\n")
+    cat("Membership scores\n")
+    print(x$membership_scores)
   }
 }
+
+
+
+

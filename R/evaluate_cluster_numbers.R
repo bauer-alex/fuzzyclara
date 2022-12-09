@@ -154,14 +154,16 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
         
         # Add scaling parameters to output information:
         if (scale == TRUE) {
-          res$cluster_results <- lapply(X = seq_along(res$cluster_results), FUN = function(i) {
+          res$cluster_results <- lapply(X = seq_along(res$cluster_results),
+                                        FUN = function(i) {
             res$cluster_results[[i]]$scaling <- scaling
             class(res$cluster_results[[i]]) <- c("fuzzyclara", class(res))
             return(res$cluster_results[[i]])
           })
         }
         if (scale == FALSE) {
-          res$cluster_results <- lapply(X = seq_along(res$cluster_results), FUN = function(i) {
+          res$cluster_results <- lapply(X = seq_along(res$cluster_results),
+                                        FUN = function(i) {
             res$cluster_results[[i]]$scaling <- FALSE
             class(res$cluster_results[[i]]) <- c("fuzzyclara", class(res))
             return(res$cluster_results[[i]])

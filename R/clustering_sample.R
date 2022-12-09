@@ -49,14 +49,13 @@ clustering_sample <- function(data, sample_ids, dist, clusters = 5,
     print_logMessage("Perform the main clustering step...",
                      verbose_toLogFile = verbose_toLogFile)
   }
-  clustering_results_sample <- perform_sample_clustering(dist     = dist,
-                                                         data     = data_sample,
+  clustering_results_sample <- perform_sample_clustering(dist = dist,
+                                                         data = data_sample,
                                                          clusters = clusters,
-                                                         type     = type,
-                                                         metric   = metric,
-                                                         names    = data_sample$Name,
-                                                         m        = m,
-                                                         build    = build,
+                                                         type = type,
+                                                         metric = metric,
+                                                         names = data_sample$Name,
+                                                         m = m, build = build,
                                                          ...)
 
   # Assignment of each observations of the entire dataset to closest medoid
@@ -65,16 +64,16 @@ clustering_sample <- function(data, sample_ids, dist, clusters = 5,
     print_logMessage("Assigning each observation to a cluster...",
                      verbose_toLogFile = verbose_toLogFile)
   }
-  clustering_results <- assign_cluster(data    = data,
+  clustering_results <- assign_cluster(data = data,
                                        medoids = clustering_results_sample$medoid,
-                                       metric  = metric,
-                                       type    = type,
-                                       m       = m)
+                                       metric = metric,
+                                       type = type,
+                                       m = m)
 
   # Add information about subsample, distance matrix, clustering of subsample
   # for silhouette plot:
-  clustering_results[["subsample_ids"]]        <- sample_ids
-  clustering_results[["dist_matrix"]]          <- dist
+  clustering_results[["subsample_ids"]] <- sample_ids
+  clustering_results[["dist_matrix"]] <- dist
   clustering_results[["subsample_clustering"]] <- clustering_results[["clustering"]][sample_ids]
 
 
@@ -102,7 +101,6 @@ compute_distance_matrix <- function(data, sample_ids, metric = "euclidean") {
   
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
   Name <- NULL
-  
   
   # Reduction of data to sample observations:
   data <- data %>% dplyr::slice(sample_ids)
@@ -152,12 +150,11 @@ perform_sample_clustering <- function(dist, data, clusters, type, metric,
   checkmate::assert_class(dist, classes = "dist")
   checkmate::assert_vector(clusters)
   checkmate::assert_choice(type, choices = c("hard","fuzzy"))
-  # TODO how to check 'names'?
+  checkmate::assert_character(names, len = nrow(data))
   checkmate::assert_number(m, lower = 1)
   checkmate::assert_logical(build, len = 1)
   checkmate::assert_choice(verbose, choices = 0:2)
   checkmate::assert_logical(verbose_toLogFile, len = 1)
-
 
   # Hard pam clustering:
   if (type == "hard") {

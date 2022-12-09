@@ -193,7 +193,8 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
 
   } else if (type == "wordclouds") {
     plot <- clara_wordcloud(x = x, data = data, variable = variable,
-                            na.omit = na.omit, ...)
+                            na.omit = na.omit,
+                            confidence_threshold = confidence_threshold, ...)
 
   } else if (type == "silhouette") {
     plot <- clara_silhouette(x = x, data = data,
@@ -248,7 +249,8 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
   if (x$type == "fuzzy") {
     # Filter relevant observation based on the membership score threshold:
     relevant_obs <- x$membership_scores %>%
-      mutate(max_memb_score = do.call(pmax, c(x$membership_scores, na.rm = TRUE))) %>%
+      mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
+                                              na.rm = TRUE))) %>%
       filter(max_memb_score >= confidence_threshold)
     data <- data %>% dplyr::filter(row.names(data) %in%  rownames(relevant_obs))
   }
@@ -308,9 +310,10 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
   if (x$type == "fuzzy") {
     # Filter relevant observation based on the membership score threshold:
     relevant_obs <- x$membership_scores %>%
-      mutate(max_memb_score = do.call(pmax, c(x$membership_scores, na.rm = TRUE))) %>%
+      mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
+                                              na.rm = TRUE))) %>%
       filter(max_memb_score >= confidence_threshold)
-    data <- data %>% dplyr::filter(row.names(data) %in%  rownames(relevant_obs))
+    data <- data %>% dplyr::filter(row.names(data) %in% rownames(relevant_obs))
   }
   
   # Remove missing values if specified:
@@ -367,13 +370,15 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42){
   cluster <- var <- angle <- NULL
   
   # Select observations based on confidence_threshold:
-  #if (x$type == "fuzzy") {
-  #  # Filter relevant observation based on the membership score threshold:
-  #  relevant_obs <- x$membership_scores %>%
-  #    mutate(max_memb_score = do.call(pmax, c(x$membership_scores, na.rm = TRUE))) %>%
-  #    filter(max_memb_score >= confidence_threshold)
-  #  data <- data %>% dplyr::filter(!(row.names(data) %in% rownames(relevant_obs)))
-  #}
+  if (x$type == "fuzzy") {
+    # Filter relevant observation based on the membership score threshold:
+    relevant_obs <- x$membership_scores %>%
+      mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
+                                              na.rm = TRUE))) %>%
+      filter(max_memb_score >= confidence_threshold)
+    data <- data %>%
+      dplyr::filter(!(row.names(data) %in% rownames(relevant_obs)))
+  }
   
   # Remove missing values if specified:
   if (na.omit == TRUE) {
@@ -386,17 +391,11 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42){
   plot <- data %>%
     dplyr::group_by(cluster) %>%
     dplyr::count(var) %>%
-    mutate(angle = 90 * sample(c(0, 1), n(), replace = TRUE, prob = c(60, 40))) %>%
-    ggplot(
-      aes(
-        label = var,
-        color = cluster,
-        angle = angle
-      )
-    ) +
+    mutate(angle = 90 * sample(c(0, 1), n(), replace = TRUE,
+                               prob = c(60, 40))) %>%
+    ggplot(aes(label = var, color = cluster, angle = angle)) +
     ggwordcloud::geom_text_wordcloud_area(area_corr_power = 1) +
-    ggplot2::scale_size_area(max_size = 4) +
-    theme_minimal() +
+    ggplot2::scale_size_area(max_size = 4) + theme_minimal() +
     facet_wrap(~ cluster)
 
   return(plot)
@@ -450,12 +449,14 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
   if (x$type == "fuzzy") {
     # Filter relevant observation based on the membership score threshold:
     relevant_obs <- x$membership_scores %>%
-      mutate(max_memb_score = do.call(pmax, c(x$membership_scores, na.rm = TRUE))) %>%
+      mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
+                                              na.rm = TRUE))) %>%
       filter(max_memb_score >= confidence_threshold)
     rel_obs <- rownames(relevant_obs)
     
     # Transparent observations for scatterplots:
-    transparent_obs <- data %>% dplyr::filter(!(row.names(data) %in%  rownames(relevant_obs)))
+    transparent_obs <- data %>%
+      dplyr::filter(!(row.names(data) %in% rownames(relevant_obs)))
     
   } else {
     transparent_obs <- NULL
@@ -506,10 +507,10 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
         alpha = "prob",
         shape = group_by, size = 1.5,  legend = "right", ggtheme = theme_bw(),
         xlab = paste0("Dim 1 (", variance_perc[1], "% )" ),
-        ylab = paste0("Dim 2 (", variance_perc[2], "% )" )
-      ) + theme_minimal() +
-        facet_wrap(~cluster) +
-        guides(color = "none", alpha = guide_legend(title = "membership \n probability"))
+        ylab = paste0("Dim 2 (", variance_perc[2], "% )" )) +
+        theme_minimal() + facet_wrap(~cluster) +
+        guides(color = "none",
+               alpha = guide_legend(title = "membership \n probability"))
 
     } else { # group_by = NULL
       plot <- ggscatter(
@@ -521,7 +522,8 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
         ylab = paste0("Dim 2 (", variance_perc[2], "% )" )
       ) + theme_minimal() +
         facet_wrap(~cluster) +
-        guides(color = "none", alpha = guide_legend(title = "membership \n probability"))
+        guides(color = "none",
+               alpha = guide_legend(title = "membership \n probability"))
     }
 
   } else { # normal PCA plot
@@ -539,16 +541,18 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
     if (!is.null(group_by)) {
       plot <- ggscatter(
         individuals_coord, x = "Dim.1", y = "Dim.2",
-        color = "cluster", palette = "npg", ellipse = TRUE, ellipse.type = "convex",
-        shape = group_by, size = 1.5,  legend = "right", ggtheme = theme_bw(),
+        color = "cluster", palette = "npg", ellipse = TRUE,
+        ellipse.type = "convex",
+        shape = group_by, size = 1.5, legend = "right", ggtheme = theme_bw(),
         xlab = paste0("Dim 1 (", variance_perc[1], "% )" ),
         ylab = paste0("Dim 2 (", variance_perc[2], "% )" )
       ) + stat_mean(aes(color = cluster), size = 4) + theme_minimal()
     } else {
       plot <- ggscatter(
         individuals_coord, x = "Dim.1", y = "Dim.2",
-        color = "cluster", palette = "npg", ellipse = TRUE, ellipse.type = "convex",
-        size = 1.5,  legend = "right", ggtheme = theme_bw(),
+        color = "cluster", palette = "npg", ellipse = TRUE,
+        ellipse.type = "convex", size = 1.5, legend = "right",
+        ggtheme = theme_bw(),
         xlab = paste0("Dim 1 (", variance_perc[1], "% )" ),
         ylab = paste0("Dim 2 (", variance_perc[2], "% )" )
       ) + stat_mean(aes(color = cluster), size = 4) + theme_minimal()
@@ -624,7 +628,8 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
   max_memb_score <- variable <- cluster <- prob <- NULL
   
   
-  if (((!(!is.null(x_var) & !is.null(y_var)) ) | !(class(data[[x_var]]) == "numeric" & class(data[[y_var]]) == "numeric"))) {
+  if (((!(!is.null(x_var) & !is.null(y_var)) ) |
+       !(class(data[[x_var]]) == "numeric" & class(data[[y_var]]) == "numeric"))) {
     stop("Please specify the variables correctly. Both variable and group_by should contain the names of metric variables.")
   }
   
@@ -636,14 +641,16 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
   if (x$type == "fuzzy") {
     # Filter relevant observation based on the membership score threshold:
     relevant_obs <- x$membership_scores %>%
-      mutate(max_memb_score = do.call(pmax, c(x$membership_scores, na.rm = TRUE))) %>%
+      mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
+                                              na.rm = TRUE))) %>%
       filter(max_memb_score >= confidence_threshold)
     rel_obs <- rownames(relevant_obs)
     
     # Transparent observations for scatterplots:
-    transparent_obs <- data %>% dplyr::filter(!(row.names(data) %in%  rownames(relevant_obs)))
+    transparent_obs <- data %>%
+      dplyr::filter(!(row.names(data) %in% rownames(relevant_obs)))
     
-    data <- data %>% dplyr::filter(row.names(data) %in%  rownames(relevant_obs))
+    data <- data %>% dplyr::filter(row.names(data) %in% rownames(relevant_obs))
     
   } else {
     transparent_obs <- NULL
@@ -665,17 +672,16 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
       if (!all(clusters_select %in% data_long$cluster)) {
         stop("clusters specified by focus_clusters aren't found in the data.")
       }
-
       data_long <- data_long %>%
         filter(cluster %in% clusters_select)
     }
 
     plot <- data_long %>%
-      ggplot(aes(x = !!ensym(x_var), y = !!ensym(y_var), alpha = prob, color = cluster)) +
-      geom_point() +
-      theme_minimal()  +
-      facet_wrap(~cluster) +
-      guides(color = "none", alpha = guide_legend(title = "membership \n probability"))
+      ggplot(aes(x = !!ensym(x_var), y = !!ensym(y_var), alpha = prob,
+                 color = cluster)) +
+      geom_point() + theme_minimal() + facet_wrap(~cluster) +
+      guides(color = "none",
+             alpha = guide_legend(title = "membership \n probability"))
 
   } else{ # normal scatterplot
     plot <- data %>%
@@ -686,7 +692,9 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
 
     if(x$type == "fuzzy" && plot_all_fuzzy == TRUE){
       plot <- plot +
-        geom_point(data = transparent_obs, aes(x = !!ensym(x_var), y = !!ensym(y_var)), alpha = alpha_fuzzy)
+        geom_point(data = transparent_obs,
+                   aes(x = !!ensym(x_var), y = !!ensym(y_var)),
+                   alpha = alpha_fuzzy)
     }
   }
 
@@ -731,15 +739,15 @@ clara_silhouette <- function(x, data,
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
   max_memb_score <- cluster <- NULL
   
-  
   if (x$type == "fuzzy") {
     # Filter relevant observation based on the membership score threshold:
     relevant_obs <- x$membership_scores %>%
-      mutate(max_memb_score = do.call(pmax, c(x$membership_scores, na.rm = TRUE))) %>%
+      mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
+                                              na.rm = TRUE))) %>%
       filter(max_memb_score >= confidence_threshold)
     rel_obs <- rownames(relevant_obs)
     
-    data <- data %>% dplyr::filter(row.names(data) %in%  rownames(relevant_obs))
+    data <- data %>% dplyr::filter(row.names(data) %in% rownames(relevant_obs))
     
   } else {
     rel_obs <- rownames(x$membership_scores)
@@ -755,7 +763,8 @@ clara_silhouette <- function(x, data,
 
   if (silhouette_subsample == FALSE) {
 
-    sil <- silhouette(as.numeric(data$cluster), dist(select(data, -cluster), method = metric))
+    sil <- silhouette(as.numeric(data$cluster), dist(select(data, -cluster),
+                      method = metric))
 
   } else { # use only subsamples from 'x' in order to not calculate the distance matrix between all samples
 
@@ -769,7 +778,8 @@ clara_silhouette <- function(x, data,
     } else { # x$type = "fuzzy" -> data is already filtered by threshold. Distance matrix has to be filtered too
 
       # considered observations: part of subsample and rel_obs
-      rel_obs_sil <- intersect(rel_obs, rownames(x$distance_to_medoids)[x$subsample_ids])
+      rel_obs_sil <- intersect(rel_obs,
+                               rownames(x$distance_to_medoids)[x$subsample_ids])
 
       data_sub <- data[rel_obs_sil,]
 
@@ -790,3 +800,7 @@ clara_silhouette <- function(x, data,
 
   return(plot)
 }
+
+
+
+
