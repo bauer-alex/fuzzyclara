@@ -53,7 +53,7 @@ predict.fuzzyclara <- function(object, newdata, ...){
   # Preparation of output object:
   if (object$type == "hard") {
     assignments <- list(assignments$clustering, assignments$distance_to_medoids)
-    names(assignments) <- c("assignment", "distance_to_medoids")
+    names(assignments) <- c("clustering", "distance_to_medoids")
   }
   else {
     assignments <- list(assignments$clustering, assignments$membership_scores,
