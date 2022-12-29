@@ -24,6 +24,7 @@ reference:
       - perform_sample_clustering
       - print_logMessage
       - evaluate_cluster_numbers
+      - plot_cluster_numbers
   - title: "Visualization functions for clustering results"
     desc: "Function to visualize clustering solutions in different ways"
     contents:
