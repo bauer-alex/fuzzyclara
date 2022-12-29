@@ -207,6 +207,10 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
   } else if (type == "scatterplot") {
     plot <- clara_scatterplot(x = x, data = data, na.omit = na.omit,
                               confidence_threshold = confidence_threshold, ...)
+  
+  } else if (type == "parallel") {
+    plot <- clara_parallel(x = x, data = data,
+                           confidence_threshold = confidence_threshold, ...)
   }
 
 
@@ -582,6 +586,10 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
 
   return(plot)
 }
+
+
+#' Plot function parallel coordinate plot:
+#' 
 
 
 #' Plot function scatterplot

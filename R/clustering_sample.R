@@ -159,7 +159,7 @@ perform_sample_clustering <- function(dist, data, clusters, type, metric,
   # Hard pam clustering:
   if (type == "hard") {
     pam_sample <- pam(x = dist, k = clusters, diss = TRUE, ...)
-    medoids    <- pam_sample$medoids
+    medoids    <- as.character(pam_sample$medoids)
     clustering <- pam_sample$clustering
   }
 
