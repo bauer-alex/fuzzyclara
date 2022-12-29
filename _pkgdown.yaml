@@ -34,6 +34,7 @@ reference:
       - clara_silhouette
       - clara_scatterplot
       - clara_wordcloud
+      - clara_parallel
       - plot.fuzzyclara
   - title: "Analysis function of clustering results"
     desc: Further functions to analyze obtained clustering solutions
