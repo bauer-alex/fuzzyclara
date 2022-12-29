@@ -11,6 +11,7 @@
   variable = NULL,
   na.omit = FALSE,
   confidence_threshold = 0,
+  seed = 42,
   ...
 )
 }
@@ -20,7 +21,7 @@
 \item{data}{data.frame or matrix used for clustering}
 
 \item{type, variable}{Type of plot. One of \code{c("barplot","boxplot","wordclouds",
-"silhouette","pca","scatterplot")}. Defaults to NULL, which either plots
+"silhouette","pca","scatterplot", "parallel")}. Defaults to NULL, which either plots
 a barplot or a boxplot, depending on the class of \code{variable}.}
 
 \item{na.omit}{Should missing values be excluded for plotting? Defaults to
@@ -28,6 +29,9 @@ FALSE.}
 
 \item{confidence_threshold}{Threshold for fuzzy clustering observations to
 be plotted. Must be a number between 0 and 1. Defaults to 0.}
+
+\item{seed}{random number seed (needed for \code{clara_wordcloud} and
+\code{clara_parallel})}
 
 \item{...}{Further arguments for internal plot functions.}
 }

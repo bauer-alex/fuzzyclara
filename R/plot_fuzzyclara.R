@@ -5,12 +5,14 @@
 #' @param x An object of class "fuzzyclara"
 #' @param data data.frame or matrix used for clustering
 #' @param type,variable Type of plot. One of \code{c("barplot","boxplot","wordclouds",
-#' "silhouette","pca","scatterplot")}. Defaults to NULL, which either plots
+#' "silhouette","pca","scatterplot", "parallel")}. Defaults to NULL, which either plots
 #' a barplot or a boxplot, depending on the class of \code{variable}.
 #' @param na.omit Should missing values be excluded for plotting? Defaults to
 #' FALSE.
 #' @param confidence_threshold Threshold for fuzzy clustering observations to
 #' be plotted. Must be a number between 0 and 1. Defaults to 0.
+#' @param seed random number seed (needed for \code{clara_wordcloud} and
+#' \code{clara_parallel})
 #' @param ... Further arguments for internal plot functions.
 #'
 #' @return Clustering plot
@@ -136,17 +138,20 @@
 #'      
 #'      
 plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
-                            na.omit = FALSE, confidence_threshold = 0, ...){
+                            na.omit = FALSE, confidence_threshold = 0,
+                            seed = 42, ...){
 
   checkmate::assert_class(x, class = "fuzzyclara")
   checkmate::assert(checkmate::check_data_frame(data),
                     checkmate::check_matrix(data), combine = "or")
   checkmate::assert_choice(type,
                            choices = c("barplot","boxplot","wordclouds",
-                                       "silhouette","pca", "scatterplot"),
+                                       "silhouette","pca", "scatterplot",
+                                       "parallel"),
                            null.ok = TRUE)
   checkmate::assert_character(variable, null.ok = TRUE)
   checkmate::assert_logical(na.omit, len = 1)
+  checkmate::assert_numeric(confidence_threshold, lower = 0, upper = 1)
 
 
   # Convertion of matrix to data.frame:
@@ -161,8 +166,9 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
   int_vars <- unlist(lapply(data, is.integer))
   data[, int_vars] <- lapply(data[, int_vars], as.numeric)
 
-  # if PCA, scale the data
-  if (!is.null(type) && type == "pca"){
+  # if PCA or , scale the data
+  # could be also used as an argument to the function
+  if (!is.null(type) && type %in% c("pca", "parallel")) {
     ind <- unlist(lapply(data, is.numeric), use.names = TRUE)
     for (i in ind) {
       data[, ind] <- scale(data[, ind])
@@ -193,7 +199,7 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
 
   } else if (type == "wordclouds") {
     plot <- clara_wordcloud(x = x, data = data, variable = variable,
-                            na.omit = na.omit,
+                            na.omit = na.omit, seed = seed,
                             confidence_threshold = confidence_threshold, ...)
 
   } else if (type == "silhouette") {
@@ -209,7 +215,7 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
                               confidence_threshold = confidence_threshold, ...)
   
   } else if (type == "parallel") {
-    plot <- clara_parallel(x = x, data = data,
+    plot <- clara_parallel(x = x, data = data, seed = seed,
                            confidence_threshold = confidence_threshold, ...)
   }
 
@@ -245,6 +251,7 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
   checkmate::assert_choice(variable, choices = names(data))
   checkmate::assert_character(group_by, null.ok = TRUE)
   checkmate::assert_logical(na.omit, len = 1)
+  checkmate::assert_numeric(confidence_threshold, lower = 0, upper = 1)
   
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
   cluster <- max_memb_score <- NULL
@@ -256,7 +263,7 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
       mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
                                               na.rm = TRUE))) %>%
       filter(max_memb_score >= confidence_threshold)
-    data <- data %>% dplyr::filter(row.names(data) %in%  rownames(relevant_obs))
+    data <- data %>% dplyr::filter(row.names(data) %in% rownames(relevant_obs))
   }
   
   # Remove missing values if specified:
@@ -305,6 +312,7 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
   checkmate::assert_choice(variable, choices = names(data))
   checkmate::assert_character(group_by, null.ok = TRUE)
   checkmate::assert_logical(na.omit, len = 1)
+  checkmate::assert_numeric(confidence_threshold, lower = 0, upper = 1)
 
 
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
@@ -372,6 +380,7 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42,
   checkmate::assert_choice(variable, choices = names(data))
   checkmate::assert_number(seed)
   checkmate::assert_logical(na.omit, len = 1)
+  checkmate::assert_numeric(confidence_threshold, lower = 0, upper = 1)
   
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
   cluster <- var <- angle <- max_memb_score <- NULL
@@ -405,8 +414,6 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42,
     facet_wrap(~ cluster)
 
   return(plot)
-
-
 }
 
 
@@ -442,7 +449,7 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
   checkmate::assert_data_frame(data)
   checkmate::assert_character(group_by, null.ok = TRUE)
   checkmate::assert_logical(plot_all_fuzzy, len = 1)
-  checkmate::assert_number(confidence_threshold, lower = 0, upper = 1)
+  checkmate::assert_numeric(confidence_threshold, lower = 0, upper = 1)
   checkmate::assert_number(alpha_fuzzy, lower = 0, upper = 1)
   checkmate::assert_logical(focus, len = 1)
   checkmate::assert_vector(focus_clusters, null.ok = TRUE)
@@ -588,8 +595,68 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
 }
 
 
-#' Plot function parallel coordinate plot:
+#' Plot function parallel coordinate plot
 #' 
+#' Function to plot a parallel coordinate plot
+#' 
+#' @param x An object of class "fuzzyclara"
+#' @param data Prepared data.frame (contains cluster variable, observations are
+#' already filtered by threshold (fuzzy))
+#' @param confidence_threshold Threshold for fuzzy clustering observations to
+#' be plotted. Must be a number between 0 and 1. Defaults to 0.
+#' @param seed random number seed
+#' 
+#' @return parallel coordinate plot
+#' 
+#' @import checkmate dplyr ggplot2 ggpubr tidyr tibble
+#' @export
+#' 
+clara_parallel <- function(x, data, confidence_threshold = 0, seed = 42) {
+  
+  checkmate::assert_class(x, classes = "fuzzyclara")
+  checkmate::assert_data_frame(data)
+  checkmate::assert_numeric(confidence_threshold, lower = 0, upper = 1)
+  
+  # TODO: add potential random sampling
+  # TODO: choose variables to plot
+  
+  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  cluster <- max_memb_score <- NULL
+  
+  # Select observations based on confidence_threshold:
+  if (x$type == "fuzzy") {
+    # Filter relevant observation based on the membership score threshold:
+    relevant_obs <- x$membership_scores %>%
+      mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
+                                              na.rm = TRUE))) %>%
+      filter(max_memb_score >= confidence_threshold)
+    data <- data %>% dplyr::filter(row.names(data) %in% rownames(relevant_obs))
+  }
+  
+  # Reformat data to long format and add row.names to data:
+  data <- data %>% mutate(cluster = as.numeric(cluster))
+  num_vars <- unlist(lapply(data, is.numeric))
+  data <- data[, num_vars]
+  data_long <- data %>% rownames_to_column(var = "name") %>%
+    pivot_longer(cols = 2:(ncol(.) - 1), names_to = "variable")
+  
+  # Extract observations with medoids: 
+  data_long_medoids <- data_long %>% filter(name %in% x$medoids)
+  
+  # Parallel coordinate plot:
+  plot <- ggplot(mapping = aes(x = variable, y = value, group = name,
+                               col = cluster)) +
+    geom_line(data = data_long) + #mapping = aes(alpha = memb_score)) +
+    geom_line(data = data_long_medoids, size = 1.5, col = gray(0.2)) +
+    ylab("Standardized value") +
+    facet_wrap(~ cluster, nrow = 1) +
+    theme_minimal() +
+    theme(axis.title.x    = element_blank(),
+          legend.position = "none",
+          axis.text.x     = element_text(angle = 45, hjust = 1))
+  return(plot)
+}
+
 
 
 #' Plot function scatterplot
@@ -627,7 +694,7 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
   checkmate::assert_character(x_var, len = 1)
   checkmate::assert_character(y_var, len = 1)
   checkmate::assert_logical(plot_all_fuzzy, len = 1)
-  checkmate::assert_number(confidence_threshold, lower = 0, upper = 1)
+  checkmate::assert_numeric(confidence_threshold, lower = 0, upper = 1)
   checkmate::assert_number(alpha_fuzzy, lower = 0, upper = 1)
   checkmate::assert_logical(focus, len = 1)
   checkmate::assert_vector(focus_clusters, null.ok = TRUE)
@@ -743,7 +810,7 @@ clara_silhouette <- function(x, data,
   # TODO how to check 'metric'? (Edit Jana: in fuzzycara we don't check it either) At least specify 'metric' a bit more in the above documentation -> DONE. Similar to the proxy::dist metric? (Jana: Yes)
   checkmate::assert_logical(silhouette_subsample, len = 1)
   checkmate::assert_logical(scale_sil, len = 1)
-  checkmate::assert_number(confidence_threshold, lower = 0, upper = 1)
+  checkmate::assert_numeric(confidence_threshold, lower = 0, upper = 1)
 
 
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:

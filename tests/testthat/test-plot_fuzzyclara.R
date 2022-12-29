@@ -272,6 +272,12 @@ test_that("plot_fuzzyclara_clarans", { # plots
   expect_s3_class(p$layers[[1]]$geom, "GeomTextWordcloud")
   
   
+  ## Parallel coordinate plot:
+  p <- plot(x = cc_hard, data = USArrests_enriched, type = "parallel")
+  # check class of object
+  expect_s3_class(p, "ggplot")
+  expect_s3_class(p$layers[[1]]$geom, "GeomLine")
+  
   ## Scatterplot
   p <- plot(x = cc_hard, data = USArrests_enriched, type = "scatterplot",
             x_var = "Murder", y_var = "Assault")
@@ -365,6 +371,13 @@ test_that("plot_fuzzyclara_clarans", { # plots
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBar")
+  
+  # Parallel coordinate plot:
+  p <- plot(x = cc_fuzzy, data = USArrests_enriched, type = "parallel",
+            confidence_threshold = 0.3)
+  # check class of object
+  expect_s3_class(p, "ggplot")
+  expect_s3_class(p$layers[[1]]$geom, "GeomLine")
   
   
   # focus scatterplot

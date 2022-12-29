@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_fuzzyclara.R
 \name{clara_scatterplot}
 \alias{clara_scatterplot}
-\title{Plot function parallel coordinate plot:}
+\title{Plot function scatterplot}
 \usage{
 clara_scatterplot(
   x,
@@ -47,8 +47,5 @@ FALSE.}
 scatterplot
 }
 \description{
-Plot function scatterplot
-}
-\details{
 Function to plot a scatterplot
 }
