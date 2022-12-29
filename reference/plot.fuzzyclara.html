@@ -66,6 +66,7 @@
 <span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  na.omit <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  confidence_threshold <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">42</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -82,7 +83,7 @@
 
 <dt>type, variable</dt>
 <dd><p>Type of plot. One of <code>c("barplot","boxplot","wordclouds",
-"silhouette","pca","scatterplot")</code>. Defaults to NULL, which either plots
+"silhouette","pca","scatterplot", "parallel")</code>. Defaults to NULL, which either plots
 a barplot or a boxplot, depending on the class of <code>variable</code>.</p></dd>
 
 
@@ -94,6 +95,11 @@ FALSE.</p></dd>
 <dt>confidence_threshold</dt>
 <dd><p>Threshold for fuzzy clustering observations to
 be plotted. Must be a number between 0 and 1. Defaults to 0.</p></dd>
+
+
+<dt>seed</dt>
+<dd><p>random number seed (needed for <code>clara_wordcloud</code> and
+<code>clara_parallel</code>)</p></dd>
 
 
 <dt>...</dt>
