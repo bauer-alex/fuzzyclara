@@ -74,7 +74,7 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
                                      return_results = FALSE, ...) {
 
   checkmate::assert_data_frame(data)
-  checkmate::assert_numeric(clusters_range, lower = 1, upper = nrow(data))
+  checkmate::assert_integer(clusters_range, lower = 1, upper = nrow(data))
   checkmate::assert_number(samples, lower = 1)
   checkmate::assert_number(sample_size, lower = 1, null.ok = TRUE)
   checkmate::assert_choice(type, choices = c("hard","fuzzy"))
@@ -86,7 +86,6 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
 
 
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
-  cluster_number <- NULL
   sd <- NULL
 
   # Scaling of numerical variables:
@@ -100,11 +99,6 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
     data[, ind] <- scale(data[, ind])
   }
 
-  # Create data.frame with criterion results:
-  criterion_df <- data.frame(cluster_number = clusters_range,
-                             criterion = rep(0, length(clusters_range)))
-  criterion <- ifelse(type == "fuzzy", yes = "avg_weighted_dist",
-                      no = "avg_min_dist")
   # Compute clustering for different cluster numbers:
   if (algorithm == "clara") {
     y <- clustering_clara(data, clusters = clusters_range, metric = metric,
@@ -122,28 +116,9 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
                             algorithm = "clarans", type = type, seed = seed,
                             m = m, verbose = verbose, cores = cores, ...)
   }
-  # Select criterion for choice of cluster number:
-  criterion_df$criterion <- as.numeric(sapply(X = seq_along(clusters_range),
-                                   FUN = function(i) {y[[i]][criterion]}))
 
   if (plot == TRUE) {
-    ylab_text <- ifelse(type == "hard", "Minimal Average Distance",
-                        "Minimal Weighted \nAverage Distance") # for type = "fuzzy"
-
-    plot_cluster <- ggplot(criterion_df) +
-      geom_line(aes(x = cluster_number, y = criterion), size = 1,
-                linetype = "dotted", col = "darkslategrey") +
-      geom_point(aes(x = cluster_number, y = criterion), size = 5, shape = 19,
-                 col = "darkslategrey") +
-      ylab(ylab_text) + xlab("Cluster number") +
-      theme_minimal() +
-      theme(plot.title        = element_text(hjust = 0.5),
-            legend.text.align = 0,
-            strip.placement   = "outside",
-            strip.background  = element_blank(),
-            axis.title.y      = element_text(margin = margin(0, 10, 0, 0)),
-            axis.title.x      = element_text(margin = margin(10, 0, 0, 0)))+
-      scale_x_continuous(breaks = breaks_width(1))
+    plot_cluster <- plot_cluster_numbers(y)
 
     # Return the plot (and the cluster results):
       if(return_results == FALSE){
@@ -176,7 +151,73 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
 
   if (plot == FALSE) {
     if (return_results == TRUE) {
+      res <- y
       return(res)
     }
   }
 }
+
+
+#' Function to provide graphical visualization for selecting the optimal number
+#' of clusters.
+#' The function provides graphical visualization showing the minimal (weighted)
+#' average distance for every cluster number.
+#' @param cluster_results List of fuzzyclara clustering results with different
+#' numbers of clusters.
+#' @param clusters_range Optional range for the number of clusters. Defaults to
+#' \code{NULL}.
+plot_cluster_numbers <- function(cluster_results, clusters_range = NULL) {
+  
+  checkmate::assert_list(cluster_results)
+  checkmate::assert_integer(clusters_range, null.ok = TRUE)
+  for (i in seq_along(cluster_results)) {
+    checkmate::assert_class(cluster_results[[i]], "fuzzyclara")
+  }
+  
+  # Extract cluster range from list of clustering results if not provided:
+  if (is.null(clusters_range)) {
+    clusters_range <- sapply(X = seq_along(cluster_results),
+                             FUN = function(i) {length(cluster_results[[i]]$medoids)})
+  }
+  
+  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  cluster_number <- NULL
+  
+  # Create data.frame with criterion results:
+  criterion_df <- data.frame(cluster_number = clusters_range,
+                             criterion = rep(0, length(clusters_range)))
+  criterion <- ifelse(cluster_results[[1]]$type == "fuzzy",
+                      yes = "avg_weighted_dist", no = "avg_min_dist")
+  # Select criterion for choice of cluster number:
+  criterion_df$criterion <- as.numeric(sapply(X = seq_along(clusters_range),
+                                              FUN = function(i) {cluster_results[[i]][criterion]}))
+  # Sort data.frame according to cluster number in ascending order:
+  criterion_df <- criterion_df %>% arrange(cluster_number, descending = FALSE)
+  
+  # Graphical visualization:
+  ylab_text <- ifelse(cluster_results[[1]]$type == "hard", "Minimal Average Distance",
+                      "Minimal Weighted \nAverage Distance") # for type = "fuzzy"
+  
+  plot_cluster <- ggplot(criterion_df) +
+    geom_line(aes(x = cluster_number, y = criterion), size = 1,
+              linetype = "dotted", col = "darkslategrey") +
+    geom_point(aes(x = cluster_number, y = criterion), size = 5, shape = 19,
+               col = "darkslategrey") +
+    ylab(ylab_text) + xlab("Cluster number") +
+    theme_minimal() +
+    theme(plot.title        = element_text(hjust = 0.5),
+          legend.text.align = 0,
+          strip.placement   = "outside",
+          strip.background  = element_blank(),
+          axis.title.y      = element_text(margin = margin(0, 10, 0, 0)),
+          axis.title.x      = element_text(margin = margin(10, 0, 0, 0)))+
+    scale_x_continuous(breaks = breaks_width(1))
+  return(plot_cluster)
+}
+
+
+
+
+
+
+
