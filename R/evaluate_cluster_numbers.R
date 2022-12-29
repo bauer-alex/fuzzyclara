@@ -166,6 +166,7 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
 #' numbers of clusters.
 #' @param clusters_range Optional range for the number of clusters. Defaults to
 #' \code{NULL}.
+#' @export
 plot_cluster_numbers <- function(cluster_results, clusters_range = NULL) {
   
   checkmate::assert_list(cluster_results)
