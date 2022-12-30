@@ -10,7 +10,7 @@
   type = NULL,
   variable = NULL,
   na.omit = FALSE,
-  confidence_threshold = 0,
+  membership_threshold = 0,
   seed = 42,
   ...
 )
@@ -27,7 +27,7 @@ a barplot or a boxplot, depending on the class of \code{variable}.}
 \item{na.omit}{Should missing values be excluded for plotting? Defaults to
 FALSE.}
 
-\item{confidence_threshold}{Threshold for fuzzy clustering observations to
+\item{membership_threshold}{Threshold for fuzzy clustering observations to
 be plotted. Must be a number between 0 and 1. Defaults to 0.}
 
 \item{seed}{random number seed (needed for \code{clara_wordcloud} and
@@ -133,29 +133,29 @@ plot(x = cc_hard, data = USArrests, type = "silhouette")
  
 # Plot clusters for fuzzy clustering (using threshold for membership scores)
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
-     variable = "Assault", confidence_threshold = 0) 
+     variable = "Assault", membership_threshold = 0) 
        
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
-     variable = "Assault", confidence_threshold = 0.5)       
+     variable = "Assault", membership_threshold = 0.5)       
        
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-     x_var = "Murder", y_var = "Assault", confidence_threshold = 0)  
+     x_var = "Murder", y_var = "Assault", membership_threshold = 0)  
      
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-     x_var = "Murder", y_var = "Assault", confidence_threshold = 0.5)     
+     x_var = "Murder", y_var = "Assault", membership_threshold = 0.5)     
   
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-     x_var = "Murder", y_var = "Assault", confidence_threshold = 0.5,
+     x_var = "Murder", y_var = "Assault", membership_threshold = 0.5,
      plot_all_fuzzy = TRUE)  
   
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
-     group_by = "Area", confidence_threshold = 0)      
+     group_by = "Area", membership_threshold = 0)      
      
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
-     group_by = "Area", confidence_threshold = 0.5)     
+     group_by = "Area", membership_threshold = 0.5)     
 
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
-     group_by = "Area", confidence_threshold = 0.5, plot_all_fuzzy = TRUE)     
+     group_by = "Area", membership_threshold = 0.5, plot_all_fuzzy = TRUE)     
      
      
 }

@@ -4,7 +4,7 @@
 \alias{clara_parallel}
 \title{Plot function parallel coordinate plot}
 \usage{
-clara_parallel(x, data, confidence_threshold = 0, seed = 42)
+clara_parallel(x, data, membership_threshold = 0, seed = 42)
 }
 \arguments{
 \item{x}{An object of class "fuzzyclara"}
@@ -12,7 +12,7 @@ clara_parallel(x, data, confidence_threshold = 0, seed = 42)
 \item{data}{Prepared data.frame (contains cluster variable, observations are
 already filtered by threshold (fuzzy))}
 
-\item{confidence_threshold}{Threshold for fuzzy clustering observations to
+\item{membership_threshold}{Threshold for fuzzy clustering observations to
 be plotted. Must be a number between 0 and 1. Defaults to 0.}
 
 \item{seed}{random number seed}

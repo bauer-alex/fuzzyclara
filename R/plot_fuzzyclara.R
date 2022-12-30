@@ -9,7 +9,7 @@
 #' a barplot or a boxplot, depending on the class of \code{variable}.
 #' @param na.omit Should missing values be excluded for plotting? Defaults to
 #' FALSE.
-#' @param confidence_threshold Threshold for fuzzy clustering observations to
+#' @param membership_threshold Threshold for fuzzy clustering observations to
 #' be plotted. Must be a number between 0 and 1. Defaults to 0.
 #' @param seed random number seed (needed for \code{clara_wordcloud} and
 #' \code{clara_parallel})
@@ -112,33 +112,33 @@
 #'  
 #' # Plot clusters for fuzzy clustering (using threshold for membership scores)
 #' plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
-#'      variable = "Assault", confidence_threshold = 0) 
+#'      variable = "Assault", membership_threshold = 0) 
 #'        
 #' plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
-#'      variable = "Assault", confidence_threshold = 0.5)       
+#'      variable = "Assault", membership_threshold = 0.5)       
 #'        
 #' plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-#'      x_var = "Murder", y_var = "Assault", confidence_threshold = 0)  
+#'      x_var = "Murder", y_var = "Assault", membership_threshold = 0)  
 #'      
 #' plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-#'      x_var = "Murder", y_var = "Assault", confidence_threshold = 0.5)     
+#'      x_var = "Murder", y_var = "Assault", membership_threshold = 0.5)     
 #'   
 #' plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-#'      x_var = "Murder", y_var = "Assault", confidence_threshold = 0.5,
+#'      x_var = "Murder", y_var = "Assault", membership_threshold = 0.5,
 #'      plot_all_fuzzy = TRUE)  
 #'   
 #' plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
-#'      group_by = "Area", confidence_threshold = 0)      
+#'      group_by = "Area", membership_threshold = 0)      
 #'      
 #' plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
-#'      group_by = "Area", confidence_threshold = 0.5)     
+#'      group_by = "Area", membership_threshold = 0.5)     
 #' 
 #' plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
-#'      group_by = "Area", confidence_threshold = 0.5, plot_all_fuzzy = TRUE)     
+#'      group_by = "Area", membership_threshold = 0.5, plot_all_fuzzy = TRUE)     
 #'      
 #'      
 plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
-                            na.omit = FALSE, confidence_threshold = 0,
+                            na.omit = FALSE, membership_threshold = 0,
                             seed = 42, ...){
 
   checkmate::assert_class(x, class = "fuzzyclara")
@@ -151,7 +151,7 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
                            null.ok = TRUE)
   checkmate::assert_character(variable, null.ok = TRUE)
   checkmate::assert_logical(na.omit, len = 1)
-  checkmate::assert_numeric(confidence_threshold, lower = 0, upper = 1)
+  checkmate::assert_numeric(membership_threshold, lower = 0, upper = 1)
 
 
   # Convertion of matrix to data.frame:
@@ -190,33 +190,33 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
   if (type == "barplot") {
     plot <- clara_barplot(x = x, data = data, variable = variable,
                           na.omit = na.omit,
-                          confidence_threshold = confidence_threshold, ...)
+                          membership_threshold = membership_threshold, ...)
 
   } else if (type == "boxplot") {
     plot <- clara_boxplot(x = x, data = data, variable = variable,
                           na.omit = na.omit,
-                          confidence_threshold = confidence_threshold, ...)
+                          membership_threshold = membership_threshold, ...)
 
   } else if (type == "wordclouds") {
     plot <- clara_wordcloud(x = x, data = data, variable = variable,
                             na.omit = na.omit, seed = seed,
-                            confidence_threshold = confidence_threshold, ...)
+                            membership_threshold = membership_threshold, ...)
 
   } else if (type == "silhouette") {
     plot <- clara_silhouette(x = x, data = data,
-                             confidence_threshold = confidence_threshold, ...)
+                             membership_threshold = membership_threshold, ...)
 
   } else if (type == "pca") {
     plot <- clara_pca(x = x, data = data,
-                      confidence_threshold = confidence_threshold, ...)
+                      membership_threshold = membership_threshold, ...)
 
   } else if (type == "scatterplot") {
     plot <- clara_scatterplot(x = x, data = data, na.omit = na.omit,
-                              confidence_threshold = confidence_threshold, ...)
+                              membership_threshold = membership_threshold, ...)
   
   } else if (type == "parallel") {
     plot <- clara_parallel(x = x, data = data, seed = seed,
-                           confidence_threshold = confidence_threshold, ...)
+                           membership_threshold = membership_threshold, ...)
   }
 
 
@@ -235,7 +235,7 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
 #' @param group_by Optional grouping variable
 #' @param na.omit Should missing values be excluded for plotting? Defaults to
 #' FALSE.
-#' @param confidence_threshold Threshold for fuzzy clustering observations to
+#' @param membership_threshold Threshold for fuzzy clustering observations to
 #' be plotted. Must be a number between 0 and 1. Defaults to 0.
 #'
 #' @return barplot
@@ -244,25 +244,25 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
 #' @export
 #'
 clara_barplot <- function(x, data, variable, group_by = NULL,
-                          na.omit = FALSE, confidence_threshold = 0) {
+                          na.omit = FALSE, membership_threshold = 0) {
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
   checkmate::assert_choice(variable, choices = names(data))
   checkmate::assert_character(group_by, null.ok = TRUE)
   checkmate::assert_logical(na.omit, len = 1)
-  checkmate::assert_numeric(confidence_threshold, lower = 0, upper = 1)
+  checkmate::assert_numeric(membership_threshold, lower = 0, upper = 1)
   
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
   cluster <- max_memb_score <- NULL
   
-  # Select observations based on confidence_threshold:
+  # Select observations based on membership_threshold:
   if (x$type == "fuzzy") {
     # Filter relevant observation based on the membership score threshold:
     relevant_obs <- x$membership_scores %>%
       mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
                                               na.rm = TRUE))) %>%
-      filter(max_memb_score >= confidence_threshold)
+      filter(max_memb_score >= membership_threshold)
     data <- data %>% dplyr::filter(row.names(data) %in% rownames(relevant_obs))
   }
   
@@ -305,26 +305,26 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
 #' @export
 #'
 clara_boxplot <- function(x, data, variable, group_by = NULL,
-                          na.omit = FALSE, confidence_threshold = 0) {
+                          na.omit = FALSE, membership_threshold = 0) {
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
   checkmate::assert_choice(variable, choices = names(data))
   checkmate::assert_character(group_by, null.ok = TRUE)
   checkmate::assert_logical(na.omit, len = 1)
-  checkmate::assert_numeric(confidence_threshold, lower = 0, upper = 1)
+  checkmate::assert_numeric(membership_threshold, lower = 0, upper = 1)
 
 
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
   cluster <- max_memb_score <- NULL
   
-  # Select observations based on confidence_threshold:
+  # Select observations based on membership_threshold:
   if (x$type == "fuzzy") {
     # Filter relevant observation based on the membership score threshold:
     relevant_obs <- x$membership_scores %>%
       mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
                                               na.rm = TRUE))) %>%
-      filter(max_memb_score >= confidence_threshold)
+      filter(max_memb_score >= membership_threshold)
     data <- data %>% dplyr::filter(row.names(data) %in% rownames(relevant_obs))
   }
   
@@ -364,7 +364,7 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
 #' @param na.omit Should missing values be excluded for plotting? Defaults to
 #' FALSE.
 #' @param seed Random number seed. Defaults to 42.
-#' @param confidence_threshold Threshold for fuzzy clustering observations to
+#' @param membership_threshold Threshold for fuzzy clustering observations to
 #' be plotted. Must be a number between 0 and 1. Defaults to 0.
 #'
 #' @return wordcloud plot
@@ -373,14 +373,14 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
 #' @export
 #'
 clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42,
-                            confidence_threshold = 0){
+                            membership_threshold = 0){
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
   checkmate::assert_choice(variable, choices = names(data))
   checkmate::assert_number(seed)
   checkmate::assert_logical(na.omit, len = 1)
-  checkmate::assert_numeric(confidence_threshold, lower = 0, upper = 1)
+  checkmate::assert_numeric(membership_threshold, lower = 0, upper = 1)
   
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
   cluster <- var <- angle <- max_memb_score <- NULL
@@ -390,13 +390,13 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42,
     data <- data %>% filter(!is.na(!!sym(variable)))
   }
   
-  # Select observations based on confidence_threshold:
+  # Select observations based on membership_threshold:
   if (x$type == "fuzzy") {
     # Filter relevant observation based on the membership score threshold:
     relevant_obs <- x$membership_scores %>%
       mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
                                               na.rm = TRUE))) %>%
-      filter(max_memb_score >= confidence_threshold)
+      filter(max_memb_score >= membership_threshold)
     data <- data %>% dplyr::filter(row.names(data) %in% rownames(relevant_obs))
   }
 
@@ -425,7 +425,7 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42,
 #' @param group_by Optional grouping variable
 #' @param plot_all_fuzzy For fuzzy clustering and threshold: should observations
 #' below threshold be plotted transparent? Defaults to TRUE.
-#' @param confidence_threshold Threshold for fuzzy clustering observations to
+#' @param membership_threshold Threshold for fuzzy clustering observations to
 #' be plotted. Must be a number between 0 and 1. Defaults to 0.
 #' @param alpha_fuzzy Alpha value for observations below threshold, only
 #' relevant for \code{plot_all_fuzzy = TRUE}. Defaults to 0.4.
@@ -442,14 +442,14 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42,
 #' @export
 #'
 clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
-                      confidence_threshold = 0, alpha_fuzzy = 0.4,
+                      membership_threshold = 0, alpha_fuzzy = 0.4,
                       focus = FALSE, focus_clusters = NULL) {
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
   checkmate::assert_character(group_by, null.ok = TRUE)
   checkmate::assert_logical(plot_all_fuzzy, len = 1)
-  checkmate::assert_numeric(confidence_threshold, lower = 0, upper = 1)
+  checkmate::assert_numeric(membership_threshold, lower = 0, upper = 1)
   checkmate::assert_number(alpha_fuzzy, lower = 0, upper = 1)
   checkmate::assert_logical(focus, len = 1)
   checkmate::assert_vector(focus_clusters, null.ok = TRUE)
@@ -464,7 +464,7 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
     relevant_obs <- x$membership_scores %>%
       mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
                                               na.rm = TRUE))) %>%
-      filter(max_memb_score >= confidence_threshold)
+      filter(max_memb_score >= membership_threshold)
     rel_obs <- rownames(relevant_obs)
     
     # Transparent observations for scatterplots:
@@ -602,7 +602,7 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
 #' @param x An object of class "fuzzyclara"
 #' @param data Prepared data.frame (contains cluster variable, observations are
 #' already filtered by threshold (fuzzy))
-#' @param confidence_threshold Threshold for fuzzy clustering observations to
+#' @param membership_threshold Threshold for fuzzy clustering observations to
 #' be plotted. Must be a number between 0 and 1. Defaults to 0.
 #' @param seed random number seed
 #' 
@@ -611,11 +611,11 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
 #' @import checkmate dplyr ggplot2 ggpubr tidyr tibble
 #' @export
 #' 
-clara_parallel <- function(x, data, confidence_threshold = 0, seed = 42) {
+clara_parallel <- function(x, data, membership_threshold = 0, seed = 42) {
   
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
-  checkmate::assert_numeric(confidence_threshold, lower = 0, upper = 1)
+  checkmate::assert_numeric(membership_threshold, lower = 0, upper = 1)
   
   # TODO: add potential random sampling
   # TODO: choose variables to plot
@@ -623,13 +623,13 @@ clara_parallel <- function(x, data, confidence_threshold = 0, seed = 42) {
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
   cluster <- max_memb_score <- name <- variable <- value <- . <- NULL
   
-  # Select observations based on confidence_threshold:
+  # Select observations based on membership_threshold:
   if (x$type == "fuzzy") {
     # Filter relevant observation based on the membership score threshold:
     relevant_obs <- x$membership_scores %>%
       mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
                                               na.rm = TRUE))) %>%
-      filter(max_memb_score >= confidence_threshold)
+      filter(max_memb_score >= membership_threshold)
     data <- data %>% dplyr::filter(row.names(data) %in% rownames(relevant_obs))
   }
   
@@ -667,7 +667,7 @@ clara_parallel <- function(x, data, confidence_threshold = 0, seed = 42) {
 #' @param x_var,y_var Names of x and y variable
 #' @param plot_all_fuzzy For fuzzy clustering and threshold: should observations
 #' below threshold be plotted transparent? Defaults to TRUE.
-#' @param confidence_threshold Threshold for fuzzy clustering observations to
+#' @param membership_threshold Threshold for fuzzy clustering observations to
 #' be plotted. Must be a number between 0 and 1. Defaults to 0.
 #' @param alpha_fuzzy Alpha value for observations below threshold, only
 #' relevant for fuzzy clustering and \code{focus = FALSE}. Defaults to 0.4.
@@ -685,7 +685,7 @@ clara_parallel <- function(x, data, confidence_threshold = 0, seed = 42) {
 #' @export
 #'
 clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
-                              confidence_threshold = 0, alpha_fuzzy = 0.4,
+                              membership_threshold = 0, alpha_fuzzy = 0.4,
                               focus = FALSE, focus_clusters = NULL,
                               na.omit = FALSE) {
 
@@ -694,7 +694,7 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
   checkmate::assert_character(x_var, len = 1)
   checkmate::assert_character(y_var, len = 1)
   checkmate::assert_logical(plot_all_fuzzy, len = 1)
-  checkmate::assert_numeric(confidence_threshold, lower = 0, upper = 1)
+  checkmate::assert_numeric(membership_threshold, lower = 0, upper = 1)
   checkmate::assert_number(alpha_fuzzy, lower = 0, upper = 1)
   checkmate::assert_logical(focus, len = 1)
   checkmate::assert_vector(focus_clusters, null.ok = TRUE)
@@ -720,7 +720,7 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
     relevant_obs <- x$membership_scores %>%
       mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
                                               na.rm = TRUE))) %>%
-      filter(max_memb_score >= confidence_threshold)
+      filter(max_memb_score >= membership_threshold)
     rel_obs <- rownames(relevant_obs)
     
     # Transparent observations for scatterplots:
@@ -791,7 +791,7 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
 #' plot instead of all samples? Defaults to FALSE.
 #' @param scale_sil Scale numeric variables for silhouette plot? Defaults to
 #' TRUE. Irrelevant if \code{silhouette_subsample} is TRUE.
-#' @param confidence_threshold Threshold for fuzzy clustering observations to
+#' @param membership_threshold Threshold for fuzzy clustering observations to
 #' be plotted. Must be a number between 0 and 1. Defaults to 0.
 #'
 #' @return silhouette plot
@@ -803,14 +803,14 @@ clara_silhouette <- function(x, data,
                              metric = "euclidean",
                              silhouette_subsample = FALSE,
                              scale_sil = TRUE,
-                             confidence_threshold = 0){
+                             membership_threshold = 0){
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
   # TODO how to check 'metric'? (Edit Jana: in fuzzycara we don't check it either) At least specify 'metric' a bit more in the above documentation -> DONE. Similar to the proxy::dist metric? (Jana: Yes)
   checkmate::assert_logical(silhouette_subsample, len = 1)
   checkmate::assert_logical(scale_sil, len = 1)
-  checkmate::assert_numeric(confidence_threshold, lower = 0, upper = 1)
+  checkmate::assert_numeric(membership_threshold, lower = 0, upper = 1)
 
 
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
@@ -821,7 +821,7 @@ clara_silhouette <- function(x, data,
     relevant_obs <- x$membership_scores %>%
       mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
                                               na.rm = TRUE))) %>%
-      filter(max_memb_score >= confidence_threshold)
+      filter(max_memb_score >= membership_threshold)
     rel_obs <- rownames(relevant_obs)
     
     data <- data %>% dplyr::filter(row.names(data) %in% rownames(relevant_obs))

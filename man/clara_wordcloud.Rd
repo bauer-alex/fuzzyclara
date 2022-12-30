@@ -10,7 +10,7 @@ clara_wordcloud(
   variable,
   na.omit = na.omit,
   seed = 42,
-  confidence_threshold = 0
+  membership_threshold = 0
 )
 }
 \arguments{
@@ -25,7 +25,7 @@ FALSE.}
 
 \item{seed}{Random number seed. Defaults to 42.}
 
-\item{confidence_threshold}{Threshold for fuzzy clustering observations to
+\item{membership_threshold}{Threshold for fuzzy clustering observations to
 be plotted. Must be a number between 0 and 1. Defaults to 0.}
 }
 \value{
