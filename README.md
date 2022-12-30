@@ -15,18 +15,23 @@ Efficient and fuzzy clustering based on the CLARA algorithm
 -   Authors: [Maximilian
     Weigert](https://www.en.stablab.stat.uni-muenchen.de/people/doktoranden/weigert/index.html),
     [Alexander Bauer](https://github.com/bauer-alex/), Jana Gauss
--   Contributors: Asmik Nalmpatian
--   Version: 0.1
+-   Contributors: Theresa Kriecherbauer, Asmik Nalmpatian
+-   Version: 1.0.0
 
 ## Aim of this Package
 
-Some general text
-
-In contrast to other software packages, `fuzzyclara` …
-
-## Main Functionality
-
-…
+The `fuzzyclara` package tackles two issues of cluster analysis applications.
+First, it includes routines for fuzzy clustering which avoid the common hard
+clustering assumption that each observation is a clear member of one sole
+cluster. Instead, membership probabilities indicate to which extent the
+characteristics of each observation are shaped by the characteristics of several
+'typical' clusters. Second, the estimation of classical clustering algorithms
+is often only hardly or not at all feasible in large data situations with
+thousands of observations. Subsampling-based algorithms building on the CLARA
+algorithm are implemented to make the estimation feasible in such situations.
+Building on these two points, the 'fuzzyclara' package offers routines for all
+aspects of a cluster analysis, including the use of user-defined distance
+functions and diverse visualization techniques.
 
 ## Documentation and Useful Materials
 
@@ -58,6 +63,3 @@ unit tests by calling
 devtools::test()
 ```
 
-## References
-
-…

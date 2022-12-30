@@ -621,7 +621,7 @@ clara_parallel <- function(x, data, confidence_threshold = 0, seed = 42) {
   # TODO: choose variables to plot
   
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
-  cluster <- max_memb_score <- NULL
+  cluster <- max_memb_score <- name <- variable <- value <- . <- NULL
   
   # Select observations based on confidence_threshold:
   if (x$type == "fuzzy") {
@@ -647,7 +647,7 @@ clara_parallel <- function(x, data, confidence_threshold = 0, seed = 42) {
   plot <- ggplot(mapping = aes(x = variable, y = value, group = name,
                                col = cluster)) +
     geom_line(data = data_long) + #mapping = aes(alpha = memb_score)) +
-    geom_line(data = data_long_medoids, size = 1.5, col = gray(0.2)) +
+    geom_line(data = data_long_medoids, size = 1.5, col = "#AFAFAF") +
     ylab("Standardized value") +
     facet_wrap(~ cluster, nrow = 1) +
     theme_minimal() +
