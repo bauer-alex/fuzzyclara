@@ -97,7 +97,7 @@ test_that("fuzzyclara_hard_clarans", { # hard CLARANS clustering
                            max_neighbors = 20,
                            type        = "hard",
                            seed        = 3526,
-                           verbose     = 0)
+                           verbose     = 2)
 
   # check whole object
   expect_s3_class(cc_hard, "fuzzyclara")
@@ -155,7 +155,7 @@ test_that("fuzzyclara_fuzzy_clara_build", { # fuzzy clustering with build algori
                           m = 3,
                           build = TRUE,
                           seed        = 3526,
-                          verbose     = 0)
+                          verbose     = 2)
 
   invisible(capture.output(print(cc_fuzzy)))
 
@@ -190,7 +190,7 @@ test_that("fuzzyclara_fuzzy_clarans", { # fuzzy clustering
                           type        = "fuzzy",
                           m = 3,
                           seed        = 3526,
-                          verbose     = 0)
+                          verbose     = 2)
 
   invisible(capture.output(print(cc_fuzzy)))
 

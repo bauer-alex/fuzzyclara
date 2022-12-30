@@ -11,6 +11,15 @@ test_that("plot_fuzzyclara_clara", { # plots
                         seed        = 3526,
                         verbose     = 0)
   
+  cc_fuzzy <- fuzzyclara(data        = USArrests,
+                        clusters    = 3,
+                        metric      = "euclidean",
+                        samples     = 1,
+                        sample_size = NULL,
+                        type        = "fuzzy",
+                        seed        = 3526,
+                        verbose     = 0)
+  
   USArrests_enriched <- USArrests %>%
     mutate(State = as.factor(rownames(USArrests)),
            Area  = as.factor(case_when(State %in% c("Washington", "Oregon",
@@ -44,6 +53,12 @@ test_that("plot_fuzzyclara_clara", { # plots
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBoxplot")
   
+  ## Boxplot fuzzy
+  p <- plot(x = cc_fuzzy, data = USArrests_enriched, variable = "Assault")
+  # check class of object
+  expect_s3_class(p, "ggplot")
+  expect_s3_class(p$layers[[1]]$geom, "GeomBoxplot")
+  
   # Grouped Boxplot
   p <- plot(x = cc_hard, data = USArrests_enriched, variable = "Assault", group_by = "Area")
   # check class of object
@@ -57,6 +72,12 @@ test_that("plot_fuzzyclara_clara", { # plots
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBar")
   
+  ## Barplot fuzzy
+  p <- plot(x = cc_fuzzy, data = USArrests_enriched, variable = "Area")
+  # check class of object
+  expect_s3_class(p, "ggplot")
+  expect_s3_class(p$layers[[1]]$geom, "GeomBar")
+  
   ## Grouped Barplot
   p <- plot(x = cc_hard, data = USArrests_enriched, variable = "Area", group_by = "State")
   # check class of object
@@ -66,6 +87,13 @@ test_that("plot_fuzzyclara_clara", { # plots
   
   ## Wordcloud
   p <- plot(x = cc_hard, data = USArrests_enriched, variable = "State",
+            type = "wordclouds")
+  # check class of object
+  expect_s3_class(p, "ggplot")
+  expect_s3_class(p$layers[[1]]$geom, "GeomTextWordcloud")
+  
+  ## Wordcloud fuzzy
+  p <- plot(x = cc_fuzzy, data = USArrests_enriched, variable = "State",
             type = "wordclouds")
   # check class of object
   expect_s3_class(p, "ggplot")
