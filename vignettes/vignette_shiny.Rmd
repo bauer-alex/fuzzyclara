@@ -181,7 +181,7 @@ plot(x = cc_fuzzy, data = USArrests_enriched, variable = "Assault")
 shinyApp(
   ui = fluidPage(
     sliderInput("threshold", 
-                 label = "Confidence threshold",min = 0, max = 1, value = 0.5, step = 0.05),
+                 label = "Membership threshold",min = 0, max = 1, value = 0.5, step = 0.05),
     plotOutput("cityplt")
   ),
   
@@ -193,7 +193,7 @@ shinyApp(
       x = cc_fuzzy,
       data = USArrests_enriched,
       variable = "Assault",
-      confidence_threshold = input$threshold
+      membership_threshold = input$threshold
       )
     })
         
@@ -215,7 +215,7 @@ plot(x = cc_fuzzy, data = USArrests_enriched, variable = "Area")
 shinyApp(
   ui = fluidPage(
     sliderInput("threshold", 
-                 label = "Confidence threshold",min = 0, max = 1, value = 0.5, step = 0.05),
+                 label = "Membership threshold",min = 0, max = 1, value = 0.5, step = 0.05),
     plotOutput("cityplt")
   ),
   
@@ -227,7 +227,7 @@ shinyApp(
       x = cc_fuzzy,
       data = USArrests_enriched,
       variable = "Area",
-      confidence_threshold = input$threshold
+      membership_threshold = input$threshold
       )
     })
         
@@ -253,7 +253,7 @@ plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
 shinyApp(
   ui = fluidPage(
     sliderInput("threshold", 
-                 label = "Confidence threshold",min = 0, max = 1, value = 0.5, step = 0.05),
+                 label = "Membership threshold",min = 0, max = 1, value = 0.5, step = 0.05),
     plotOutput("cityplt")
   ),
   
@@ -267,7 +267,7 @@ shinyApp(
       type = "scatterplot",
       x_var = "Murder", 
       y_var = "Assault",
-      confidence_threshold = input$threshold,
+      membership_threshold = input$threshold,
       plot_all_fuzzy = TRUE
       )
     })
@@ -297,7 +297,7 @@ plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
 shinyApp(
   ui = fluidPage(
     sliderInput("threshold", 
-                 label = "Confidence threshold",min = 0, max = 1, value = 0.5, step = 0.05),
+                 label = "Membership threshold",min = 0, max = 1, value = 0.5, step = 0.05),
     plotOutput("cityplt")
   ),
   
@@ -310,7 +310,7 @@ shinyApp(
       data = USArrests_enriched,
       type = "pca",
       group_by = "Area",
-      confidence_threshold = input$threshold,
+      membership_threshold = input$threshold,
       plot_all_fuzzy = TRUE
       )
     })

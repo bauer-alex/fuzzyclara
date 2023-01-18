@@ -10,7 +10,7 @@ clara_boxplot(
   variable,
   group_by = NULL,
   na.omit = FALSE,
-  confidence_threshold = 0
+  membership_threshold = 0
 )
 }
 \arguments{
@@ -26,7 +26,7 @@ already filtered by threshold (fuzzy))}
 \item{na.omit}{Should missing values be excluded for plotting? Defaults to
 FALSE.}
 
-\item{confidence_threshold}{Threshold for fuzzy clustering observations to
+\item{membership_threshold}{Threshold for fuzzy clustering observations to
 be plotted. Must be a number between 0 and 1. Defaults to 0.}
 }
 \value{

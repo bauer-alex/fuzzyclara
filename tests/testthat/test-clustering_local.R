@@ -17,7 +17,7 @@ test_that("clustering_local", { # clustering_local function
                                 sample_local = sample,
                                 metric = "euclidean",
                                 type = "hard",
-                                verbose = 2)
+                                verbose = 0)
 
   # check whole object
   expect_class(cc_hard, "list")

@@ -82,6 +82,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   type <- rep(type, length.out = length(clusters))
   if (clusters[1] == 1) {
     type[1] <- "hard"
+    change_output_style <- TRUE
   }
   # The resulting output, however, should look the usual fuzzy output.
 
@@ -105,7 +106,8 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
       clustering_numbers_list <- lapply(X = seq_along(clusters), FUN = function(j) {
         clustering <- clustering_sample(data = data,
                                         sample_ids = sample_ids[[i]],
-                                        dist = dist_matrix, clusters = clusters[j],
+                                        dist = dist_matrix,
+                                        clusters = clusters[j],
                                         metric = metric, m = m, seed = seed,
                                         sample_size = sample_size,
                                         type = type[j], verbose = verbose,
@@ -174,7 +176,8 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
         clustering_numbers_list <- lapply(X = seq_along(clusters), FUN = function(j) {
           clustering <- clustering_sample(data = data,
                                           sample_ids = sample_ids[[i]],
-                                          dist = dist_matrix, clusters = clusters[j],
+                                          dist = dist_matrix,
+                                          clusters = clusters[j],
                                           metric = metric, m = m, seed = seed,
                                           sample_size = sample_size,
                                           type = type[j], verbose = verbose,
@@ -194,6 +197,11 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   # Return of results list for all numbers of clusters:
   results_list <- lapply(X = seq_along(clusters), FUN = function(j) {
 
+    # No changed output style for more than one cluster:
+    if (j > 1 & type[2] == "fuzzy" & m != 1) {
+      change_output_style <- FALSE
+    }
+    
     # Selection of best clustering solution (according to smallest average
     # distance to closest cluster medoid):
     min_distance_list <- lapply(X = 1:samples, FUN = function(i) {
@@ -226,7 +234,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
     # Change output style if pam was used for type "fuzzy":
     if (change_output_style == TRUE) {
       # Type:
-      best_solution$type[j] <- "fuzzy"
+      best_solution$type <- "fuzzy"
       # Weighted distance:
       names(best_solution)[[3]] <- "avg_weighted_dist"
       # Membership scores:
@@ -239,6 +247,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
       best_solution$membership_scores <- membership
       best_solution <- best_solution[c(element_names[1:3], "membership_scores",
                                        element_names[4:length(element_names)])]
+      
     }
 
     # Return of clustering solution based on the best sample:

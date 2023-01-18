@@ -11,6 +11,15 @@ test_that("plot_fuzzyclara_clara", { # plots
                         seed        = 3526,
                         verbose     = 0)
   
+  cc_fuzzy <- fuzzyclara(data        = USArrests,
+                        clusters    = 3,
+                        metric      = "euclidean",
+                        samples     = 1,
+                        sample_size = NULL,
+                        type        = "fuzzy",
+                        seed        = 3526,
+                        verbose     = 0)
+  
   USArrests_enriched <- USArrests %>%
     mutate(State = as.factor(rownames(USArrests)),
            Area  = as.factor(case_when(State %in% c("Washington", "Oregon",
@@ -44,6 +53,12 @@ test_that("plot_fuzzyclara_clara", { # plots
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBoxplot")
   
+  ## Boxplot fuzzy
+  p <- plot(x = cc_fuzzy, data = USArrests_enriched, variable = "Assault")
+  # check class of object
+  expect_s3_class(p, "ggplot")
+  expect_s3_class(p$layers[[1]]$geom, "GeomBoxplot")
+  
   # Grouped Boxplot
   p <- plot(x = cc_hard, data = USArrests_enriched, variable = "Assault", group_by = "Area")
   # check class of object
@@ -57,6 +72,12 @@ test_that("plot_fuzzyclara_clara", { # plots
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBar")
   
+  ## Barplot fuzzy
+  p <- plot(x = cc_fuzzy, data = USArrests_enriched, variable = "Area")
+  # check class of object
+  expect_s3_class(p, "ggplot")
+  expect_s3_class(p$layers[[1]]$geom, "GeomBar")
+  
   ## Grouped Barplot
   p <- plot(x = cc_hard, data = USArrests_enriched, variable = "Area", group_by = "State")
   # check class of object
@@ -66,6 +87,13 @@ test_that("plot_fuzzyclara_clara", { # plots
   
   ## Wordcloud
   p <- plot(x = cc_hard, data = USArrests_enriched, variable = "State",
+            type = "wordclouds")
+  # check class of object
+  expect_s3_class(p, "ggplot")
+  expect_s3_class(p$layers[[1]]$geom, "GeomTextWordcloud")
+  
+  ## Wordcloud fuzzy
+  p <- plot(x = cc_fuzzy, data = USArrests_enriched, variable = "State",
             type = "wordclouds")
   # check class of object
   expect_s3_class(p, "ggplot")
@@ -121,7 +149,7 @@ test_that("plot_fuzzyclara_clara", { # plots
                     type = "wordclouds"))
   
   
-  ## confidence threshold for fuzzy clustering
+  ## membership threshold for fuzzy clustering
   cc_fuzzy <- fuzzyclara(data        = USArrests,
                          clusters    = 3,
                          metric      = "euclidean",
@@ -133,7 +161,7 @@ test_that("plot_fuzzyclara_clara", { # plots
                          verbose     = 0)
   
   p <- plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-            x_var = "Murder", y_var = "Assault", confidence_threshold = 0.5,
+            x_var = "Murder", y_var = "Assault", membership_threshold = 0.5,
             plot_all_fuzzy = TRUE)
   # check class of object
   expect_s3_class(p, "ggplot")
@@ -145,14 +173,14 @@ test_that("plot_fuzzyclara_clara", { # plots
                          cc_fuzzy$membership_scores$Cluster3) >= 0.5)
   expect_identical(n_obs_conf, nrow(p$data))
   
-  p <- plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca", confidence_threshold = 0.5,
+  p <- plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca", membership_threshold = 0.5,
             plot_all_fuzzy = TRUE)
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomPoint")
   
   p <- plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca", group_by = "Area",
-            confidence_threshold = 0.5,
+            membership_threshold = 0.5,
             plot_all_fuzzy = TRUE)
   # check class of object
   expect_s3_class(p, "ggplot")
@@ -272,6 +300,12 @@ test_that("plot_fuzzyclara_clarans", { # plots
   expect_s3_class(p$layers[[1]]$geom, "GeomTextWordcloud")
   
   
+  ## Parallel coordinate plot:
+  p <- plot(x = cc_hard, data = USArrests_enriched, type = "parallel")
+  # check class of object
+  expect_s3_class(p, "ggplot")
+  expect_s3_class(p$layers[[1]]$geom, "GeomLine")
+  
   ## Scatterplot
   p <- plot(x = cc_hard, data = USArrests_enriched, type = "scatterplot",
             x_var = "Murder", y_var = "Assault")
@@ -318,7 +352,7 @@ test_that("plot_fuzzyclara_clarans", { # plots
                     type = "wordclouds"))
   
   
-  ## confidence threshold for fuzzy clustering
+  ## membership threshold for fuzzy clustering
   cc_fuzzy  <- fuzzyclara(data        = USArrests,
                           clusters    = 3,
                           metric      = "euclidean",
@@ -331,7 +365,7 @@ test_that("plot_fuzzyclara_clarans", { # plots
                           verbose     = 0)
   
   p <- plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-            x_var = "Murder", y_var = "Assault", confidence_threshold = 0.5,
+            x_var = "Murder", y_var = "Assault", membership_threshold = 0.5,
             plot_all_fuzzy = TRUE)
   # check class of object
   expect_s3_class(p, "ggplot")
@@ -343,14 +377,14 @@ test_that("plot_fuzzyclara_clarans", { # plots
                          cc_fuzzy$membership_scores$Cluster3) >= 0.5)
   expect_identical(n_obs_conf, nrow(p$data))
   
-  p <- plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca", confidence_threshold = 0.5,
-            plot_all_fuzzy = TRUE)
+  p <- plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
+            membership_threshold = 0.5, plot_all_fuzzy = TRUE)
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomPoint")
   
   p <- plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca", group_by = "Area",
-            confidence_threshold = 0.5,
+            membership_threshold = 0.5,
             plot_all_fuzzy = TRUE)
   # check class of object
   expect_s3_class(p, "ggplot")
@@ -365,6 +399,13 @@ test_that("plot_fuzzyclara_clarans", { # plots
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBar")
+  
+  # Parallel coordinate plot:
+  p <- plot(x = cc_fuzzy, data = USArrests_enriched, type = "parallel",
+            membership_threshold = 0.3)
+  # check class of object
+  expect_s3_class(p, "ggplot")
+  expect_s3_class(p$layers[[1]]$geom, "GeomLine")
   
   
   # focus scatterplot

@@ -10,7 +10,8 @@
   type = NULL,
   variable = NULL,
   na.omit = FALSE,
-  confidence_threshold = 0,
+  membership_threshold = 0,
+  seed = 42,
   ...
 )
 }
@@ -20,14 +21,17 @@
 \item{data}{data.frame or matrix used for clustering}
 
 \item{type, variable}{Type of plot. One of \code{c("barplot","boxplot","wordclouds",
-"silhouette","pca","scatterplot")}. Defaults to NULL, which either plots
+"silhouette","pca","scatterplot", "parallel")}. Defaults to NULL, which either plots
 a barplot or a boxplot, depending on the class of \code{variable}.}
 
 \item{na.omit}{Should missing values be excluded for plotting? Defaults to
 FALSE.}
 
-\item{confidence_threshold}{Threshold for fuzzy clustering observations to
+\item{membership_threshold}{Threshold for fuzzy clustering observations to
 be plotted. Must be a number between 0 and 1. Defaults to 0.}
+
+\item{seed}{random number seed (needed for \code{clara_wordcloud} and
+\code{clara_parallel})}
 
 \item{...}{Further arguments for internal plot functions.}
 }
@@ -44,20 +48,29 @@ library(dplyr)
 USArrests_enriched <- USArrests \%>\% 
   mutate(State = as.factor(rownames(USArrests)),
          Area  = as.factor(case_when(State \%in\% c("Washington", "Oregon",
-                                               "California", "Nevada", "Arizona", "Idaho", "Montana",
-                                               "Wyoming", "Colorado", "New Mexico", "Utah", "Hawaii",
+                                               "California", "Nevada",
+                                               "Arizona", "Idaho", "Montana",
+                                               "Wyoming", "Colorado",
+                                               "New Mexico", "Utah", "Hawaii",
                                                "Alaska") ~ "West",
-                                  State \%in\% c("Texas", "Oklahoma", "Arkansas", "Louisiana",
-                                               "Mississippi", "Alabama", "Tennessee", "Kentucky", "Georgia",
-                                               "Florida", "South Carolina", "North Carolina", "Virginia",
+                                  State \%in\% c("Texas", "Oklahoma", "Arkansas",
+                                               "Louisiana", "Mississippi",
+                                               "Alabama", "Tennessee",
+                                               "Kentucky", "Georgia",
+                                               "Florida", "South Carolina",
+                                               "North Carolina", "Virginia",
                                                "West Virginia") ~ "South",
                                   State \%in\% c("Kansas", "Nebraska", "South Dakota",
-                                               "North Dakota", "Minnesota", "Missouri", "Iowa", "Illinois",
-                                               "Indiana", "Michigan", "Wisconsin", "Ohio") ~ "Midwest",
+                                               "North Dakota", "Minnesota",
+                                               "Missouri", "Iowa", "Illinois",
+                                               "Indiana", "Michigan", "Wisconsin",
+                                               "Ohio") ~ "Midwest",
                                   State \%in\% c("Maine", "New Hampshire", "New York",
-                                               "Massachusetts", "Rhode Island", "Vermont", "Pennsylvania",
-                                               "New Jersey", "Connecticut", "Delaware", "Maryland") ~
-                                    "Northeast")))
+                                               "Massachusetts", "Rhode Island",
+                                               "Vermont", "Pennsylvania",
+                                               "New Jersey", "Connecticut",
+                                               "Delaware", "Maryland") ~
+                                               "Northeast")))
 # Determine clusters that will be plotted                                 
 cc_hard <- fuzzyclara(data        = USArrests,
                       clusters    = 3,
@@ -87,10 +100,12 @@ plot(x = cc_hard, data = USArrests_enriched, variable = "Assault")
 plot(x = cc_hard, data = USArrests_enriched, variable = "Area")
 
 # Wordcloud
-plot(x = cc_hard, data = USArrests_enriched, variable = "State", type = "wordclouds")                                    
+plot(x = cc_hard, data = USArrests_enriched, variable = "State", 
+     type = "wordclouds")                                    
                                     
 # Scatterplot
-plot(x = cc_hard, data = USArrests_enriched, type = "scatterplot", x_var = "Murder", y_var = "Assault")   
+plot(x = cc_hard, data = USArrests_enriched, type = "scatterplot",
+     x_var = "Murder", y_var = "Assault")   
 
 # Plot membership probability for fuzzy clustering
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
@@ -117,27 +132,30 @@ plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
 plot(x = cc_hard, data = USArrests, type = "silhouette")  
  
 # Plot clusters for fuzzy clustering (using threshold for membership scores)
-plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca", variable = "Assault", confidence_threshold = 0) 
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
+     variable = "Assault", membership_threshold = 0) 
        
-plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca", variable = "Assault", confidence_threshold = 0.5)       
+plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
+     variable = "Assault", membership_threshold = 0.5)       
        
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-     x_var = "Murder", y_var = "Assault", confidence_threshold = 0)  
+     x_var = "Murder", y_var = "Assault", membership_threshold = 0)  
      
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-     x_var = "Murder", y_var = "Assault", confidence_threshold = 0.5)     
+     x_var = "Murder", y_var = "Assault", membership_threshold = 0.5)     
   
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-     x_var = "Murder", y_var = "Assault", confidence_threshold = 0.5, plot_all_fuzzy = TRUE)  
+     x_var = "Murder", y_var = "Assault", membership_threshold = 0.5,
+     plot_all_fuzzy = TRUE)  
   
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
-     group_by = "Area", confidence_threshold = 0)      
+     group_by = "Area", membership_threshold = 0)      
      
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
-     group_by = "Area", confidence_threshold = 0.5)     
+     group_by = "Area", membership_threshold = 0.5)     
 
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
-     group_by = "Area", confidence_threshold = 0.5, plot_all_fuzzy = TRUE)     
+     group_by = "Area", membership_threshold = 0.5, plot_all_fuzzy = TRUE)     
      
      
 }

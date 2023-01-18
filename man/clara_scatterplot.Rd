@@ -10,7 +10,7 @@ clara_scatterplot(
   x_var,
   y_var,
   plot_all_fuzzy = TRUE,
-  confidence_threshold = 0,
+  membership_threshold = 0,
   alpha_fuzzy = 0.4,
   focus = FALSE,
   focus_clusters = NULL,
@@ -27,7 +27,7 @@ clara_scatterplot(
 \item{plot_all_fuzzy}{For fuzzy clustering and threshold: should observations
 below threshold be plotted transparent? Defaults to TRUE.}
 
-\item{confidence_threshold}{Threshold for fuzzy clustering observations to
+\item{membership_threshold}{Threshold for fuzzy clustering observations to
 be plotted. Must be a number between 0 and 1. Defaults to 0.}
 
 \item{alpha_fuzzy}{Alpha value for observations below threshold, only

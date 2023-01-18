@@ -19,7 +19,7 @@ test_that("fuzzyclara_hard_clara", { # hard CLARA clustering
   expect_s3_class(cc_hard, "fuzzyclara")
   expect_s3_class(cc_hard, "list")
 
-  expect_length(cc_hard, 12)
+  expect_length(cc_hard, 13)
 
 
   # check final cluster distance matrix
@@ -78,7 +78,7 @@ test_that("fuzzyclara_hard_clarans", { # hard CLARANS clustering
   expect_s3_class(cc_hard, "fuzzyclara")
   expect_s3_class(cc_hard, "list")
 
-  expect_length(cc_hard, 9)
+  expect_length(cc_hard, 10)
 
 
   # check final cluster distance matrix
@@ -97,7 +97,7 @@ test_that("fuzzyclara_hard_clarans", { # hard CLARANS clustering
                            max_neighbors = 20,
                            type        = "hard",
                            seed        = 3526,
-                           verbose     = 0)
+                           verbose     = 2)
 
   # check whole object
   expect_s3_class(cc_hard, "fuzzyclara")
@@ -128,7 +128,7 @@ test_that("fuzzyclara_fuzzy_clara", { # fuzzy clustering
   expect_s3_class(cc_fuzzy, "fuzzyclara")
   expect_s3_class(cc_fuzzy, "list")
 
-  expect_length(cc_fuzzy, 13)
+  expect_length(cc_fuzzy, 14)
 
 
   # check membership scores
@@ -155,7 +155,7 @@ test_that("fuzzyclara_fuzzy_clara_build", { # fuzzy clustering with build algori
                           m = 3,
                           build = TRUE,
                           seed        = 3526,
-                          verbose     = 0)
+                          verbose     = 2)
 
   invisible(capture.output(print(cc_fuzzy)))
 
@@ -163,7 +163,7 @@ test_that("fuzzyclara_fuzzy_clara_build", { # fuzzy clustering with build algori
   expect_s3_class(cc_fuzzy, "fuzzyclara")
   expect_s3_class(cc_fuzzy, "list")
 
-  expect_length(cc_fuzzy, 13)
+  expect_length(cc_fuzzy, 14)
 
 
   # check membership scores
@@ -190,7 +190,7 @@ test_that("fuzzyclara_fuzzy_clarans", { # fuzzy clustering
                           type        = "fuzzy",
                           m = 3,
                           seed        = 3526,
-                          verbose     = 0)
+                          verbose     = 2)
 
   invisible(capture.output(print(cc_fuzzy)))
 
@@ -198,7 +198,7 @@ test_that("fuzzyclara_fuzzy_clarans", { # fuzzy clustering
   expect_s3_class(cc_fuzzy, "fuzzyclara")
   expect_s3_class(cc_fuzzy, "list")
 
-  expect_length(cc_fuzzy, 10)
+  expect_length(cc_fuzzy, 11)
 
 
   # check membership scores
@@ -209,6 +209,76 @@ test_that("fuzzyclara_fuzzy_clarans", { # fuzzy clustering
 
 })
 
+test_that("fuzzyclara_fuzzy_clara_parallel", { # fuzzy clustering with build algorithm
+  
+  data(USArrests)
+  
+  # fuzzy clustering
+  n_clusters <- 3
+  cc_fuzzy  <- fuzzyclara(data        = USArrests,
+                          clusters    = n_clusters,
+                          metric      = "euclidean",
+                          samples     = 1,
+                          sample_size = NULL,
+                          type        = "fuzzy",
+                          m = 3,
+                          build = TRUE,
+                          seed        = 3526,
+                          verbose     = 0,
+                          cores = 2)
+  
+  invisible(capture.output(print(cc_fuzzy)))
+  
+  # check whole object
+  expect_s3_class(cc_fuzzy, "fuzzyclara")
+  expect_s3_class(cc_fuzzy, "list")
+  
+  expect_length(cc_fuzzy, 14)
+  
+  
+  # check membership scores
+  expect_s3_class(cc_fuzzy$membership_scores, "data.frame")
+  expect_identical(dim(cc_fuzzy$membership_scores),
+                   as.integer(c(nrow(USArrests), n_clusters)))
+  
+  
+})
+
+
+test_that("fuzzyclara_fuzzy_clarans_parallel", { # fuzzy clustering
+  
+  data(USArrests)
+  
+  # fuzzy clustering
+  n_clusters <- 3
+  cc_fuzzy  <- fuzzyclara(data        = USArrests,
+                          clusters    = n_clusters,
+                          metric      = "euclidean",
+                          algorithm   = "clarans",
+                          num_local   = 2,
+                          max_neighbors = 20,
+                          type        = "fuzzy",
+                          m = 3,
+                          seed        = 3526,
+                          verbose     = 0,
+                          cores = 2)
+  
+  invisible(capture.output(print(cc_fuzzy)))
+  
+  # check whole object
+  expect_s3_class(cc_fuzzy, "fuzzyclara")
+  expect_s3_class(cc_fuzzy, "list")
+  
+  expect_length(cc_fuzzy, 11)
+  
+  
+  # check membership scores
+  expect_s3_class(cc_fuzzy$membership_scores, "data.frame")
+  expect_identical(dim(cc_fuzzy$membership_scores),
+                   as.integer(c(nrow(USArrests), n_clusters)))
+  
+  
+})
 
 
 test_that("fuzzyclara_fuzzy_pam", { # use pam clustering if m = 1 or clusters = 1
@@ -408,8 +478,5 @@ test_that("fuzzyclara_scale", { # scaling of variables
   dist_matrix <- proxy::dist(data[cc_hard$subsample_ids,])
 
   expect_identical(round(matrix(dist_matrix), 2), round(matrix(cc_hard$dist_matrix), 2))
-
-
-
 
 })

@@ -98,7 +98,8 @@
 #'cc_manh
 #'
 #'# Hard clustering with Minkowski distance
-#'      #In order to specify arguments of the distance metric (e. g. p for Minkowski distance), 
+#'      # In order to specify arguments of the distance metric (e. g. p for
+#'      # Minkowski distance), 
 #'      # you can use a self-defined distance function.
 #'
 #'dist_mink <- function(x, y) {
@@ -137,7 +138,9 @@ fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
   checkmate::assert_choice(verbose, choices = 0:2)
   checkmate::assert_logical(scale, len = 1)
   checkmate::assert_logical(build, len = 1)
-
+  
+  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  sd <- NULL
 
   # pam requires the number of clusters to be smaller than the number of
   # observations -> another check of sample_size
@@ -158,13 +161,16 @@ fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
   else {
     name_metric <- metric
   }
-
+  
+  # Scaling of numerical variables:
   if(scale == TRUE){
-    # optional: Scaling of numerical (and ordinal) variables:
     ind <- unlist(lapply(data, is.numeric), use.names = TRUE)
-    for (i in ind) {
-      data[, ind] <- scale(data[, ind])
-    }
+    # Store scaling parameters in a list:
+    scaling <- list()
+    scaling$mean <- colMeans(data[, ind])
+    scaling$sd <- apply(X = data, MARGIN = 2, FUN = sd)
+    # Scaling:
+    data[, ind] <- scale(data[, ind])
   }
 
   # Choice of clustering algorithm:
@@ -181,6 +187,14 @@ fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
                                  num_local = num_local, type = type,
                                  cores = cores, seed = seed, m = m,
                                  verbose = verbose, ...)
+  }
+  
+  # Add scaling parameters to output information:
+  if (scale == TRUE) {
+    result$scaling <- scaling
+  }
+  if (scale == FALSE) {
+    result$scaling <- FALSE
   }
 
   # Return of clustering solution:

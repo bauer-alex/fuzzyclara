@@ -1,11 +1,12 @@
 Package: fuzzyclara
-Title: Routines for Efficient Hard and Fuzzy Clustering based on the CLARA algorithm
-Version: 0.1
+Title: Efficient Medoid-based Clustering Algorithms for Large and Fuzzy Data
+Version: 1.0.0
 Authors@R: c(
     person(given = "Maximilian", family = "Weigert", email = "maximilian.weigert@stat.uni-muenchen.de", role = c("aut","cre"), comment = c(ORCID = "0000-0003-4400-134X")),
     person(given = "Alexander",  family = "Bauer",   email = "alexander.bauer@stat.uni-muenchen.de", role = "aut", comment = c(ORCID = "0000-0003-3495-5131")),
     person(given = "Jana",       family = "Gauss",   role = "aut"),
-    person(given = "Asmik",      family = "Nalmpatian", role = "ctb"))
+    person(given = "Asmik",      family = "Nalmpatian", role = "ctb"),
+    person(given = "Theresa", family = "Kriecherbauer", role = "ctb"))
 Description: The 'fuzzyclara' package tackles two issues of cluster analysis applications.
   First, it includes routines for fuzzy clustering which avoid the common hard clustering assumption
   that each observation is a clear member of one sole cluster. Instead, membership probabilities indicate
@@ -45,4 +46,4 @@ Imports:
     tidyr,
     Matrix
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5)

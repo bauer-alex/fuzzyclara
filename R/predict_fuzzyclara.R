@@ -55,11 +55,20 @@ predict.fuzzyclara <- function(object, newdata, ...){
 
   # Convertion of matrix to data.frame:
   if (!(any(class(newdata) == "data.frame"))) {
-    data <- as.data.frame(data)
+    newdata <- as.data.frame(newdata)
+  }
+  
+  # Scaling of numerical variables:
+  if(is.list(object$scaling)){
+    ind <- unlist(lapply(newdata, is.numeric), use.names = TRUE)
+    newdata[, ind] <- scale(x = newdata[, ind], center = object$scaling$mean,
+                            scale = object$scaling$sd)
   }
 
   # Adding row.names to column:
   newdata <- newdata %>% tibble::rownames_to_column(var = "Name")
+  object$data_medoids <- object$data_medoids %>%
+    tibble::rownames_to_column(var = "Name")
 
   # Assign clusters to new observations:
   assignments <- assign_cluster(data = newdata,
@@ -67,17 +76,18 @@ predict.fuzzyclara <- function(object, newdata, ...){
                                 metric = object$metric,
                                 type = object$type,
                                 m = object$fuzzyness,
+                                data_medoids = object$data_medoids,
                                 return_distMatrix = TRUE)
 
   # Preparation of output object:
   if (object$type == "hard") {
     assignments <- list(assignments$clustering, assignments$distance_to_medoids)
-    names(assignments) <- c("assignment", "distance_to_medoids")
+    names(assignments) <- c("clustering", "distance_to_medoids")
   }
   else {
     assignments <- list(assignments$clustering, assignments$membership_scores,
                         assignments$distance_to_medoids)
-    names(assignments) <- c("assignment", "membership_scores",
+    names(assignments) <- c("clustering", "membership_scores",
                             "distance_to_medoids")
   }
 

@@ -6,4 +6,5 @@
 ^doc$
 ^Meta$
 ^paper$
+^data-raw$
 ^\.github$
