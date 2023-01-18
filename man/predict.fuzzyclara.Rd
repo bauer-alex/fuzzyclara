@@ -19,3 +19,29 @@ clustering plot tibble
 \description{
 Function to predict cluster assignments
 }
+\examples{
+
+# Split data intp test and training data
+train_indices <- sample(x = nrow(USArrests), size = 0.7*nrow(USArrests))
+USArrests_train <- USArrests[train_indices, ]
+USArrests_test <- USArrests[-train_indices, ]
+
+# Determine fuzzy clusters on training data
+
+cc_fuzzy <- fuzzyclara(data        = USArrests_train,
+                       clusters    = 3,
+                       metric      = "euclidean",
+                       samples     = 1,
+                       sample_size = NULL,
+                       type        = "fuzzy",
+                       m           = 2,
+                       seed        = 3526,
+                       verbose     = 0)
+cc_fuzzy
+
+# Make cluster prediction for test data
+
+USArrests_clusters_predicted <- predict(object = cc_fuzzy, newdata = USArrests_test)
+USArrests_clusters_predicted$membership_scores
+
+}
