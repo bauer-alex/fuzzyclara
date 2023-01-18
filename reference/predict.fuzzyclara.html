@@ -83,6 +83,100 @@
 <p>clustering plot tibble</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Split data intp test and training data</span></span></span>
+<span class="r-in"><span><span class="va">train_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">USArrests</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">0.7</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">USArrests</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">USArrests_train</span> <span class="op">&lt;-</span> <span class="va">USArrests</span><span class="op">[</span><span class="va">train_indices</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">USArrests_test</span> <span class="op">&lt;-</span> <span class="va">USArrests</span><span class="op">[</span><span class="op">-</span><span class="va">train_indices</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Determine fuzzy clusters on training data</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">cc_fuzzy</span> <span class="op">&lt;-</span> <span class="fu"><a href="fuzzyclara.html">fuzzyclara</a></span><span class="op">(</span>data        <span class="op">=</span> <span class="va">USArrests_train</span>,</span></span>
+<span class="r-in"><span>                       clusters    <span class="op">=</span> <span class="fl">3</span>,</span></span>
+<span class="r-in"><span>                       metric      <span class="op">=</span> <span class="st">"euclidean"</span>,</span></span>
+<span class="r-in"><span>                       samples     <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>                       sample_size <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
+<span class="r-in"><span>                       type        <span class="op">=</span> <span class="st">"fuzzy"</span>,</span></span>
+<span class="r-in"><span>                       m           <span class="op">=</span> <span class="fl">2</span>,</span></span>
+<span class="r-in"><span>                       seed        <span class="op">=</span> <span class="fl">3526</span>,</span></span>
+<span class="r-in"><span>                       verbose     <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>The specified sample size is equal to the number of</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>     observations in the data. PAM clustering is performed on the entire data.</span>
+<span class="r-in"><span><span class="va">cc_fuzzy</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Clustering results</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Medoids</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Maine"      "Oklahoma"   "Washington"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Clustering</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 1 1 2 1 1 1 1 3 3 1 1 2 1 1 1 1 1 1 1 3 2 3 1 2 2 1 1 2 1 3 3 1 2 1 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Minimum average weighted distance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.921615</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Membership scores</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 Cluster1  Cluster2  Cluster3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Tennessee      0.4349154 0.2298403 0.3352442</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North Carolina 0.3817899 0.3027344 0.3154757</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> New Hampshire  0.1711561 0.6830199 0.1458240</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Missouri       0.4548489 0.1518981 0.3932530</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> New York       0.4063714 0.2048122 0.3888164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Kentucky       0.4094883 0.3206609 0.2698508</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Indiana        0.5812606 0.1478981 0.2708413</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Colorado       0.3622871 0.1861606 0.4515524</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Oregon         0.3250350 0.1227377 0.5522274</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Kansas         0.5762958 0.1643453 0.2593588</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> New Mexico     0.4038130 0.2161491 0.3800378</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North Dakota   0.1755718 0.6685080 0.1559202</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> New Jersey     0.4083710 0.1906460 0.4009830</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Virginia       0.6012306 0.1490551 0.2497143</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Texas          0.4304855 0.1992906 0.3702239</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Michigan       0.3976843 0.2113069 0.3910088</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Carolina 0.3968287 0.2805707 0.3226005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Oklahoma       1.0000000 0.0000000 0.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Maryland       0.4124053 0.2241857 0.3634090</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Nevada         0.3712872 0.2273208 0.4013920</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iowa           0.2089161 0.6117937 0.1792901</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Alaska         0.3689502 0.2601622 0.3708876</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Georgia        0.4087960 0.2568321 0.3343719</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Minnesota      0.3424368 0.3531350 0.3044282</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Idaho          0.2727784 0.5086542 0.2185674</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Florida        0.3898772 0.2411034 0.3690195</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Alabama        0.4333326 0.2468272 0.3198402</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> West Virginia  0.2547829 0.5395924 0.2056247</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Nebraska       0.4128004 0.3001477 0.2870518</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hawaii         0.3706984 0.2223769 0.4069247</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Utah           0.3080420 0.1440917 0.5478663</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Ohio           0.5073587 0.1319875 0.3606538</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Maine          0.0000000 1.0000000 0.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Rhode Island   0.3805713 0.2626207 0.3568081</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Washington     0.0000000 0.0000000 1.0000000</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Make cluster prediction for test data</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">USArrests_clusters_predicted</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">cc_fuzzy</span>, newdata <span class="op">=</span> <span class="va">USArrests_test</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">USArrests_clusters_predicted</span><span class="op">$</span><span class="va">membership_scores</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                Cluster1  Cluster2  Cluster3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Arizona       0.3864742 0.2026716 0.4108542</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Arkansas      0.4279743 0.2798095 0.2922163</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> California    0.3658698 0.2180772 0.4160530</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Connecticut   0.3859348 0.2752832 0.3387819</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Delaware      0.4614670 0.2003408 0.3381922</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Illinois      0.4192787 0.1972894 0.3834320</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Louisiana     0.4230429 0.2422718 0.3346853</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Massachusetts 0.3938994 0.1958606 0.4102400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mississippi   0.3865943 0.3034741 0.3099317</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Montana       0.3735841 0.3737285 0.2526874</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Pennsylvania  0.4990513 0.2027702 0.2981785</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Dakota  0.2209036 0.5990947 0.1800017</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Vermont       0.2484704 0.5300902 0.2214395</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Wisconsin     0.3026741 0.4341720 0.2631539</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Wyoming       0.5236124 0.2275164 0.2488712</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
