@@ -24,6 +24,8 @@
 "silhouette","pca","scatterplot", "parallel")}. Defaults to NULL, which either plots
 a barplot or a boxplot, depending on the class of \code{variable}.}
 
+\item{variable}{}
+
 \item{na.omit}{Should missing values be excluded for plotting? Defaults to
 FALSE.}
 
@@ -34,6 +36,8 @@ be plotted. Must be a number between 0 and 1. Defaults to 0.}
 \code{clara_parallel})}
 
 \item{...}{Further arguments for internal plot functions.}
+
+\item{type}{}
 }
 \value{
 Clustering plot
@@ -101,7 +105,7 @@ plot(x = cc_hard, data = USArrests_enriched, variable = "Area")
 
 # Wordcloud
 plot(x = cc_hard, data = USArrests_enriched, variable = "State", 
-     type = "wordclouds")                                    
+     type = "wordclouds", seed = 123)                                    
                                     
 # Scatterplot
 plot(x = cc_hard, data = USArrests_enriched, type = "scatterplot",
@@ -156,6 +160,9 @@ plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
 
 plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
      group_by = "Area", membership_threshold = 0.5, plot_all_fuzzy = TRUE)     
-     
+
+# Parallel Plot
+plot(x = cc_fuzzy, data = USArrests_enriched, 
+     type = "parallel", sample_percentage = 1, plot_membership_scores = TRUE)      
      
 }

@@ -4,7 +4,14 @@
 \alias{clara_parallel}
 \title{Plot function parallel coordinate plot}
 \usage{
-clara_parallel(x, data, membership_threshold = 0, seed = 42)
+clara_parallel(
+  x,
+  data,
+  membership_threshold = 0,
+  seed = 42,
+  plot_membership_scores,
+  sample_percentage = 0.2
+)
 }
 \arguments{
 \item{x}{An object of class "fuzzyclara"}
@@ -16,6 +23,14 @@ already filtered by threshold (fuzzy))}
 be plotted. Must be a number between 0 and 1. Defaults to 0.}
 
 \item{seed}{random number seed}
+
+\item{plot_membership_scores}{Boolean value indicating whether the cluster
+membership scores for the observations should be indicated through line the
+transparency (TRUE) or not (FALSE)}
+
+\item{sample_percentage}{Percentage value that indicates which percentage of
+observations should randomly selected for representation the plot. Must be a
+number between 0 and 1. Defaults to 0.2.}
 }
 \value{
 parallel coordinate plot

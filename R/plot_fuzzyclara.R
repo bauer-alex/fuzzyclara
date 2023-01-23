@@ -14,7 +14,8 @@
 #' @param seed random number seed (needed for \code{clara_wordcloud} and
 #' \code{clara_parallel})
 #' @param ... Further arguments for internal plot functions.
-#'
+#' @param type 
+#' @param variable 
 #' @return Clustering plot
 #'
 #' @import checkmate cluster dplyr factoextra ggplot2 ggpubr
@@ -80,7 +81,7 @@
 #' 
 #' # Wordcloud
 #' plot(x = cc_hard, data = USArrests_enriched, variable = "State", 
-#'      type = "wordclouds")                                    
+#'      type = "wordclouds", seed = 123)                                    
 #'                                     
 #' # Scatterplot
 #' plot(x = cc_hard, data = USArrests_enriched, type = "scatterplot",
@@ -135,7 +136,10 @@
 #' 
 #' plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
 #'      group_by = "Area", membership_threshold = 0.5, plot_all_fuzzy = TRUE)     
-#'      
+#' 
+#' # Parallel Plot
+#' plot(x = cc_fuzzy, data = USArrests_enriched, 
+#'      type = "parallel", sample_percentage = 1, plot_membership_scores = TRUE)      
 #'      
 plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
                             na.omit = FALSE, membership_threshold = 0,
@@ -216,7 +220,8 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
   
   } else if (type == "parallel") {
     plot <- clara_parallel(x = x, data = data, seed = seed,
-                           membership_threshold = membership_threshold, ...)
+                           membership_threshold = membership_threshold, 
+                           ...)
   }
 
 
@@ -605,17 +610,27 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
 #' @param membership_threshold Threshold for fuzzy clustering observations to
 #' be plotted. Must be a number between 0 and 1. Defaults to 0.
 #' @param seed random number seed
+#' @param sample_percentage Percentage value that indicates which percentage of
+#' observations should randomly selected for representation the plot. Must be a
+#' number between 0 and 1. Defaults to 0.2.
+#' @param plot_membership_scores Boolean value indicating whether the cluster 
+#' membership scores for the observations should be indicated through line the
+#' transparency (TRUE) or not (FALSE)
 #' 
 #' @return parallel coordinate plot
 #' 
 #' @import checkmate dplyr ggplot2 ggpubr tidyr tibble
 #' @export
 #' 
-clara_parallel <- function(x, data, membership_threshold = 0, seed = 42) {
+clara_parallel <- function(x, data, membership_threshold = 0, seed = 42,
+                           plot_membership_scores, sample_percentage = 0.2) {
   
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
   checkmate::assert_numeric(membership_threshold, lower = 0, upper = 1)
+  checkmate::assert_numeric(sample_percentage, lower = 0, upper = 1)
+  # ? check für plot_membership_score (habe kein assert... gefunden)
+  
   
   # TODO: add potential random sampling
   # TODO: choose variables to plot
@@ -633,20 +648,34 @@ clara_parallel <- function(x, data, membership_threshold = 0, seed = 42) {
     data <- data %>% dplyr::filter(row.names(data) %in% rownames(relevant_obs))
   }
   
+  # Sample x percent of observations to avoid overplotting
+  if (sample_percentage != 1) {
+    rows <- nrow(data)
+    selected_rows <- sample(x = rows, size = sample_percentage * rows)
+    data <- data[selected_rows,]
+  }
+  
+  # Add column with membership scores
+  if (plot_membership_scores == TRUE) {
+    "memb_score" <-  apply(X = x$membership_scores, MARGIN = 1,
+                            FUN = max)
+    data <- cbind(data, memb_score)
+  }
+  
   # Reformat data to long format and add row.names to data:
   data <- data %>% mutate(cluster = as.numeric(cluster))
   num_vars <- unlist(lapply(data, is.numeric))
   data <- data[, num_vars]
   data_long <- data %>% rownames_to_column(var = "name") %>%
-    pivot_longer(cols = 2:(ncol(.) - 1), names_to = "variable")
-  
+    pivot_longer(cols = 2:(ncol(.) - 2), names_to = "variable")
   # Extract observations with medoids: 
   data_long_medoids <- data_long %>% filter(name %in% x$medoids)
-  
+   
   # Parallel coordinate plot:
+  
   plot <- ggplot(mapping = aes(x = variable, y = value, group = name,
                                col = cluster)) +
-    geom_line(data = data_long) + #mapping = aes(alpha = memb_score)) +
+    geom_line(data = data_long, aes(alpha = memb_score)) + #mapping = aes(alpha = memb_score)) +
     geom_line(data = data_long_medoids, size = 1.5, col = "#AFAFAF") +
     ylab("Standardized value") +
     facet_wrap(~ cluster, nrow = 1) +
