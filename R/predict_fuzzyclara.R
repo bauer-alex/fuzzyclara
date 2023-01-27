@@ -37,7 +37,9 @@
 #'
 #' # Make cluster prediction for test data
 #'
-#' USArrests_clusters_predicted <- predict(object = cc_fuzzy, newdata = USArrests_test, dist_matrix = dist)
+#' USArrests_clusters_predicted <- predict(object = cc_fuzzy,
+#'                                         newdata = USArrests_test,
+#'                                         dist_matrix = dist)
 #' USArrests_clusters_predicted$membership_scores
 #'
 predict.fuzzyclara <- function(object, newdata, ...){

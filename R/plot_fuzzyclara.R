@@ -11,11 +11,15 @@
 #' FALSE.
 #' @param membership_threshold Threshold for fuzzy clustering observations to
 #' be plotted. Must be a number between 0 and 1. Defaults to 0.
+#' @param sample_percentage Percentage value that indicates which percentage of
+#' observations should randomly selected for representation the plot. Must be a
+#' number between 0 and 1. Defaults to 1.
+#' @param plot_membership_scores Boolean value indicating whether the cluster 
+#' membership scores for the observations should be indicated through line the
+#' transparency (TRUE) or not (FALSE). Defaults to FALSE.
 #' @param seed random number seed (needed for \code{clara_wordcloud} and
 #' \code{clara_parallel})
 #' @param ... Further arguments for internal plot functions.
-#' @param type 
-#' @param variable 
 #' @return Clustering plot
 #'
 #' @import checkmate cluster dplyr factoextra ggplot2 ggpubr
@@ -143,7 +147,8 @@
 #'      
 plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
                             na.omit = FALSE, membership_threshold = 0,
-                            seed = 42, ...){
+                            sample_percentage = 1, 
+                            plot_membership_scores = FALSE, seed = 42, ...){
 
   checkmate::assert_class(x, class = "fuzzyclara")
   checkmate::assert(checkmate::check_data_frame(data),
@@ -221,7 +226,8 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
   } else if (type == "parallel") {
     plot <- clara_parallel(x = x, data = data, seed = seed,
                            membership_threshold = membership_threshold, 
-                           ...)
+                           sample_percentage = sample_percentage,
+                           plot_membership_scores = plot_membership_scores, ...)
   }
 
 
@@ -623,7 +629,7 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
 #' @export
 #' 
 clara_parallel <- function(x, data, membership_threshold = 0, seed = 42,
-                           plot_membership_scores, sample_percentage = 0.2) {
+                           plot_membership_scores = FALSE, sample_percentage = 0.2) {
   
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)

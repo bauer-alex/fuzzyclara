@@ -46,7 +46,9 @@ dist <- proxy::dist(x = USArrests_test[, -1], y = USArrests_medoids[, -1],
 
 # Make cluster prediction for test data
 
-USArrests_clusters_predicted <- predict(object = cc_fuzzy, newdata = USArrests_test, dist_matrix = dist)
+USArrests_clusters_predicted <- predict(object = cc_fuzzy,
+                                        newdata = USArrests_test,
+                                        dist_matrix = dist)
 USArrests_clusters_predicted$membership_scores
 
 }

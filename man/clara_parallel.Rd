@@ -9,7 +9,7 @@ clara_parallel(
   data,
   membership_threshold = 0,
   seed = 42,
-  plot_membership_scores,
+  plot_membership_scores = FALSE,
   sample_percentage = 0.2
 )
 }

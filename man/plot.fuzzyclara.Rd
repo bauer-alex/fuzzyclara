@@ -11,6 +11,8 @@
   variable = NULL,
   na.omit = FALSE,
   membership_threshold = 0,
+  sample_percentage = 1,
+  plot_membership_scores = FALSE,
   seed = 42,
   ...
 )
@@ -24,20 +26,24 @@
 "silhouette","pca","scatterplot", "parallel")}. Defaults to NULL, which either plots
 a barplot or a boxplot, depending on the class of \code{variable}.}
 
-\item{variable}{}
-
 \item{na.omit}{Should missing values be excluded for plotting? Defaults to
 FALSE.}
 
 \item{membership_threshold}{Threshold for fuzzy clustering observations to
 be plotted. Must be a number between 0 and 1. Defaults to 0.}
 
+\item{sample_percentage}{Percentage value that indicates which percentage of
+observations should randomly selected for representation the plot. Must be a
+number between 0 and 1. Defaults to 1.}
+
+\item{plot_membership_scores}{Boolean value indicating whether the cluster
+membership scores for the observations should be indicated through line the
+transparency (TRUE) or not (FALSE). Defaults to FALSE.}
+
 \item{seed}{random number seed (needed for \code{clara_wordcloud} and
 \code{clara_parallel})}
 
 \item{...}{Further arguments for internal plot functions.}
-
-\item{type}{}
 }
 \value{
 Clustering plot
