@@ -66,6 +66,8 @@
 <span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  na.omit <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  membership_threshold <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  sample_percentage <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  plot_membership_scores <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">42</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -87,10 +89,6 @@
 a barplot or a boxplot, depending on the class of <code>variable</code>.</p></dd>
 
 
-<dt>variable</dt>
-<dd></dd>
-
-
 <dt>na.omit</dt>
 <dd><p>Should missing values be excluded for plotting? Defaults to
 FALSE.</p></dd>
@@ -101,6 +99,18 @@ FALSE.</p></dd>
 be plotted. Must be a number between 0 and 1. Defaults to 0.</p></dd>
 
 
+<dt>sample_percentage</dt>
+<dd><p>Percentage value that indicates which percentage of
+observations should randomly selected for representation the plot. Must be a
+number between 0 and 1. Defaults to 1.</p></dd>
+
+
+<dt>plot_membership_scores</dt>
+<dd><p>Boolean value indicating whether the cluster
+membership scores for the observations should be indicated through line the
+transparency (TRUE) or not (FALSE). Defaults to FALSE.</p></dd>
+
+
 <dt>seed</dt>
 <dd><p>random number seed (needed for <code>clara_wordcloud</code> and
 <code>clara_parallel</code>)</p></dd>
@@ -108,10 +118,6 @@ be plotted. Must be a number between 0 and 1. Defaults to 0.</p></dd>
 
 <dt>...</dt>
 <dd><p>Further arguments for internal plot functions.</p></dd>
-
-
-<dt>type</dt>
-<dd></dd>
 
 </dl></div>
     <div class="section level2">
