@@ -826,6 +826,8 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
 #' plot instead of all samples? Defaults to FALSE.
 #' @param scale_sil Scale numeric variables for silhouette plot? Defaults to
 #' TRUE. Irrelevant if \code{silhouette_subsample} is TRUE.
+#' @param silhouette_table Should a table of silhouette results be returned
+#' together with the plot? Defaults to TRUE.
 #' @param membership_threshold Threshold for fuzzy clustering observations to
 #' be plotted. Must be a number between 0 and 1. Defaults to 0.
 #'
@@ -838,6 +840,7 @@ clara_silhouette <- function(x, data,
                              metric = "euclidean",
                              silhouette_subsample = FALSE,
                              scale_sil = TRUE,
+                             silhouette_table = TRUE,
                              membership_threshold = 0){
 
   checkmate::assert_class(x, classes = "fuzzyclara")
@@ -849,7 +852,7 @@ clara_silhouette <- function(x, data,
 
 
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
-  max_memb_score <- cluster <- NULL
+  max_memb_score <- cluster <- sil_width <- NULL
   
   if (x$type == "fuzzy") {
     # Filter relevant observation based on the membership score threshold:
@@ -906,9 +909,26 @@ clara_silhouette <- function(x, data,
 
     }
   }
-
-  plot <- fviz_silhouette(sil) + theme_minimal() +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  
+  if (silhouette_table == FALSE) {
+    plot <- fviz_silhouette(sil, print.summary = FALSE) + theme_minimal() +
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  }
+  if (silhouette_table == TRUE) {
+    plot <- list()
+    plot$plot <- fviz_silhouette(sil, print.summary = FALSE) + theme_minimal() +
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+    
+    # Prepare silhouette table for each cluster:
+    plot$silhouette_table <- as.data.frame.matrix(sil) %>%
+      group_by(cluster) %>%
+      summarize(size = n(), sil_width = mean(sil_width)) %>%
+      as.data.frame()
+    colnames(plot$silhouette_table) <- c("Cluster", "Size", "Silhouette width")
+    
+    # Overall silhouette width:
+    plot$average_silhouette_width <- mean(as.data.frame.matrix(sil)$sil_width)
+  }
 
   return(plot)
 }

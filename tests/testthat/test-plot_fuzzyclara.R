@@ -123,12 +123,13 @@ test_that("plot_fuzzyclara_clara", { # plots
   
   ## Silhouette
   invisible(capture.output(p <- plot(x = cc_hard, data = USArrests, type = "silhouette",
-                                     silhouette_subsample = TRUE)))
+                                     silhouette_subsample = TRUE, silhouette_table = FALSE)))
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBar")
   
-  invisible(capture.output(p <- plot(x = cc_hard, data = USArrests, type = "silhouette")))
+  invisible(capture.output(p <- plot(x = cc_hard, data = USArrests, type = "silhouette",
+                                     silhouette_table = FALSE)))
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBar")
@@ -189,7 +190,7 @@ test_that("plot_fuzzyclara_clara", { # plots
   
   # silhouette, fuzzy, silhouette_subsample = TRUE
   invisible(capture.output(p <- plot(x = cc_fuzzy, data = USArrests, type = "silhouette",
-                                     silhouette_subsample = TRUE)))
+                                     silhouette_subsample = TRUE, silhouette_table = FALSE)))
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBar")
@@ -331,7 +332,8 @@ test_that("plot_fuzzyclara_clarans", { # plots
   expect_error(plot(x = cc_hard, data = USArrests, type = "silhouette",
                     silhouette_subsample = TRUE))
   
-  invisible(capture.output(p <- plot(x = cc_hard, data = USArrests, type = "silhouette")))
+  invisible(capture.output(p <- plot(x = cc_hard, data = USArrests, type = "silhouette",
+                                     silhouette_table = FALSE)))
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBar")
@@ -342,6 +344,8 @@ test_that("plot_fuzzyclara_clarans", { # plots
   dat_sil_manual <- silhouette(as.numeric(cc_hard$clustering), dist(data))
   expect_identical(round(sort(dat_sil$sil_width), 2), round(sort(dat_sil_manual[, 3]), 2))
   
+  # silhouette table
+  expect_list(plot(x = cc_hard, data = USArrests, type = "silhouette"))
   
   # errors:
   expect_error(plot(x = cc_hard, data = USArrests_enriched,
@@ -395,7 +399,8 @@ test_that("plot_fuzzyclara_clarans", { # plots
   expect_error(plot(x = cc_fuzzy, data = USArrests, type = "silhouette",
                     silhouette_subsample = TRUE))
   
-  invisible(capture.output(p <- plot(x = cc_fuzzy, data = USArrests, type = "silhouette")))
+  invisible(capture.output(p <- plot(x = cc_fuzzy, data = USArrests, type = "silhouette",
+                                     silhouette_table = FALSE)))
   # check class of object
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$layers[[1]]$geom, "GeomBar")

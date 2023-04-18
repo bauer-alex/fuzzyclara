@@ -10,6 +10,7 @@ clara_silhouette(
   metric = "euclidean",
   silhouette_subsample = FALSE,
   scale_sil = TRUE,
+  silhouette_table = TRUE,
   membership_threshold = 0
 )
 }
@@ -27,6 +28,9 @@ plot instead of all samples? Defaults to FALSE.}
 
 \item{scale_sil}{Scale numeric variables for silhouette plot? Defaults to
 TRUE. Irrelevant if \code{silhouette_subsample} is TRUE.}
+
+\item{silhouette_table}{Should a table of silhouette results be returned
+together with the plot? Defaults to TRUE.}
 
 \item{membership_threshold}{Threshold for fuzzy clustering observations to
 be plotted. Must be a number between 0 and 1. Defaults to 0.}
