@@ -64,6 +64,7 @@
 <span>  metric <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
 <span>  silhouette_subsample <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  scale_sil <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  silhouette_table <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  membership_threshold <span class="op">=</span> <span class="fl">0</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -92,6 +93,11 @@ plot instead of all samples? Defaults to FALSE.</p></dd>
 <dt>scale_sil</dt>
 <dd><p>Scale numeric variables for silhouette plot? Defaults to
 TRUE. Irrelevant if <code>silhouette_subsample</code> is TRUE.</p></dd>
+
+
+<dt>silhouette_table</dt>
+<dd><p>Should a table of silhouette results be returned
+together with the plot? Defaults to TRUE.</p></dd>
 
 
 <dt>membership_threshold</dt>
