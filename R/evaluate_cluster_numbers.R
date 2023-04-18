@@ -200,7 +200,7 @@ plot_cluster_numbers <- function(cluster_results, clusters_range = NULL) {
                       "Minimal Weighted \nAverage Distance") # for type = "fuzzy"
   
   plot_cluster <- ggplot(criterion_df) +
-    geom_line(aes(x = cluster_number, y = criterion), size = 1,
+    geom_line(aes(x = cluster_number, y = criterion), linewidth = 1,
               linetype = "dotted", col = "darkslategrey") +
     geom_point(aes(x = cluster_number, y = criterion), size = 5, shape = 19,
                col = "darkslategrey") +

@@ -77,7 +77,7 @@ predict.fuzzyclara <- function(object, newdata, ...){
                                 medoids = object$medoids,
                                 metric = object$metric,
                                 type = object$type,
-                                m = object$fuzzyness,
+                                m = object$fuzzyness_exponent,
                                 data_medoids = object$data_medoids,
                                 return_distMatrix = TRUE)
 

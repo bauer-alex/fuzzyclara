@@ -218,7 +218,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
     if (type[[j]] == "hard") {
       m <- 1
     }
-    best_solution[["fuzzyness"]] <- m
+    best_solution[["fuzzyness_exponent"]] <- m
     best_solution[["algorithm"]] <- "clara"
     best_solution[["metric"]] <- metric
 

@@ -23,7 +23,7 @@ test_that("assign_cluster", {
 
   # check whole object
   expect_class(result, "list")
-  expect_length(result, 5)
+  expect_length(result, 6)
   expect_identical(dim(result$membership_scores), as.integer(c(nrow(data), 3)))
 
   # with distance matrix
@@ -35,7 +35,7 @@ test_that("assign_cluster", {
 
   # check whole object
   expect_class(result, "list")
-  expect_length(result, 5)
+  expect_length(result, 6)
   expect_identical(dim(result$membership_scores), as.integer(c(nrow(data), 3)))
 
 })

@@ -36,7 +36,7 @@ test_that("clustering_sample", { # clustering_sample function
 
   # check whole object
   expect_class(cc_fuzzy, "list")
-  expect_length(cc_fuzzy, 7)
+  expect_length(cc_fuzzy, 8)
   expect_identical(dim(cc_fuzzy$membership_scores), as.integer(c(nrow(data), 3)))
 
 

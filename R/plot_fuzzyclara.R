@@ -682,7 +682,7 @@ clara_parallel <- function(x, data, membership_threshold = 0, seed = 42,
   plot <- ggplot(mapping = aes(x = variable, y = value, group = name,
                                col = cluster)) +
     geom_line(data = data_long, aes(alpha = memb_score)) + #mapping = aes(alpha = memb_score)) +
-    geom_line(data = data_long_medoids, size = 1.5, col = "#AFAFAF") +
+    geom_line(data = data_long_medoids, linewidth = 1.5, col = "#AFAFAF") +
     ylab("Standardized value") +
     facet_wrap(~ cluster, nrow = 1) +
     theme_minimal() +

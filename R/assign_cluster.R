@@ -103,6 +103,13 @@ assign_cluster <- function(data, metric, medoids, dist_matrix = NULL,
     membership            <- as.data.frame(assignment_dat$membership)
     row.names(membership) <- data$Name
     clustering_result[["membership_scores"]] <- membership
+    
+    # Computation of Dunn's partition coefficient:
+    dunn <- sum(membership^2) / nrow(membership)
+    dunn_norm <- (dunn - (1 / ncol(membership))) / ( 1 - 1 / ncol(membership))
+    dunn <- c(dunn, dunn_norm)
+    names(dunn) <- c("Dunn's coefficient", "Normalized Dunn'S coefficient")
+    clustering_result[["fuzzyness"]] <- dunn
   }
 
   if (return_distMatrix) {
@@ -158,3 +165,4 @@ calculate_memb_score <- function(dist_med, m = 2) {
   }
   return(list_memb)
 }
+

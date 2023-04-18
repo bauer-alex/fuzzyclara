@@ -153,7 +153,7 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
     if (type == "hard") {
       m <- 1
     }
-    best_solution[["fuzzyness"]] <- m
+    best_solution[["fuzzyness_exponent"]] <- m
     best_solution[["algorithm"]] <- "clarans"
     best_solution[["metric"]]    <- metric
 
