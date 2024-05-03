@@ -93,7 +93,8 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
       local_cluster <- makePSOCKcluster(rep("localhost", cores))
       clusterExport(cl = local_cluster,
                     varlist = c("clustering_local",
-                                "assign_cluster", "calculate_memb_score"),
+                                "assign_cluster", "calculate_memb_score",
+                                "metric"),
                     envir = environment(fuzzyclara))
       clustering_results_list <- parLapply(cl = local_cluster, X = 1:num_local,
                                            fun = function(i) {

@@ -129,7 +129,8 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
       clusterExport(cl = local_cluster,
                     varlist = c("clustering_sample", "compute_distance_matrix",
                                 "perform_sample_clustering",
-                                "assign_cluster", "calculate_memb_score"),
+                                "assign_cluster", "calculate_memb_score",
+                                "metric"),
                     envir = environment(fuzzyclara))
       clustering_results_list <- parLapply(cl = local_cluster, X = 1:samples,
                                            fun = function(i) {
