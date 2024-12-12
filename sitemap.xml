@@ -1,99 +1,35 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/main_functionality.html</loc>
-  </url>
-  <url>
-    <loc>/articles/vignette_shiny.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/assign_cluster.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculate_memb_score.html</loc>
-  </url>
-  <url>
-    <loc>/reference/clara_barplot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/clara_boxplot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/clara_parallel.html</loc>
-  </url>
-  <url>
-    <loc>/reference/clara_pca.html</loc>
-  </url>
-  <url>
-    <loc>/reference/clara_scatterplot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/clara_silhouette.html</loc>
-  </url>
-  <url>
-    <loc>/reference/clara_wordcloud.html</loc>
-  </url>
-  <url>
-    <loc>/reference/clustering_clara.html</loc>
-  </url>
-  <url>
-    <loc>/reference/clustering_clarans.html</loc>
-  </url>
-  <url>
-    <loc>/reference/clustering_local.html</loc>
-  </url>
-  <url>
-    <loc>/reference/clustering_sample.html</loc>
-  </url>
-  <url>
-    <loc>/reference/compute_distance_matrix.html</loc>
-  </url>
-  <url>
-    <loc>/reference/evaluate_cluster_numbers.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fuzzyclara.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/perform_sample_clustering.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot.fuzzyclara.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot_cluster_numbers.html</loc>
-  </url>
-  <url>
-    <loc>/reference/predict.fuzzyclara.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.fuzzyclara.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print_logMessage.html</loc>
-  </url>
-  <url>
-    <loc>/reference/travel.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/articles/main_functionality.html</loc></url>
+<url><loc>/articles/vignette_shiny.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/assign_cluster.html</loc></url>
+<url><loc>/reference/calculate_memb_score.html</loc></url>
+<url><loc>/reference/clara_barplot.html</loc></url>
+<url><loc>/reference/clara_boxplot.html</loc></url>
+<url><loc>/reference/clara_parallel.html</loc></url>
+<url><loc>/reference/clara_pca.html</loc></url>
+<url><loc>/reference/clara_scatterplot.html</loc></url>
+<url><loc>/reference/clara_silhouette.html</loc></url>
+<url><loc>/reference/clara_wordcloud.html</loc></url>
+<url><loc>/reference/clustering_clara.html</loc></url>
+<url><loc>/reference/clustering_clarans.html</loc></url>
+<url><loc>/reference/clustering_local.html</loc></url>
+<url><loc>/reference/clustering_sample.html</loc></url>
+<url><loc>/reference/compute_distance_matrix.html</loc></url>
+<url><loc>/reference/evaluate_cluster_numbers.html</loc></url>
+<url><loc>/reference/fuzzyclara.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/perform_sample_clustering.html</loc></url>
+<url><loc>/reference/plot.fuzzyclara.html</loc></url>
+<url><loc>/reference/plot_cluster_numbers.html</loc></url>
+<url><loc>/reference/predict.fuzzyclara.html</loc></url>
+<url><loc>/reference/print.fuzzyclara.html</loc></url>
+<url><loc>/reference/print_logMessage.html</loc></url>
+<url><loc>/reference/travel.html</loc></url>
 </urlset>
+
