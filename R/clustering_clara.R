@@ -87,7 +87,7 @@ clustering_clara <- function(data, clusters = 5, metric = "euclidean",
   # The resulting output, however, should look the usual fuzzy output.
 
   # Adding row.names to column:
-  data <- data %>% tibble::rownames_to_column(var = "Name")
+  data <- data %>% tibble::rownames_to_column(var = "Name") %>% as.data.frame()
   row.names(data) <- data$Name
 
   # Calculation of clustering results for each sample:

@@ -44,7 +44,7 @@ assign_cluster <- function(data, metric, medoids, dist_matrix = NULL,
     
     if (is.null(data_medoids)) {
       # Extraction of obtained medoids of the data:
-      data_medoids <- data %>% filter(Name %in% medoids)
+      data_medoids <- data %>% filter(Name %in% medoids) %>% as.data.frame()
     }
   
     # Calculate the distances to the cluster medoids:
