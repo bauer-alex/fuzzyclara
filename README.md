@@ -12,8 +12,7 @@ license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://open
 
 Efficient and fuzzy clustering based on the CLARA algorithm
 
--   Authors: [Maximilian
-    Weigert](https://www.en.stablab.stat.uni-muenchen.de/people/doktoranden/weigert/index.html),
+-   Authors: Maximilian Weigert,
     [Alexander Bauer](https://github.com/bauer-alex/), Jana Gauss
 -   Contributors: Theresa Kriecherbauer, Asmik Nalmpatian
 -   Version: 1.0.0
@@ -37,22 +36,22 @@ functions and diverse visualization techniques.
 
 To get an overview of the functionalities of the package, check out the
 [package
-vignette](https://MaxWeigert.github.io/fuzzyclara/articles/main_functionality.html).
+vignette](https://bauer-alex.github.io/fuzzyclara/articles/main_functionality.html).
 
 ## Installation
 
 The most current version from GitHub can be installed via
 
 ``` r
-devtools::install_github("MaxWeigert/fuzzyclara")
+devtools::install_github("bauer-alex/fuzzyclara")
 ```
 
 ## How to Contribute
 
 If you encounter problems with the package, find bugs or have
 suggestions for additional functionalities please open a [GitHub
-issue](https://github.com/MaxWeigert/fuzzyclara/issues). Alternatively,
-feel free to contact us directly via email.
+issue](https://github.com/bauer-alex/fuzzyclara/issues). Alternatively,
+feel free to contact us directly [via email](mailto:baueralexander@posteo.de).
 
 Contributions (via pull requests or otherwise) are welcome. Before you
 open a pull request or share your updates with us, please make sure that
