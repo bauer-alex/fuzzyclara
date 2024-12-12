@@ -77,7 +77,7 @@ A variety of medoid-based fuzzy clustering methods is available in packages
 TODO Sind das alle Pakete?  
 TODO Welche anderen Pakete beschaeftigen sich mit dem kompletten Workflow von Clustering?
 
-All of the above implementations have in common that they either alllow for the
+All of the above implementations have in common that they either allow for the
 application of fuzzy clustering or of subsampling approaches, but not both
 simultaneously.
 The *fuzzyclara* package allows for simultaneously analyzing large and
@@ -181,7 +181,7 @@ shows recommends us to choose the solution with four different clusters.
 
 ![Elbow plot of best clustering solutions with 1 to 10 clusters according to the minial average weighted distance.\label{fig:description}](figures/travel_elbow.png)
 
-\autoref{fig:parcoord} highlights the chracteristics of the different clusters
+\autoref{fig:parcoord} highlights the characteristics of the different clusters
 showing the individual paths of 500 randomly sampled observations including the
 medoid. Whereas cluster 1 shows a tendency to trips of shorter length, lower
 distance and lower costs, the tourists of cluster 2 tend to travel most
