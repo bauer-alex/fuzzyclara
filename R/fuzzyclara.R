@@ -155,7 +155,7 @@ fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
   }
 
   # Extract name of metric:
-  if (class(metric) == "function") {
+  if (inherits(metric, "function")) {
     name_metric <- deparse(substitute(metric))
   }
   else {

@@ -53,14 +53,14 @@
 #' @export
 #' @examples 
 #' # Select optimal number of clusters
-#' cc_number <- evaluate_cluster_numbers( data            = USArrests,
-#'                                        clusters_range  = 2:6,
-#'                                        metric          = "euclidean",
-#'                                        samples         = 1,
-#'                                        sample_size     = NULL,
-#'                                        type            = "hard",
-#'                                        seed            = 3526,
-#'                                        verbose         = 0)
+#' cc_number <- evaluate_cluster_numbers(data            = USArrests,
+#'                                       clusters_range  = 2:6,
+#'                                       metric          = "euclidean",
+#'                                       samples         = 1,
+#'                                       sample_size     = NULL,
+#'                                       type            = "hard",
+#'                                       seed            = 3526,
+#'                                       verbose         = 0)
 #' cc_number
 #' 
 evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
@@ -207,7 +207,6 @@ plot_cluster_numbers <- function(cluster_results, clusters_range = NULL) {
     ylab(ylab_text) + xlab("Cluster number") +
     theme_minimal() +
     theme(plot.title        = element_text(hjust = 0.5),
-          legend.text.align = 0,
           strip.placement   = "outside",
           strip.background  = element_blank(),
           axis.title.y      = element_text(margin = margin(0, 10, 0, 0)),
@@ -215,10 +214,3 @@ plot_cluster_numbers <- function(cluster_results, clusters_range = NULL) {
     scale_x_continuous(breaks = breaks_width(1))
   return(plot_cluster)
 }
-
-
-
-
-
-
-

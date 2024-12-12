@@ -17,7 +17,7 @@ test_that("evaluate_cl_nums_clara", { # plot to select number of clusters
   expect_s3_class(cc_number, "ggplot")
   expect_s3_class(cc_number$layers[[1]]$geom, "GeomLine")
 
-  expect_length(cc_number, 9)
+  expect_length(cc_number, 11)
 
   expect_identical(dim(cc_number$data),
                    as.integer(c(5, 2)))
@@ -108,7 +108,7 @@ test_that("evaluate_cl_nums_clarans", { # plot to select number of clusters
   expect_s3_class(cc_number, "ggplot")
   expect_s3_class(cc_number$layers[[1]]$geom, "GeomLine")
 
-  expect_length(cc_number, 9)
+  expect_length(cc_number, 11)
 
   expect_identical(dim(cc_number$data),
                    as.integer(c(5, 2)))
@@ -169,4 +169,3 @@ test_that("plot_cl_nums", { # plot to select number of clusters
   expect_s3_class(cc_plot, "ggplot")
   expect_s3_class(cc_plot$layers[[1]]$geom, "GeomLine")
 })
-

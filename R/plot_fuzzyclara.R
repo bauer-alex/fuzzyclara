@@ -420,7 +420,7 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42,
     mutate(angle = 90 * sample(c(0, 1), n(), replace = TRUE,
                                prob = c(60, 40))) %>%
     ggplot(aes(label = var, color = cluster, angle = angle)) +
-    ggwordcloud::geom_text_wordcloud_area(area_corr_power = 1) +
+    ggwordcloud::geom_text_wordcloud_area() +
     ggplot2::scale_size_area(max_size = 4) + theme_minimal() +
     facet_wrap(~ cluster)
 
@@ -740,8 +740,8 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
   max_memb_score <- variable <- cluster <- prob <- NULL
   
   
-  if (((!(!is.null(x_var) & !is.null(y_var)) ) |
-       !(class(data[[x_var]]) == "numeric" & class(data[[y_var]]) == "numeric"))) {
+  if ((!(!is.null(x_var) & !is.null(y_var)) ) |
+      !(inherits(data[[x_var]], "numeric") & inherits(data[[y_var]], "numeric"))) {
     stop("Please specify the variables correctly. Both variable and group_by should contain the names of metric variables.")
   }
   
@@ -932,7 +932,3 @@ clara_silhouette <- function(x, data,
 
   return(plot)
 }
-
-
-
-

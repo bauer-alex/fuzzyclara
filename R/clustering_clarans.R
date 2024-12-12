@@ -210,7 +210,7 @@ clustering_local <- function(data, sample_local, clusters = 5,
   checkmate::assert_logical(verbose_toLogFile, len = 1)
 
   # Extract name of metric:
-  if (class(metric) == "function") {
+  if (inherits(metric, "function")) {
     name_metric <- deparse(substitute(metric))
 
   } else { # 'metric' is no function, but a character name
