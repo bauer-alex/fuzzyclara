@@ -33,8 +33,9 @@ dat_long %>%
   geom_line(alpha = 0.05) +
   ylab("standardized value") +
   theme_minimal(base_size = 12) +
-  theme(axis.title.x = element_blank())
-ggsave("travel_description.png", bg = "white", width = 5, height = 4)
+  theme(axis.title.x       = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor   = element_blank())
 
 
 
@@ -51,7 +52,9 @@ choice <- evaluate_cluster_numbers(data           = travel,
                                    m              = 1.5,
                                    plot           = TRUE,
                                    return_results = TRUE)
-choice$plot
+choice$plot +
+  theme(panel.grid.minor   = element_blank(),
+        panel.grid.major.x = element_blank())
 ggsave("travel_elbow.png", bg = "white", width = 10, height = 4)
 
 
@@ -80,15 +83,16 @@ ggplot(mapping = aes(x = variable, y = value, group = traveler_id, col = cluster
   ylim(c(-2,4)) +
   facet_wrap(~ cluster, nrow = 1) +
   theme_minimal(base_size = 12) +
-  theme(axis.title.x    = element_blank(),
-        legend.position = "none",
-        axis.text.x     = element_text(angle = 45, hjust = 1))
+  theme(axis.title.x       = element_blank(),
+        axis.text.x        = element_text(angle = 45, hjust = 1),
+        legend.position    = "none",
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.x = element_blank())
 ggsave("travel_clustered.png", bg = "white", width = 10, height = 4)
 
 
 
 # boxplots of travel expenses
-
 library(ggpubr)
 plot1 <- plot(x = choice$cluster_results[[4]], data = travel, type = "boxplot",
      variable = "totalExpenses")# + ylim(0, 6000)
