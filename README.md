@@ -5,8 +5,8 @@
 
 [![R build status](https://github.com/bauer-alex/fuzzyclara/workflows/R-CMD-check/badge.svg)](https://github.com/bauer-alex/fuzzyclara/actions)
 [![Codecov test coverage](https://codecov.io/github/bauer-alex/fuzzyclara/graph/badge.svg?token=XK0OBP9TA2)](https://app.codecov.io/gh/bauer-alex/fuzzyclara)
-<!-- [![](https://cranlogs.r-pkg.org/badges/grand-total/fuzzyclara)](https://cran.r-project.org/package=fuzzyclara) -->
 [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+<!-- [![](https://cranlogs.r-pkg.org/badges/grand-total/fuzzyclara)](https://cran.r-project.org/package=fuzzyclara) -->
 <!-- badges: end -->
 
 Efficient and fuzzy clustering based on the CLARA algorithm
