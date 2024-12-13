@@ -4,7 +4,7 @@ template:
 navbar:
   right:
   - icon: fa-github
-    href: https://github.com/MaxWeigert/fuzzyclara
+    href: https://github.com/bauer-alex/fuzzyclara
 
 reference:
   - title: "Clustering functions"
@@ -45,5 +45,3 @@ reference:
     desc: "Internal datasets to showcase the package functionalities."
     contents:
       - travel
-      
-  
