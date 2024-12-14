@@ -172,7 +172,7 @@ randomly drawn samples of size 1\,000. As tourists are likely to share
 characteristics of several tourist types, we use the fuzzy version with a
 membership exponent of $m = 1.5$. Based on the minimum average weighted
 dissimilarity, the elbow criterion (see \autoref{fig:modelEffects})
-suggests the use of the solution with four different clusters.
+suggests the use of the solution with five different clusters.
 
 ![Elbow plot of clustering solutions with 1 to 10 clusters according to the minial average weighted distance.\label{fig:description}](figures/travel_elbow.png)
 
@@ -183,7 +183,7 @@ distance and lower costs, the tourists of cluster 2 tend to travel most
 frequently and spend the most money for travelling. Between the clusters 3 and
 4, there are only minor differences regarding travel distances and expenses.
 
-![Parallel coordinate plot showing individual paths of 500 randomly sampled observations over the standardized variables. The path of medoids are highlighted with bold black lines. The transparency of the line represents the membership score of the observation to the assigned cluster where less transparency encodes clearer membership, i.e. a lower degree of fuzzyness. \label{fig:parcoord}](figures/travel_clustered.png)
+![Parallel coordinate plot showing characteristics of 500 randomly sampled observations over the standardized variables. The characteristics of medoids are highlighted with bold black lines. The transparency of the line represents the membership score of the observation to the assigned cluster where less transparency encodes clearer membership, i.e. a lower degree of fuzzyness. \label{fig:parcoord}](figures/travel_clustered.png)
 
 # Acknowledgments
 

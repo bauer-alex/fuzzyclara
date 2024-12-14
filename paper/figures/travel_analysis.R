@@ -75,6 +75,15 @@ n <- 500
 set.seed(2022)
 random_ids <- sample(unique(dat_long$traveler_id), size = n)
 
+# properly label the variables
+dat_long <- dat_long %>% 
+  mutate(variable = factor(variable,
+                           levels = c("max_travelDistance", "max_tripLength", "number_trips", "totalExpenses"),
+                           labels = c("max. travel distance", "max. trip length", "number of trips", "total expenses")))
+dat_long_medoids <- dat_long_medoids %>% 
+  mutate(variable = factor(variable,
+                           levels = c("max_travelDistance", "max_tripLength", "number_trips", "totalExpenses"),
+                           labels = c("max. travel distance", "max. trip length", "number of trips", "total expenses")))
 # with highlighted medoids per cluster
 ggplot(mapping = aes(x = variable, y = value, group = traveler_id, col = cluster)) +
   geom_line(data = dat_long %>% filter(traveler_id %in% random_ids), aes(alpha = memb_score)) +
@@ -84,7 +93,7 @@ ggplot(mapping = aes(x = variable, y = value, group = traveler_id, col = cluster
   facet_wrap(~ cluster, nrow = 1) +
   theme_minimal(base_size = 12) +
   theme(axis.title.x       = element_blank(),
-        axis.text.x        = element_text(angle = 45, hjust = 1),
+        axis.text.x        = element_text(angle = 56, hjust = 1),
         legend.position    = "none",
         panel.grid.minor.x = element_blank(),
         panel.grid.major.x = element_blank())
