@@ -82,7 +82,6 @@ simultaneously.
 While the `fuzzyclara` package includes the option to perform hard clustering
 using the classical PAM algorithm and to use all implemented algorithms with
 any kind of (dis)similarity metric,
-<!--The user may rely on a set of pre-defined common metrics
 (which are used by `proxy::dist`) or use a self-defined metric.--> 
 the package also allows for simultaneously analyzing large and
 fuzzy data, by combining the CLARA / CLARANS algorithms with the
@@ -113,7 +112,7 @@ where $d_{ijp}$ denotes the distance of observation $i$ to its closest medoid
 3. Selection of the optimal set of clusters according to the minimal
 clustering criterion.
 
-We further allow for fuzzyness in the algorithm by adapting it as follows.
+We further allow for fuzziness in the algorithm by adapting it as follows.
 Instead of a hard clustering method, we apply the fuzzy-k-medoids algorithm
 [@krishnapuram_1999] on each subsample of the data in step 2a.
 Each observation of the complete dataset is assigned a membership score
@@ -151,7 +150,7 @@ comprises functionalities that cover the whole clustering workflow.
 The package implements a range of routines for (visually) evaluating the clustering
 solutions, including principal components plots, the analysis of silhouette scores
 or the determination of the number of clusters.
-Using the implemented visualizations, the fuzzyness of a clustering solution can either be visualized
+Using the implemented visualizations, the fuzziness of a clustering solution can either be visualized
 based on the estimated membership scores
 <!--(`clara_pca`, `clara_parcoord` and `clara_scatterplot`)-->
 or by restricting on *core cluster observations* with some minimal membership score threshold.
@@ -183,7 +182,7 @@ distance and lower costs, the tourists of cluster 2 tend to travel most
 frequently and spend the most money for travelling. Between the clusters 3 and
 4, there are only minor differences regarding travel distances and expenses.
 
-![Parallel coordinate plot showing characteristics of 500 randomly sampled observations over the standardized variables. The characteristics of medoids are highlighted with bold black lines. The transparency of the line represents the membership score of the observation to the assigned cluster where less transparency encodes clearer membership, i.e. a lower degree of fuzzyness. \label{fig:parcoord}](figures/travel_clustered.png)
+![Parallel coordinate plot showing characteristics of 500 randomly sampled observations over the standardized variables. The characteristics of medoids are highlighted with bold black lines. The transparency of the line represents the membership score of the observation to the assigned cluster where less transparency encodes clearer membership, i.e. a lower degree of fuzziness. \label{fig:parcoord}](figures/travel_clustered.png)
 
 # Acknowledgments
 
