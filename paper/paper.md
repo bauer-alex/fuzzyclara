@@ -3,8 +3,9 @@ title: 'fuzzyclara: Efficient Medoid-based Clustering Algorithms for Large and F
 
 tags:
   - R
-  - Cluster analysis
-  - High-dimensional data
+  - cluster analysis
+  - high-dimensional data
+  - fuzzy clustering
 authors:
   - name: Maximilian Weigert
     orcid: 0000-0001-6783-1421
@@ -19,7 +20,7 @@ authors:
 affiliations:
  - name: Statistical Consulting Unit StaBLab, Department of Statistics, LMU Munich, Germany
    index: 1
-date: 30 August 2022
+date: 19 December 2024
 bibliography: paper.bib
 ---
 
