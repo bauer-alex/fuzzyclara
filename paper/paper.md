@@ -153,7 +153,6 @@ solutions, including principal components plots, the analysis of silhouette scor
 or the determination of the number of clusters.
 Using the implemented visualizations, the fuzziness of a clustering solution can either be visualized
 based on the estimated membership scores
-<!--(`clara_pca`, `clara_parcoord` and `clara_scatterplot`)-->
 or by restricting on *core cluster observations* with some minimal membership score threshold.
 <!--The optimal number of clusters may be determined by the function
 `evaluate_cluster_numbers` which repeatedly performs the clustering with
