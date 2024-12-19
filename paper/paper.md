@@ -144,10 +144,7 @@ all local clusterings based on the minimal weighted average distance.
 # General Routine of Cluster Analysis
 
 Beyond the efficient estimation of (fuzzy) clustering through subsampling approaches,
-`fuzzyclara` 
-<!--aims to provide a flexible toolbox for medoid-based clustering in
-general which covers the whole clustering workflow.-->
-comprises functionalities that cover the whole clustering workflow.
+`fuzzyclara` comprises functionalities that cover the whole clustering workflow.
 The package implements a range of routines for (visually) evaluating the clustering
 solutions, including principal components plots, the analysis of silhouette scores
 or the determination of the number of clusters.
