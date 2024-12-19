@@ -56,7 +56,7 @@ test_that("predict_fuzzyclara_fuzzy_clara", { # hard CLARANS clustering
   
   # hard clustering
   n_clusters <- 3
-  cc_fuzzy   <- fuzzyclara(data        = USArrests[1:30, ],
+  cc_fuzzy   <- fuzzyclara(data       = USArrests[1:30, ],
                           clusters    = n_clusters,
                           metric      = "euclidean",
                           algorithm   = "clara",
@@ -73,4 +73,3 @@ test_that("predict_fuzzyclara_fuzzy_clara", { # hard CLARANS clustering
   expect_list(cc_fuzzy)
   expect_length(pred_cc_fuzzy, 3)
 })
-

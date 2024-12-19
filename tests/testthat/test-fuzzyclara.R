@@ -221,11 +221,11 @@ test_that("fuzzyclara_fuzzy_clara_parallel", { # fuzzy clustering with build alg
                           samples     = 1,
                           sample_size = NULL,
                           type        = "fuzzy",
-                          m = 3,
-                          build = TRUE,
+                          m           = 3,
+                          build       = TRUE,
                           seed        = 3526,
                           verbose     = 0,
-                          cores = 2)
+                          cores       = 2)
   
   invisible(capture.output(print(cc_fuzzy)))
   
@@ -251,17 +251,17 @@ test_that("fuzzyclara_fuzzy_clarans_parallel", { # fuzzy clustering
   
   # fuzzy clustering
   n_clusters <- 3
-  cc_fuzzy  <- fuzzyclara(data        = USArrests,
-                          clusters    = n_clusters,
-                          metric      = "euclidean",
-                          algorithm   = "clarans",
-                          num_local   = 2,
+  cc_fuzzy  <- fuzzyclara(data          = USArrests,
+                          clusters      = n_clusters,
+                          metric        = "euclidean",
+                          algorithm     = "clarans",
+                          num_local     = 2,
                           max_neighbors = 20,
-                          type        = "fuzzy",
-                          m = 3,
-                          seed        = 3526,
-                          verbose     = 0,
-                          cores = 2)
+                          type          = "fuzzy",
+                          m             = 3,
+                          seed          = 3526,
+                          verbose       = 0,
+                          cores         = 2)
   
   invisible(capture.output(print(cc_fuzzy)))
   
@@ -293,11 +293,11 @@ test_that("fuzzyclara_fuzzy_pam", { # use pam clustering if m = 1 or clusters = 
                           samples     = 1,
                           sample_size = NULL,
                           type        = "fuzzy",
-                          m = 1,
+                          m           = 1,
                           seed        = 3526,
                           verbose     = 0)
 
-  cc_hard   <- fuzzyclara(data        = USArrests,
+  cc_hard   <- fuzzyclara(data         = USArrests,
                            clusters    = n_clusters,
                            metric      = "euclidean",
                            samples     = 1,
@@ -325,11 +325,11 @@ test_that("fuzzyclara_fuzzy_pam", { # use pam clustering if m = 1 or clusters = 
                           samples     = 1,
                           sample_size = NULL,
                           type        = "fuzzy",
-                          m = 2,
+                          m           = 2,
                           seed        = 3526,
                           verbose     = 0)
 
-  cc_hard   <- fuzzyclara(data        = USArrests,
+  cc_hard   <- fuzzyclara(data         = USArrests,
                            clusters    = n_clusters,
                            metric      = "euclidean",
                            samples     = 1,
@@ -372,7 +372,7 @@ test_that("fuzzyclara_dist", { # check other distance functions
                         verbose     = 0)
 
   # compare to euclidean -> result must be the same
-  cc_hard   <- fuzzyclara(data        = USArrests,
+  cc_hard   <- fuzzyclara(data         = USArrests,
                            clusters    = n_clusters,
                            metric      = "euclidean",
                            samples     = 1,
@@ -446,7 +446,7 @@ test_that("fuzzyclara_scale", { # scaling of variables
 
   # hard clustering
   n_clusters <- 1
-  cc_hard   <- fuzzyclara(data        = USArrests,
+  cc_hard   <- fuzzyclara(data         = USArrests,
                            clusters    = n_clusters,
                            metric      = "euclidean",
                            samples     = 1,
@@ -454,7 +454,7 @@ test_that("fuzzyclara_scale", { # scaling of variables
                            type        = "hard",
                            seed        = 3526,
                            verbose     = 0,
-                           scale = TRUE)
+                           scale       = TRUE)
 
   # compute distance matrix manually
   data <- scale(USArrests)
@@ -463,7 +463,7 @@ test_that("fuzzyclara_scale", { # scaling of variables
   expect_identical(round(matrix(dist_matrix), 2), round(matrix(cc_hard$dist_matrix), 2))
 
   # without scaling
-  cc_hard   <- fuzzyclara(data        = USArrests,
+  cc_hard   <- fuzzyclara(data         = USArrests,
                            clusters    = n_clusters,
                            metric      = "euclidean",
                            samples     = 1,
@@ -471,7 +471,7 @@ test_that("fuzzyclara_scale", { # scaling of variables
                            type        = "hard",
                            seed        = 3526,
                            verbose     = 0,
-                           scale = FALSE)
+                           scale       = FALSE)
 
   # compute distance matrix manually
   data <- USArrests

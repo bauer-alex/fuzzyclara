@@ -6,13 +6,13 @@ test_that("clustering_sample", { # clustering_sample function
   row.names(data) <- data$Name
 
 
-
   # hard clustering
-  cc_hard <- clustering_sample(data = data, dist = dist,
-                                clusters = 3,
-                                sample_ids = 1:10,
-                                metric = "euclidean",
-                                type = "hard")
+  cc_hard <- clustering_sample(data       = data,
+                               dist       = dist,
+                               clusters   = 3,
+                               sample_ids = 1:10,
+                               metric     = "euclidean",
+                               type       = "hard")
 
   # check whole object
   expect_class(cc_hard, "list")
@@ -20,19 +20,21 @@ test_that("clustering_sample", { # clustering_sample function
   expect_identical(dim(cc_hard$dist_matrix), as.integer(c(10, 10)))
 
   # fuzzy clustering
-  cc_fuzzy <- clustering_sample(data = data, dist = dist,
-                                clusters = 3,
+  cc_fuzzy <- clustering_sample(data       = data,
+                                dist       = dist,
+                                clusters   = 3,
                                 sample_ids = 1:10,
-                                metric = "euclidean",
-                                type = "fuzzy")
+                                metric     = "euclidean",
+                                type       = "fuzzy")
 
   # fuzzy clustering with build algorithm
-  cc_fuzzy_build <- clustering_sample(data = data, dist = dist,
-                                      clusters = 3,
+  cc_fuzzy_build <- clustering_sample(data       = data,
+                                      dist       = dist,
+                                      clusters   = 3,
                                       sample_ids = 1:10,
-                                      metric = "euclidean",
-                                      type = "fuzzy",
-                                      build = TRUE)
+                                      metric     = "euclidean",
+                                      type       = "fuzzy",
+                                      build      = TRUE)
 
   # check whole object
   expect_class(cc_fuzzy, "list")
@@ -90,10 +92,12 @@ test_that("perform_sample_clustering", {
   dist_mat <- compute_distance_matrix(data, sample_ids = 1:10, metric = "Euclidean")
 
   # hard
-  clust <- perform_sample_clustering(dist = dist_mat, data = data[1:10,],
-                                     clusters = 3, type = "hard",
-                                     names = data[1:10,]$Name,
-                                     metric = "Euclidean")
+  clust <- perform_sample_clustering(dist     = dist_mat,
+                                     data     = data[1:10,],
+                                     clusters = 3,
+                                     type     = "hard",
+                                     names    = data[1:10,]$Name,
+                                     metric   = "Euclidean")
 
   # check whole object
   expect_class(clust, "list")
@@ -101,10 +105,13 @@ test_that("perform_sample_clustering", {
 
 
   # fuzzy
-  clust <- perform_sample_clustering(dist = dist_mat, data = data[1:10, ],
-                                     clusters = 3, type = "fuzzy",
-                                     names = data[1:10,]$Name, m = 3,
-                                     metric = "Euclidean")
+  clust <- perform_sample_clustering(dist     = dist_mat,
+                                     data     = data[1:10, ],
+                                     clusters = 3,
+                                     type     = "fuzzy",
+                                     names    = data[1:10,]$Name,
+                                     m        = 3,
+                                     metric   = "Euclidean")
 
   # check whole object
   expect_class(clust, "list")

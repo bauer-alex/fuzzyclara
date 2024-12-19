@@ -24,27 +24,27 @@ test_that("evaluate_cl_nums_clara", { # plot to select number of clusters
 
   # compare result to manually calculated clustering result:
   cc_hard <- fuzzyclara(data        = USArrests,
-                         clusters    = 2,
-                         metric      = "euclidean",
-                         samples     = 1,
-                         sample_size = 10,
-                         type        = "hard",
-                         seed        = 3526,
-                         verbose     = 0)
+                        clusters    = 2,
+                        metric      = "euclidean",
+                        samples     = 1,
+                        sample_size = 10,
+                        type        = "hard",
+                        seed        = 3526,
+                        verbose     = 0)
   expect_identical(round(cc_number$data[1, 2], 2), round(cc_hard$avg_min_dist, 2))
 
   # fuzzy clustering
   # return clustering results
   cc_number <- evaluate_cluster_numbers(
-    data            = USArrests,
-    clusters_range  = 2:6,
-    metric          = "euclidean",
-    samples         = 1,
-    sample_size     = 10,
-    type            = "fuzzy",
-    m = 2,
-    seed            = 3526,
-    verbose         = 0,
+    data           = USArrests,
+    clusters_range = 2:6,
+    metric         = "euclidean",
+    samples        = 1,
+    sample_size    = 10,
+    type           = "fuzzy",
+    m              = 2,
+    seed           = 3526,
+    verbose        = 0,
     return_results = TRUE)
 
   # check whole object
@@ -62,25 +62,25 @@ test_that("evaluate_cl_nums_clara", { # plot to select number of clusters
                          samples     = 1,
                          sample_size = 10,
                          type        = "fuzzy",
-                         m = 2,
+                         m           = 2,
                          seed        = 3526,
                          verbose     = 0)
   expect_identical(cluster_results[[1]], cc_fuzzy)
   
   # results without plot and without scaling:
   cc_results <- evaluate_cluster_numbers(
-    data            = USArrests,
-    clusters_range  = 2:6,
-    metric          = "euclidean",
-    samples         = 1,
-    sample_size     = 10,
-    type            = "fuzzy",
-    m = 2,
-    seed            = 3526,
-    verbose         = 0,
+    data           = USArrests,
+    clusters_range = 2:6,
+    metric         = "euclidean",
+    samples        = 1,
+    sample_size    = 10,
+    type           = "fuzzy",
+    m              = 2,
+    seed           = 3526,
+    verbose        = 0,
     return_results = TRUE,
-    plot = FALSE,
-    scale = FALSE)
+    plot           = FALSE,
+    scale          = FALSE)
   
   expect_class(cc_results, "list")
   expect_class(cc_results[[1]], "fuzzyclara")
@@ -94,15 +94,15 @@ test_that("evaluate_cl_nums_clarans", { # plot to select number of clusters
 
   # hard clustering
   cc_number <- evaluate_cluster_numbers(
-    data            = USArrests,
-    clusters_range  = 2:6,
-    metric          = "euclidean",
-    num_local = 2,
-    max_neighbors = 10,
-    type            = "hard",
-    algorithm       = "clarans",
-    seed            = 3526,
-    verbose         = 0)
+    data           = USArrests,
+    clusters_range = 2:6,
+    metric         = "euclidean",
+    num_local      = 2,
+    max_neighbors  = 10,
+    type           = "hard",
+    algorithm      = "clarans",
+    seed           = 3526,
+    verbose        = 0)
 
   # check whole object
   expect_s3_class(cc_number, "ggplot")
@@ -116,16 +116,16 @@ test_that("evaluate_cl_nums_clarans", { # plot to select number of clusters
   # fuzzy clustering
   # return clustering results
   cc_number <- evaluate_cluster_numbers(
-    data            = USArrests,
-    clusters_range  = 2:6,
-    metric          = "euclidean",
-    num_local = 2,
-    max_neighbors = 10,
-    type            = "fuzzy",
-    algorithm = "clarans",
-    m = 2,
-    seed            = 3526,
-    verbose         = 0,
+    data           = USArrests,
+    clusters_range = 2:6,
+    metric         = "euclidean",
+    num_local      = 2,
+    max_neighbors  = 10,
+    type           = "fuzzy",
+    algorithm      = "clarans",
+    m              = 2,
+    seed           = 3526,
+    verbose        = 0,
     return_results = TRUE)
 
   # check whole object
@@ -146,15 +146,15 @@ test_that("plot_cl_nums", { # plot to select number of clusters
   
   # hard clustering
   cc_number <- evaluate_cluster_numbers(
-    data            = USArrests,
-    clusters_range  = 2:6,
-    metric          = "euclidean",
-    num_local = 2,
-    max_neighbors = 10,
-    type            = "hard",
-    algorithm       = "clarans",
-    seed            = 3526,
-    verbose         = 0,
+    data           = USArrests,
+    clusters_range = 2:6,
+    metric         = "euclidean",
+    num_local      = 2,
+    max_neighbors  = 10,
+    type           = "hard",
+    algorithm      = "clarans",
+    seed           = 3526,
+    verbose        = 0,
     return_results = TRUE,
     plot = FALSE)
   
