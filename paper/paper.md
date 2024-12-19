@@ -170,10 +170,10 @@ Due to the rather large data size of over 10\,000 observations, we apply the CLA
 randomly drawn samples of size 1\,000. As tourists are likely to share
 characteristics of several tourist types, we use the fuzzy version with a
 membership exponent of $m = 1.5$. Based on the minimum average weighted
-dissimilarity, the elbow criterion (see \autoref{fig:modelEffects})
+dissimilarity, the elbow criterion (see \autoref{fig:elbow})
 suggests the use of the solution with five different clusters.
 
-![Elbow plot of clustering solutions with 1 to 10 clusters according to the minial average weighted distance.\label{fig:description}](figures/travel_elbow.png)
+![Elbow plot of clustering solutions with 1 to 10 clusters according to the minial average weighted distance.\label{fig:elbow}](figures/travel_elbow.png)
 
 \autoref{fig:parcoord} highlights the characteristics of the different clusters by
 visualizing the individual paths of 500 randomly sampled observations plus the
