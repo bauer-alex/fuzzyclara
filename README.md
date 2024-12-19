@@ -14,7 +14,7 @@ Efficient and fuzzy clustering based on the CLARA algorithm
 -   Authors: Maximilian Weigert,
     [Alexander Bauer](https://github.com/bauer-alex/), Jana Gauss
 -   Contributors: Theresa Kriecherbauer, Asmik Nalmpatian
--   Version: 1.0.0
+-   Version: 1.0.1
 
 ## Aim of this Package
 
