@@ -12,7 +12,9 @@ authors:
   - name: Alexander Bauer
     orcid: 0000-0003-3495-5131
     affiliation: 1
-  - name: Jana Gauß
+  - name: Jana Gauss
+    orcid: 0009-0003-3624-5915
+    affiliation: 1
   - name: Asmik Nalmpatian
     orcid: 0000-0003-3495-5131
     affiliation: 1
