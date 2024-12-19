@@ -53,6 +53,7 @@ choice <- evaluate_cluster_numbers(data           = travel,
                                    plot           = TRUE,
                                    return_results = TRUE)
 choice$plot +
+  theme_minimal(base_size = 14) +
   theme(panel.grid.minor   = element_blank(),
         panel.grid.major.x = element_blank())
 ggsave("travel_elbow.png", bg = "white", width = 10, height = 4)
@@ -91,9 +92,9 @@ ggplot(mapping = aes(x = variable, y = value, group = traveler_id, col = cluster
   ylab("standardized value") +
   ylim(c(-2,4)) +
   facet_wrap(~ cluster, nrow = 1) +
-  theme_minimal(base_size = 12) +
+  theme_minimal(base_size = 14) +
   theme(axis.title.x       = element_blank(),
-        axis.text.x        = element_text(angle = 56, hjust = 1),
+        axis.text.x        = element_text(angle = 60, hjust = 1),
         legend.position    = "none",
         panel.grid.minor.x = element_blank(),
         panel.grid.major.x = element_blank())
