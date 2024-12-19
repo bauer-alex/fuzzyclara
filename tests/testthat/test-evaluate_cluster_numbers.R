@@ -156,7 +156,7 @@ test_that("plot_cl_nums", { # plot to select number of clusters
     seed           = 3526,
     verbose        = 0,
     return_results = TRUE,
-    plot = FALSE)
+    plot           = FALSE)
   
   # check without given cluster range
   cc_plot <- plot_cluster_numbers(cluster_results = cc_number)

@@ -211,73 +211,81 @@ test_that("fuzzyclara_fuzzy_clarans", { # fuzzy clustering
 
 test_that("fuzzyclara_fuzzy_clara_parallel", { # fuzzy clustering with build algorithm
   
-  data(USArrests)
-  
-  # fuzzy clustering
-  n_clusters <- 3
-  cc_fuzzy  <- fuzzyclara(data        = USArrests,
-                          clusters    = n_clusters,
-                          metric      = "euclidean",
-                          samples     = 1,
-                          sample_size = NULL,
-                          type        = "fuzzy",
-                          m           = 3,
-                          build       = TRUE,
-                          seed        = 3526,
-                          verbose     = 0,
-                          cores       = 2)
-  
-  invisible(capture.output(print(cc_fuzzy)))
-  
-  # check whole object
-  expect_s3_class(cc_fuzzy, "fuzzyclara")
-  expect_s3_class(cc_fuzzy, "list")
-  
-  expect_length(cc_fuzzy, 15)
-  
-  
-  # check membership scores
-  expect_s3_class(cc_fuzzy$membership_scores, "data.frame")
-  expect_identical(dim(cc_fuzzy$membership_scores),
-                   as.integer(c(nrow(USArrests), n_clusters)))
-  
-  
+  # do not test this on Windows since the parallelization throws errors in the
+  # test environment
+  if (Sys.info()['sysname'] != "Windows") {
+    
+    data(USArrests)
+    
+    # fuzzy clustering
+    n_clusters <- 3
+    cc_fuzzy  <- fuzzyclara(data        = USArrests,
+                            clusters    = n_clusters,
+                            metric      = "euclidean",
+                            samples     = 1,
+                            sample_size = NULL,
+                            type        = "fuzzy",
+                            m           = 3,
+                            build       = TRUE,
+                            seed        = 3526,
+                            verbose     = 0,
+                            cores       = 2)
+    
+    invisible(capture.output(print(cc_fuzzy)))
+    
+    # check whole object
+    expect_s3_class(cc_fuzzy, "fuzzyclara")
+    expect_s3_class(cc_fuzzy, "list")
+    
+    expect_length(cc_fuzzy, 15)
+    
+    
+    # check membership scores
+    expect_s3_class(cc_fuzzy$membership_scores, "data.frame")
+    expect_identical(dim(cc_fuzzy$membership_scores),
+                     as.integer(c(nrow(USArrests), n_clusters)))
+    
+  }
 })
 
 
 test_that("fuzzyclara_fuzzy_clarans_parallel", { # fuzzy clustering
   
-  data(USArrests)
-  
-  # fuzzy clustering
-  n_clusters <- 3
-  cc_fuzzy  <- fuzzyclara(data          = USArrests,
-                          clusters      = n_clusters,
-                          metric        = "euclidean",
-                          algorithm     = "clarans",
-                          num_local     = 2,
-                          max_neighbors = 20,
-                          type          = "fuzzy",
-                          m             = 3,
-                          seed          = 3526,
-                          verbose       = 0,
-                          cores         = 2)
-  
-  invisible(capture.output(print(cc_fuzzy)))
-  
-  # check whole object
-  expect_s3_class(cc_fuzzy, "fuzzyclara")
-  expect_s3_class(cc_fuzzy, "list")
-  
-  expect_length(cc_fuzzy, 12)
-  
-  
-  # check membership scores
-  expect_s3_class(cc_fuzzy$membership_scores, "data.frame")
-  expect_identical(dim(cc_fuzzy$membership_scores),
-                   as.integer(c(nrow(USArrests), n_clusters)))
-  
-  
+  # do not test this on Windows since the parallelization throws errors in the
+  # test environment
+  if (Sys.info()['sysname'] != "Windows") {
+    
+    data(USArrests)
+    
+    # fuzzy clustering
+    n_clusters <- 3
+    cc_fuzzy  <- fuzzyclara(data          = USArrests,
+                            clusters      = n_clusters,
+                            metric        = "euclidean",
+                            algorithm     = "clarans",
+                            num_local     = 2,
+                            max_neighbors = 20,
+                            type          = "fuzzy",
+                            m             = 3,
+                            seed          = 3526,
+                            verbose       = 0,
+                            cores         = 2)
+    
+    invisible(capture.output(print(cc_fuzzy)))
+    
+    # check whole object
+    expect_s3_class(cc_fuzzy, "fuzzyclara")
+    expect_s3_class(cc_fuzzy, "list")
+    
+    expect_length(cc_fuzzy, 12)
+    
+    
+    # check membership scores
+    expect_s3_class(cc_fuzzy$membership_scores, "data.frame")
+    expect_identical(dim(cc_fuzzy$membership_scores),
+                     as.integer(c(nrow(USArrests), n_clusters)))
+    
+  }
 })
 
 
