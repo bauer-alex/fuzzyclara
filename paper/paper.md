@@ -30,7 +30,7 @@ bibliography: paper.bib
 Cluster analysis identifies optimal groupings of observations that share similar
 characteristics.
 One popular approach is to use medoid-based methods where each cluster center is
-represented by one *typical* observation [@kaufman_rousseeuw_2009].
+represented by one *typical* observation [@kaufman_rousseeuw_2005].
 The R package `fuzzyclara` makes a wide range of clustering algorithms conveniently available.
 It not only covers classical *hard clustering* methods (where one observation belongs to exactly one cluster)
 and alternative *fuzzy clustering* methods (where the characteristics of each observation
@@ -49,7 +49,7 @@ Medoid-based versions of this strategy build clusters based on *medoids*,
 i.e. one observation per cluster best representing its typical characteristics.
 The most prominent representative of medoid-based clustering is the
 *partitioning around medoids* (PAM) algorithm, which is robust and applicable to
-many data situations [@kaufman_rousseeuw_2009].
+many data situations [@kaufman_rousseeuw_2005].
 
 The PAM algorithm, however, has two drawbacks.
 First, its estimation is often only hardly or not at all feasible in large data
@@ -69,7 +69,7 @@ compute membership scores for each observation to every cluster.
 The statistical software R already provides a wide range of packages implementing
 clustering algorithms for large or fuzzy data.
 The package `cluster` [@R_cluster] contains diverse clustering routines
-developed by @kaufman_rousseeuw_2009 including the CLARA algorithm for large
+developed by @kaufman_rousseeuw_2005 including the CLARA algorithm for large
 data and the FANNY algorithm for fuzzy data.
 The CLARANS algorithm as an extension of CLARA is implemented in the package
 `qtcat` [@R_qtcat].
