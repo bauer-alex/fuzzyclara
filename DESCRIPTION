@@ -17,7 +17,7 @@ Description: The 'fuzzyclara' package tackles two issues of cluster analysis app
   Building on these two points, the 'fuzzyclara' package offers routines for all aspects of a cluster
   analysis, including the use of user-defined distance functions and diverse visualization techniques.
 License: MIT + file LICENSE
-URL: https://MaxWeigert.github.io/fuzzyclara/
+URL: https://bauer-alex.github.io/fuzzyclara/
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
