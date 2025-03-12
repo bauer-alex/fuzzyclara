@@ -58,7 +58,7 @@
                         <h4 data-toc-skip class="author">Maximilian
 Weigert, Asmik Nalmpatian, Jana Gauss, Alexander Bauer</h4>
             
-            <h4 data-toc-skip class="date">06.January 2025</h4>
+            <h4 data-toc-skip class="date">12.March 2025</h4>
       
 
       <div class="d-none name"><code>vignette_shiny.Rmd</code></div>
@@ -69,11 +69,8 @@ Weigert, Asmik Nalmpatian, Jana Gauss, Alexander Bauer</h4>
 <p>This document gives an overview of the functionality provided by the
 R package <code>fuzzyclara</code>.</p>
 <div class="sourceCode" id="section-cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://MaxWeigert.github.io/fuzzyclara/" class="external-link">fuzzyclara</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
-<span><span class="co">##   object 'type_sum.accel' not found</span></span></code></pre>
-<div class="sourceCode" id="section-cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://MaxWeigert.github.io/fuzzyclara/" class="external-link">fuzzyclara</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="section-clustering">Clustering<a class="anchor" aria-label="anchor" href="#section-clustering"></a>
@@ -81,7 +78,7 @@ R package <code>fuzzyclara</code>.</p>
 <div class="section level3">
 <h3 id="section-hard-clustering">Hard clustering<a class="anchor" aria-label="anchor" href="#section-hard-clustering"></a>
 </h3>
-<div class="sourceCode" id="section-cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="section-cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># TODO replace USArrests by a better dataset (maybe TourIST)</span></span>
 <span><span class="va">cc_hard</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fuzzyclara.html">fuzzyclara</a></span><span class="op">(</span>data        <span class="op">=</span> <span class="va">USArrests</span>,</span>
 <span>                       clusters    <span class="op">=</span> <span class="fl">3</span>,</span>
@@ -107,7 +104,7 @@ R package <code>fuzzyclara</code>.</p>
 <div class="section level3">
 <h3 id="section-fuzzy-clustering">Fuzzy clustering<a class="anchor" aria-label="anchor" href="#section-fuzzy-clustering"></a>
 </h3>
-<div class="sourceCode" id="section-cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="section-cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cc_fuzzy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fuzzyclara.html">fuzzyclara</a></span><span class="op">(</span>data        <span class="op">=</span> <span class="va">USArrests</span>,</span>
 <span>                       clusters    <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>                       metric      <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
@@ -187,7 +184,7 @@ R package <code>fuzzyclara</code>.</p>
 <h3 id="section-clustering-with-self-defined-distance-function-and-other-distance-functions">Clustering with self-defined distance function and other distance
 functions<a class="anchor" aria-label="anchor" href="#section-clustering-with-self-defined-distance-function-and-other-distance-functions"></a>
 </h3>
-<div class="sourceCode" id="section-cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="section-cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dist_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">y</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -270,7 +267,7 @@ functions<a class="anchor" aria-label="anchor" href="#section-clustering-with-se
 Gower, Manhattan etc. In order to specify arguments of the distance
 metric (e. g. <em>p</em> for Minkowski distance), you can use a
 self-defined distance function.</p>
-<div class="sourceCode" id="section-cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="section-cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cc_manh</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fuzzyclara.html">fuzzyclara</a></span><span class="op">(</span>data        <span class="op">=</span> <span class="va">USArrests</span>,</span>
 <span>                       clusters    <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>                       metric      <span class="op">=</span> <span class="st">"manhattan"</span>,</span>
@@ -291,7 +288,7 @@ self-defined distance function.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## Minimum average distance</span></span>
 <span><span class="co">## [1] 2.011671</span></span></code></pre>
-<div class="sourceCode" id="section-cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="section-cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dist_mink</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu">proxy</span><span class="fu">::</span><span class="fu">dist</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">"minkowski"</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -319,7 +316,7 @@ self-defined distance function.</p>
 <div class="section level3">
 <h3 id="section-select-optimal-number-of-clusters">Select optimal number of clusters<a class="anchor" aria-label="anchor" href="#section-select-optimal-number-of-clusters"></a>
 </h3>
-<div class="sourceCode" id="section-cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="section-cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cc_number</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/evaluate_cluster_numbers.html">evaluate_cluster_numbers</a></span><span class="op">(</span></span>
 <span>                       data            <span class="op">=</span> <span class="va">USArrests</span>,</span>
 <span>                       clusters_range  <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">6</span>,</span>
@@ -331,13 +328,13 @@ self-defined distance function.</p>
 <span>                       verbose         <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">cc_number</span></span></code></pre></div>
 <p><img src="vignette_shiny_files/figure-html/optimal%20number%20clusters-1.png" width="576"></p>
-<iframe data-deferred-src="app1b0156d3dca088963ece0287a7d73cf3/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
+<iframe data-deferred-src="app54ac94ccc7098a6de722d3e3f1e48838/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
 </div>
 </div>
 <div class="section level2">
 <h2 id="section-plot-of-clustering-results">Plot of clustering results<a class="anchor" aria-label="anchor" href="#section-plot-of-clustering-results"></a>
 </h2>
-<div class="sourceCode" id="section-cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="section-cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Enrich the USArrest dataset by area and state</span></span>
 <span></span>
 <span><span class="va">USArrests_enriched</span> <span class="op">&lt;-</span> <span class="va">USArrests</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -360,23 +357,23 @@ self-defined distance function.</p>
 <div class="section level3">
 <h3 id="section-boxplot">Boxplot<a class="anchor" aria-label="anchor" href="#section-boxplot"></a>
 </h3>
-<div class="sourceCode" id="section-cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="section-cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, variable <span class="op">=</span> <span class="st">"Assault"</span><span class="op">)</span> </span></code></pre></div>
 <p><img src="vignette_shiny_files/figure-html/unnamed-chunk-1-1.png" width="576"></p>
-<iframe data-deferred-src="appa68173d31fc3814f50abd095c687f0b7/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
+<iframe data-deferred-src="appe1131b31fb4943dfc3fed4acee6dd738/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
 </div>
 <div class="section level3">
 <h3 id="section-barplot">Barplot<a class="anchor" aria-label="anchor" href="#section-barplot"></a>
 </h3>
-<div class="sourceCode" id="section-cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="section-cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, variable <span class="op">=</span> <span class="st">"Area"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette_shiny_files/figure-html/unnamed-chunk-3-1.png" width="576"></p>
-<iframe data-deferred-src="app88c95685232e84b54396a67633708a44/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
+<iframe data-deferred-src="appd4c5f78a94582faf9e3db7f41e8689ce/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
 </div>
 <div class="section level3">
 <h3 id="section-wordcloud">Wordcloud<a class="anchor" aria-label="anchor" href="#section-wordcloud"></a>
 </h3>
-<div class="sourceCode" id="section-cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="section-cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, variable <span class="op">=</span> <span class="st">"State"</span>,</span>
 <span>     type <span class="op">=</span> <span class="st">"wordclouds"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette_shiny_files/figure-html/unnamed-chunk-5-1.png" width="576"></p>
@@ -384,13 +381,13 @@ self-defined distance function.</p>
 <div class="section level3">
 <h3 id="section-scatterplot">Scatterplot<a class="anchor" aria-label="anchor" href="#section-scatterplot"></a>
 </h3>
-<div class="sourceCode" id="section-cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="section-cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
 <span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## `geom_smooth()` using formula = 'y ~ x'</span></span></code></pre>
 <p><img src="vignette_shiny_files/figure-html/unnamed-chunk-6-1.png" width="576"></p>
-<iframe data-deferred-src="app4886360997d6bb8290ec3b0e437d964d/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
-<div class="sourceCode" id="section-cb21"><pre class="downlit sourceCode r">
+<iframe data-deferred-src="app7b559fb969eb0fae454ef13f31c8b100/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
+<div class="sourceCode" id="section-cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
 <span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span>, </span>
 <span>     focus <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
@@ -399,12 +396,12 @@ self-defined distance function.</p>
 <div class="section level3">
 <h3 id="section-pca">PCA<a class="anchor" aria-label="anchor" href="#section-pca"></a>
 </h3>
-<div class="sourceCode" id="section-cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="section-cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span>
 <span>     group_by <span class="op">=</span> <span class="st">"Area"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette_shiny_files/figure-html/unnamed-chunk-9-1.png" width="576"></p>
-<iframe data-deferred-src="app497835b09fd96e18b541c8f5456c64e4/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
-<div class="sourceCode" id="section-cb23"><pre class="downlit sourceCode r">
+<iframe data-deferred-src="app7ee28e76504bf9fde19817297e95b72c/?w=&amp;__subapp__=1" width="600" height="800" class="shiny-frame shiny-frame-deferred"></iframe>
+<div class="sourceCode" id="section-cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span>
 <span>     focus <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette_shiny_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
@@ -412,7 +409,7 @@ self-defined distance function.</p>
 <div class="section level3">
 <h3 id="section-silhouette">Silhouette<a class="anchor" aria-label="anchor" href="#section-silhouette"></a>
 </h3>
-<div class="sourceCode" id="section-cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="section-cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests</span>, type <span class="op">=</span> <span class="st">"silhouette"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $plot</span></span></code></pre>
 <p><img src="vignette_shiny_files/figure-html/unnamed-chunk-12-1.png" width="576"></p>
