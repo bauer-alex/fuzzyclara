@@ -79,13 +79,13 @@ R package <code>fuzzyclara</code>.</p>
 </h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cc_hard</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fuzzyclara.html">fuzzyclara</a></span><span class="op">(</span>data        <span class="op">=</span> <span class="va">USArrests</span>,</span>
-<span>                       clusters    <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>                       metric      <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
-<span>                       samples     <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                       sample_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                       type        <span class="op">=</span> <span class="st">"hard"</span>,</span>
-<span>                       seed        <span class="op">=</span> <span class="fl">3526</span>,</span>
-<span>                       verbose     <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>                      clusters    <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>                      metric      <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
+<span>                      samples     <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>                      sample_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>                      type        <span class="op">=</span> <span class="st">"hard"</span>,</span>
+<span>                      seed        <span class="op">=</span> <span class="fl">3526</span>,</span>
+<span>                      verbose     <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">cc_hard</span></span></code></pre></div>
 <pre><code><span><span class="co">## Clustering results</span></span>
 <span><span class="co">## </span></span>
@@ -267,13 +267,13 @@ metric (e. g. <em>p</em> for Minkowski distance), you can use a
 self-defined distance function.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cc_manh</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fuzzyclara.html">fuzzyclara</a></span><span class="op">(</span>data        <span class="op">=</span> <span class="va">USArrests</span>,</span>
-<span>                       clusters    <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>                       metric      <span class="op">=</span> <span class="st">"manhattan"</span>,</span>
-<span>                       samples     <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                       sample_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                       type        <span class="op">=</span> <span class="st">"hard"</span>,</span>
-<span>                       seed        <span class="op">=</span> <span class="fl">3526</span>,</span>
-<span>                       verbose     <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>                      clusters    <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>                      metric      <span class="op">=</span> <span class="st">"manhattan"</span>,</span>
+<span>                      samples     <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>                      sample_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>                      type        <span class="op">=</span> <span class="st">"hard"</span>,</span>
+<span>                      seed        <span class="op">=</span> <span class="fl">3526</span>,</span>
+<span>                      verbose     <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">cc_manh</span></span></code></pre></div>
 <pre><code><span><span class="co">## Clustering results</span></span>
 <span><span class="co">## </span></span>
@@ -291,13 +291,13 @@ self-defined distance function.</p>
 <span>  <span class="fu">proxy</span><span class="fu">::</span><span class="fu">dist</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">"minkowski"</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="va">cc_mink</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fuzzyclara.html">fuzzyclara</a></span><span class="op">(</span>data        <span class="op">=</span> <span class="va">USArrests</span>,</span>
-<span>                       clusters    <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>                       metric      <span class="op">=</span> <span class="va">dist_mink</span>,</span>
-<span>                       samples     <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                       sample_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                       type        <span class="op">=</span> <span class="st">"hard"</span>,</span>
-<span>                       seed        <span class="op">=</span> <span class="fl">3526</span>,</span>
-<span>                       verbose     <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>                      clusters    <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>                      metric      <span class="op">=</span> <span class="va">dist_mink</span>,</span>
+<span>                      samples     <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>                      sample_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>                      type        <span class="op">=</span> <span class="st">"hard"</span>,</span>
+<span>                      seed        <span class="op">=</span> <span class="fl">3526</span>,</span>
+<span>                      verbose     <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">cc_mink</span></span></code></pre></div>
 <pre><code><span><span class="co">## Clustering results</span></span>
 <span><span class="co">## </span></span>
@@ -355,68 +355,93 @@ self-defined distance function.</p>
 <h3 id="boxplot">Boxplot<a class="anchor" aria-label="anchor" href="#boxplot"></a>
 </h3>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_hard</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, variable <span class="op">=</span> <span class="st">"Assault"</span><span class="op">)</span> </span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x        <span class="op">=</span> <span class="va">cc_hard</span>,</span>
+<span>     data     <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
+<span>     variable <span class="op">=</span> <span class="st">"Assault"</span><span class="op">)</span> </span></code></pre></div>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="barplot">Barplot<a class="anchor" aria-label="anchor" href="#barplot"></a>
 </h3>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_hard</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, variable <span class="op">=</span> <span class="st">"Area"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x        <span class="op">=</span> <span class="va">cc_hard</span>,</span>
+<span>     data     <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
+<span>     variable <span class="op">=</span> <span class="st">"Area"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="wordcloud">Wordcloud<a class="anchor" aria-label="anchor" href="#wordcloud"></a>
 </h3>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_hard</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, variable <span class="op">=</span> <span class="st">"State"</span>,</span>
-<span>     type <span class="op">=</span> <span class="st">"wordclouds"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x        <span class="op">=</span> <span class="va">cc_hard</span>,</span>
+<span>     data     <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
+<span>     variable <span class="op">=</span> <span class="st">"State"</span>,</span>
+<span>     type     <span class="op">=</span> <span class="st">"wordclouds"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-3-1.png" width="576"></p>
 </div>
 <div class="section level3">
 <h3 id="scatterplot">Scatterplot<a class="anchor" aria-label="anchor" href="#scatterplot"></a>
 </h3>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_hard</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
-<span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x     <span class="op">=</span> <span class="va">cc_hard</span>,</span>
+<span>     data  <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
+<span>     type  <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
+<span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>,</span>
+<span>     y_var <span class="op">=</span> <span class="st">"Assault"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## `geom_smooth()` using formula = 'y ~ x'</span></span></code></pre>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <p>For fuzzy clustering, you can focus on one or more clusters and plot
 the membership probability:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
-<span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span>, </span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x     <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
+<span>     data  <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
+<span>     type  <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
+<span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>,</span>
+<span>     y_var <span class="op">=</span> <span class="st">"Assault"</span>, </span>
 <span>     focus <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
-<span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span>, </span>
-<span>     focus <span class="op">=</span> <span class="cn">TRUE</span>, focus_clusters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x              <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
+<span>     data           <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
+<span>     type           <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
+<span>     x_var          <span class="op">=</span> <span class="st">"Murder"</span>,</span>
+<span>     y_var          <span class="op">=</span> <span class="st">"Assault"</span>, </span>
+<span>     focus          <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>     focus_clusters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-5-2.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="pca">PCA<a class="anchor" aria-label="anchor" href="#pca"></a>
 </h3>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_hard</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x        <span class="op">=</span> <span class="va">cc_hard</span>,</span>
+<span>     data     <span class="op">=</span> <span class="va">USArrests_enriched</span>, </span>
+<span>     type     <span class="op">=</span> <span class="st">"pca"</span>,</span>
 <span>     group_by <span class="op">=</span> <span class="st">"Area"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-6-1.png" width="576"></p>
 <p>For fuzzy clustering, you can focus on one or more clusters and plot
 the membership probability:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x     <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
+<span>     data  <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
+<span>     type  <span class="op">=</span> <span class="st">"pca"</span>,</span>
 <span>     focus <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span>
-<span>     focus <span class="op">=</span> <span class="cn">TRUE</span>, focus_clusters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x              <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
+<span>     data           <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
+<span>     type           <span class="op">=</span> <span class="st">"pca"</span>,</span>
+<span>     focus          <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>     focus_clusters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-7-2.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="silhouette">Silhouette<a class="anchor" aria-label="anchor" href="#silhouette"></a>
 </h3>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_hard</span>, data <span class="op">=</span> <span class="va">USArrests</span>, type <span class="op">=</span> <span class="st">"silhouette"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x    <span class="op">=</span> <span class="va">cc_hard</span>,</span>
+<span>     data <span class="op">=</span> <span class="va">USArrests</span>,</span>
+<span>     type <span class="op">=</span> <span class="st">"silhouette"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $plot</span></span></code></pre>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-8-1.png" width="576"></p>
 <pre><code><span><span class="co">## </span></span>
@@ -433,40 +458,71 @@ the membership probability:</p>
 <h3 id="fuzzy-clustering-threshold-for-membership-scores">Fuzzy clustering: Threshold for membership scores<a class="anchor" aria-label="anchor" href="#fuzzy-clustering-threshold-for-membership-scores"></a>
 </h3>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>, variable <span class="op">=</span> <span class="st">"Assault"</span>, membership_threshold <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> </span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x                    <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
+<span>     data                 <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
+<span>     type                 <span class="op">=</span> <span class="st">"pca"</span>,</span>
+<span>     variable             <span class="op">=</span> <span class="st">"Assault"</span>,</span>
+<span>     membership_threshold <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> </span></code></pre></div>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-9-1.png" width="576"></p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>, variable <span class="op">=</span> <span class="st">"Assault"</span>, membership_threshold <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x                    <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
+<span>     data                 <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
+<span>     type                 <span class="op">=</span> <span class="st">"pca"</span>,</span>
+<span>     variable             <span class="op">=</span> <span class="st">"Assault"</span>,</span>
+<span>     membership_threshold <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-9-2.png" width="576"></p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
-<span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span>, membership_threshold <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x                    <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
+<span>     data                 <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
+<span>     type                 <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
+<span>     x_var                <span class="op">=</span> <span class="st">"Murder"</span>,</span>
+<span>     y_var                <span class="op">=</span> <span class="st">"Assault"</span>,</span>
+<span>     membership_threshold <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-10-1.png" width="576"></p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
-<span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span>, membership_threshold <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x                    <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
+<span>     data                 <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
+<span>     type                 <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
+<span>     x_var                <span class="op">=</span> <span class="st">"Murder"</span>,</span>
+<span>     y_var                <span class="op">=</span> <span class="st">"Assault"</span>,</span>
+<span>     membership_threshold <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in qt((1 - level)/2, df): NaNs produced</span></span></code></pre>
 <pre><code><span><span class="co">## Warning in max(ids, na.rm = TRUE): no non-missing arguments to max; returning</span></span>
 <span><span class="co">## -Inf</span></span></code></pre>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-10-2.png" width="576"></p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
-<span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>, y_var <span class="op">=</span> <span class="st">"Assault"</span>, membership_threshold <span class="op">=</span> <span class="fl">0.5</span>, plot_all_fuzzy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x                    <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
+<span>     data                 <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
+<span>     type                 <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
+<span>     x_var                <span class="op">=</span> <span class="st">"Murder"</span>,</span>
+<span>     y_var                <span class="op">=</span> <span class="st">"Assault"</span>,</span>
+<span>     membership_threshold <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>     plot_all_fuzzy       <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in qt((1 - level)/2, df): NaNs produced</span></span>
 <span><span class="co">## Warning in qt((1 - level)/2, df): no non-missing arguments to max; returning</span></span>
 <span><span class="co">## -Inf</span></span></code></pre>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-10-3.png" width="576"></p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span>
-<span>     group_by <span class="op">=</span> <span class="st">"Area"</span>, membership_threshold <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x                    <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
+<span>     data                 <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
+<span>     type                 <span class="op">=</span> <span class="st">"pca"</span>,</span>
+<span>     group_by             <span class="op">=</span> <span class="st">"Area"</span>,</span>
+<span>     membership_threshold <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-11-1.png" width="576"></p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span>
-<span>     group_by <span class="op">=</span> <span class="st">"Area"</span>, membership_threshold <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x                    <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
+<span>     data                 <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
+<span>     type                 <span class="op">=</span> <span class="st">"pca"</span>,</span>
+<span>     group_by             <span class="op">=</span> <span class="st">"Area"</span>,</span>
+<span>     membership_threshold <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-11-2.png" width="576"></p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cc_fuzzy</span>, data <span class="op">=</span> <span class="va">USArrests_enriched</span>, type <span class="op">=</span> <span class="st">"pca"</span>,</span>
-<span>     group_by <span class="op">=</span> <span class="st">"Area"</span>, membership_threshold <span class="op">=</span> <span class="fl">0.5</span>, plot_all_fuzzy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x                    <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
+<span>     data                 <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
+<span>     type                 <span class="op">=</span> <span class="st">"pca"</span>,</span>
+<span>     group_by             <span class="op">=</span> <span class="st">"Area"</span>,</span>
+<span>     membership_threshold <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>     plot_all_fuzzy       <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="main_functionality_files/figure-html/unnamed-chunk-11-3.png" width="576"></p>
 </div>
 </div>
