@@ -635,11 +635,7 @@ clara_parallel <- function(x, data, membership_threshold = 0, seed = 42,
   checkmate::assert_data_frame(data)
   checkmate::assert_numeric(membership_threshold, lower = 0, upper = 1)
   checkmate::assert_numeric(sample_percentage, lower = 0, upper = 1)
-  # ? check für plot_membership_score (habe kein assert... gefunden)
   
-  
-  # TODO: add potential random sampling
-  # TODO: choose variables to plot
   
   # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
   cluster <- max_memb_score <- name <- variable <- value <- . <- NULL
@@ -845,7 +841,6 @@ clara_silhouette <- function(x, data,
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
-  # TODO how to check 'metric'? (Edit Jana: in fuzzycara we don't check it either) At least specify 'metric' a bit more in the above documentation -> DONE. Similar to the proxy::dist metric? (Jana: Yes)
   checkmate::assert_logical(silhouette_subsample, len = 1)
   checkmate::assert_logical(scale_sil, len = 1)
   checkmate::assert_numeric(membership_threshold, lower = 0, upper = 1)

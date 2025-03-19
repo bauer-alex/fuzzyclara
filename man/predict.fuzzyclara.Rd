@@ -9,7 +9,8 @@
 \arguments{
 \item{object}{an object of class "fuzzyclara"}
 
-\item{newdata}{data.frame to look variables with which to predict}
+\item{newdata}{data.frame containing the variables based on which the
+predictions should be calculated}
 
 \item{...}{further arguments for predict functions}
 }

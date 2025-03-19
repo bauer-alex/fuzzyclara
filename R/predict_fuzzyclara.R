@@ -3,7 +3,8 @@
 #' Function to predict cluster assignments
 #'
 #' @param object an object of class "fuzzyclara"
-#' @param newdata data.frame to look variables with which to predict
+#' @param newdata data.frame containing the variables based on which the
+#' predictions should be calculated
 #' @param ... further arguments for predict functions
 #'
 #' @return clustering plot tibble
@@ -46,7 +47,7 @@ predict.fuzzyclara <- function(object, newdata, ...){
 
   checkmate::assert_class(object, class = "fuzzyclara")
   checkmate::assert(checkmate::check_data_frame(newdata),
-                    checkmate::check_matrix(newdata), # TODO this check doesn't match the argument description above, where 'newdata' is only described as data.frame
+                    checkmate::check_matrix(newdata),
                     checkmate::check_null(newdata), combine = "or")
 
 

@@ -27,7 +27,6 @@ library(dplyr)
 
 ### Hard clustering
 ```{r, hard clustering example}
-# TODO replace USArrests by a better dataset (maybe TourIST)
 cc_hard <- fuzzyclara(data        = USArrests,
                        clusters    = 3,
                        metric      = "euclidean",

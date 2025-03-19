@@ -26,7 +26,6 @@ assign_cluster <- function(data, metric, medoids, dist_matrix = NULL,
                            return_data_medoids = FALSE) {
 
   checkmate::assert_data_frame(data)
-  # TODO what check to run on 'medoids'? The argument specification in the documentation above should also be more specific
   checkmate::assert_choice(type, choices = c("hard", "fuzzy"))
   checkmate::assert_matrix(dist_matrix, null.ok = TRUE)
   checkmate::assert_number(m, lower = 1)
