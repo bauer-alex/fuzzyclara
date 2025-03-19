@@ -58,22 +58,22 @@ test_that("compute_dist_matrix", {
   expect_class(dist_mat, "dist")
   expect_identical(dim(dist_mat), as.integer(c(10, 10)))
 
-  # self defined euclidean distance:
+  # self defined euclidean distance
   dist_function <- function(x, y) {
     sqrt(sum((x - y)^2))
   }
   dist_mat_2 <- compute_distance_matrix(data, sample_ids = 1:10,
                                         metric = dist_function)
 
-  # calculate manually:
+  # calculate manually
   dist_mat_3 <- proxy::dist(USArrests[1:10,], method = "Euclidean")
 
-  # all three matrices must be equal:
+  # all three matrices must be equal
   expect_identical(round(matrix(dist_mat), 2), round(matrix(dist_mat_2), 2))
   expect_identical(round(matrix(dist_mat), 2), round(matrix(dist_mat_3), 2))
 
 
-  # try Manhattan and Gower:
+  # try Manhattan and Gower
   dist_gow <- compute_distance_matrix(data, sample_ids = 1:10, metric = "Gower")
   dist_manh <- compute_distance_matrix(data, sample_ids = 1:10, metric = "Manhattan")
 
@@ -118,4 +118,3 @@ test_that("perform_sample_clustering", {
   expect_identical(names(clust), c("medoids", "clustering"))
 
 })
-

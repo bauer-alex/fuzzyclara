@@ -7,8 +7,9 @@
 #' version of it is deleted. Defaults to FALSE.
 #' @inheritParams clustering_sample
 #'
-print_logMessage <- function(message, verbose_toLogFile = FALSE,
-                             reset_logFile = FALSE) {
+print_logMessage <- function(message,
+                             verbose_toLogFile = FALSE,
+                             reset_logFile     = FALSE) {
 
   checkmate::assert_character(message, len = 1)
   checkmate::assert_logical(verbose_toLogFile, len = 1)
@@ -16,21 +17,21 @@ print_logMessage <- function(message, verbose_toLogFile = FALSE,
 
   log_file <- "clustering_progress.log"
 
-  # Make sure no old log file exists:
+  # make sure no old log file exists
   if (reset_logFile && file.exists(log_file)) {
     file.remove(log_file)
   }
 
-  # Create a new log file, if necessary:
+  # create a new log file, if necessary
   if (!file.exists(log_file)) {
     file.create(log_file)
   }
 
-  # Print the message ...
-  if (!verbose_toLogFile) { # ... to the console:
+  # print the message ...
+  if (!verbose_toLogFile) { # ... to the console
     message(message)
 
-  } else { # ... to the log file:
+  } else { # ... to the log file
     write(message, file = log_file, append = TRUE)
   }
 }

@@ -28,13 +28,13 @@ library(dplyr)
 ### Hard clustering
 ```{r, hard clustering example}
 cc_hard <- fuzzyclara(data        = USArrests,
-                       clusters    = 3,
-                       metric      = "euclidean",
-                       samples     = 1,
-                       sample_size = NULL,
-                       type        = "hard",
-                       seed        = 3526,
-                       verbose     = 0)
+                      clusters    = 3,
+                      metric      = "euclidean",
+                      samples     = 1,
+                      sample_size = NULL,
+                      type        = "hard",
+                      seed        = 3526,
+                      verbose     = 0)
 cc_hard
 ```
 
@@ -73,26 +73,26 @@ cc_dist
 You can also use other distance functions from the proxy package like Gower, Manhattan etc. In order to specify arguments of the distance metric (e. g. *p* for Minkowski distance), you can use a self-defined distance function.
 ```{r manhattan, warning = FALSE}
 cc_manh <- fuzzyclara(data        = USArrests,
-                       clusters    = 3,
-                       metric      = "manhattan",
-                       samples     = 1,
-                       sample_size = NULL,
-                       type        = "hard",
-                       seed        = 3526,
-                       verbose     = 0)
+                      clusters    = 3,
+                      metric      = "manhattan",
+                      samples     = 1,
+                      sample_size = NULL,
+                      type        = "hard",
+                      seed        = 3526,
+                      verbose     = 0)
 cc_manh
 
 dist_mink <- function(x, y) {
   proxy::dist(list(x, y), method = "minkowski", p = 1)
 }
 cc_mink <- fuzzyclara(data        = USArrests,
-                       clusters    = 3,
-                       metric      = dist_mink,
-                       samples     = 1,
-                       sample_size = NULL,
-                       type        = "hard",
-                       seed        = 3526,
-                       verbose     = 0)
+                      clusters    = 3,
+                      metric      = dist_mink,
+                      samples     = 1,
+                      sample_size = NULL,
+                      type        = "hard",
+                      seed        = 3526,
+                      verbose     = 0)
 cc_mink
 ```
 
@@ -138,36 +138,52 @@ USArrests_enriched <- USArrests %>%
 
 ### Boxplot
 ```{r}
-plot(x = cc_hard, data = USArrests_enriched, variable = "Assault") 
+plot(x        = cc_hard,
+     data     = USArrests_enriched,
+     variable = "Assault") 
 ```
 
 ### Barplot
 ```{r}
-plot(x = cc_hard, data = USArrests_enriched, variable = "Area")
+plot(x        = cc_hard,
+     data     = USArrests_enriched,
+     variable = "Area")
 ```
 
 ### Wordcloud
 ```{r fig.width=6, fig.height=4}
-plot(x = cc_hard, data = USArrests_enriched, variable = "State",
-     type = "wordclouds")
+plot(x        = cc_hard,
+     data     = USArrests_enriched,
+     variable = "State",
+     type     = "wordclouds")
 ```
 
 ### Scatterplot
 ```{r}
-plot(x = cc_hard, data = USArrests_enriched, type = "scatterplot",
-     x_var = "Murder", y_var = "Assault")
+plot(x     = cc_hard,
+     data  = USArrests_enriched,
+     type  = "scatterplot",
+     x_var = "Murder",
+     y_var = "Assault")
 
 ```
 
 For fuzzy clustering, you can focus on one or more clusters and plot the membership probability:
 ```{r}
-plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-     x_var = "Murder", y_var = "Assault", 
+plot(x     = cc_fuzzy,
+     data  = USArrests_enriched,
+     type  = "scatterplot",
+     x_var = "Murder",
+     y_var = "Assault", 
      focus = TRUE)
 
-plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-     x_var = "Murder", y_var = "Assault", 
-     focus = TRUE, focus_clusters = c(1))
+plot(x              = cc_fuzzy,
+     data           = USArrests_enriched,
+     type           = "scatterplot",
+     x_var          = "Murder",
+     y_var          = "Assault", 
+     focus          = TRUE,
+     focus_clusters = c(1))
 
 ```
 
@@ -175,55 +191,92 @@ plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
 
 ### PCA
 ```{r fig.width=6, fig.height=4}
-plot(x = cc_hard, data = USArrests_enriched, type = "pca",
+plot(x        = cc_hard,
+     data     = USArrests_enriched, 
+     type     = "pca",
      group_by = "Area")
 ```
 
 For fuzzy clustering, you can focus on one or more clusters and plot the membership probability:
 ```{r}
-plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
+plot(x     = cc_fuzzy,
+     data  = USArrests_enriched,
+     type  = "pca",
      focus = TRUE)
 
-plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
-     focus = TRUE, focus_clusters = c(1))
+plot(x              = cc_fuzzy,
+     data           = USArrests_enriched,
+     type           = "pca",
+     focus          = TRUE,
+     focus_clusters = c(1))
 
 ```
-
-
-
 
 
 
 ### Silhouette
 ```{r fig.width=6, fig.height=4}
-plot(x = cc_hard, data = USArrests, type = "silhouette")
+plot(x    = cc_hard,
+     data = USArrests,
+     type = "silhouette")
 ```
 
 ### Fuzzy clustering: Threshold for membership scores
 ```{r fig.width=6, fig.height=4}
-plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca", variable = "Assault", membership_threshold = 0) 
+plot(x                    = cc_fuzzy,
+     data                 = USArrests_enriched,
+     type                 = "pca",
+     variable             = "Assault",
+     membership_threshold = 0) 
 
-plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca", variable = "Assault", membership_threshold = 0.5)
+plot(x                    = cc_fuzzy,
+     data                 = USArrests_enriched,
+     type                 = "pca",
+     variable             = "Assault",
+     membership_threshold = 0.5)
 ```
 
 ```{r fig.width=6, fig.height=4, message = FALSE}
-plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-     x_var = "Murder", y_var = "Assault", membership_threshold = 0)
+plot(x                    = cc_fuzzy,
+     data                 = USArrests_enriched,
+     type                 = "scatterplot",
+     x_var                = "Murder",
+     y_var                = "Assault",
+     membership_threshold = 0)
 
-plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-     x_var = "Murder", y_var = "Assault", membership_threshold = 0.5)
+plot(x                    = cc_fuzzy,
+     data                 = USArrests_enriched,
+     type                 = "scatterplot",
+     x_var                = "Murder",
+     y_var                = "Assault",
+     membership_threshold = 0.5)
 
-plot(x = cc_fuzzy, data = USArrests_enriched, type = "scatterplot",
-     x_var = "Murder", y_var = "Assault", membership_threshold = 0.5, plot_all_fuzzy = TRUE)
+plot(x                    = cc_fuzzy,
+     data                 = USArrests_enriched,
+     type                 = "scatterplot",
+     x_var                = "Murder",
+     y_var                = "Assault",
+     membership_threshold = 0.5,
+     plot_all_fuzzy       = TRUE)
 ```
 
 ```{r fig.width=6, fig.height=4, message = FALSE}
-plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
-     group_by = "Area", membership_threshold = 0)
+plot(x                    = cc_fuzzy,
+     data                 = USArrests_enriched,
+     type                 = "pca",
+     group_by             = "Area",
+     membership_threshold = 0)
 
-plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
-     group_by = "Area", membership_threshold = 0.5)
+plot(x                    = cc_fuzzy,
+     data                 = USArrests_enriched,
+     type                 = "pca",
+     group_by             = "Area",
+     membership_threshold = 0.5)
 
-plot(x = cc_fuzzy, data = USArrests_enriched, type = "pca",
-     group_by = "Area", membership_threshold = 0.5, plot_all_fuzzy = TRUE)
+plot(x                    = cc_fuzzy,
+     data                 = USArrests_enriched,
+     type                 = "pca",
+     group_by             = "Area",
+     membership_threshold = 0.5,
+     plot_all_fuzzy       = TRUE)
 ```

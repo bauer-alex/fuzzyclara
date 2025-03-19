@@ -20,9 +20,14 @@
 #'
 #' @import proxy
 #'
-assign_cluster <- function(data, metric, medoids, dist_matrix = NULL,
-                           type = "hard", m = 2, data_medoids = NULL,
-                           return_distMatrix = FALSE,
+assign_cluster <- function(data,
+                           metric,
+                           medoids,
+                           dist_matrix         = NULL,
+                           type                = "hard",
+                           m                   = 2,
+                           data_medoids        = NULL,
+                           return_distMatrix   = FALSE,
                            return_data_medoids = FALSE) {
 
   checkmate::assert_data_frame(data)
@@ -33,31 +38,31 @@ assign_cluster <- function(data, metric, medoids, dist_matrix = NULL,
   checkmate::assert_logical(return_data_medoids, len = 1)
 
 
-  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  # some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2
   Name <- NULL
 
 
-  # Calculate distance matrix between all observation and the medoids
-  # (if not already given to the function):
+  # calculate distance matrix between all observation and the medoids
+  # (if not already given to the function)
   if (is.null(dist_matrix)) {
     
     if (is.null(data_medoids)) {
-      # Extraction of obtained medoids of the data:
+      # extraction of obtained medoids of the data
       data_medoids <- data %>% filter(Name %in% medoids) %>% as.data.frame()
     }
   
-    # Calculate the distances to the cluster medoids:
-    dist <- proxy::dist(x = data[, -1], y = data_medoids[, -1],
+    # calculate the distances to the cluster medoids
+    dist <- proxy::dist(x      = data[, -1],
+                        y      = data_medoids[, -1],
                         method = metric)
-  }
-  else {
+  } else {
     dist <- dist_matrix[, medoids]
   }
 
-  # Assignment to the medoid with minimum distance:
+  # assignment to the medoid with minimum distance
   cluster_assignments <- apply(dist, 1, which.min)
 
-  # Computation of membership scores in case of fuzzy clustering:
+  # computation of membership scores in case of fuzzy clustering
   if (type == "fuzzy") {
     memb_scores_list <- apply(dist, 1, function(x) {
       data.frame(t(as.numeric(calculate_memb_score(dist_med = x, m = m))))
@@ -66,16 +71,17 @@ assign_cluster <- function(data, metric, medoids, dist_matrix = NULL,
     colnames(memb_scores) <- paste0("Cluster", 1:ncol(memb_scores))
   }
 
-  # Computation of distance for hard and fuzzy clustering:
+  # computation of distance for hard and fuzzy clustering
   if (type == "hard") {
-    # Minimum distance:
+    # minimum distance
     distances <- apply(dist, 1, min)
+    
   } else { # type = "fuzzy"
-    # Weighted distance (membership scores as weights):
+    # weighted distance (membership scores as weights)
     distances <- rowSums(dist * memb_scores)
   }
 
-  # Return of clustering information:
+  # return of clustering information
   dist_dat <- as.data.frame(dist[1:nrow(dist),])
   colnames(dist_dat) <- paste0("Distance_to_Cluster", 1:ncol(dist_dat))
   assignment_dat     <- data.frame("assignment" = cluster_assignments,
@@ -85,25 +91,25 @@ assign_cluster <- function(data, metric, medoids, dist_matrix = NULL,
     assignment_dat$membership <- memb_scores
   }
 
-  # Return of information about cluster assignments:
+  # return of information about cluster assignments
   assignment   <- assignment_dat$assignment
   distance     <- assignment_dat$distance
   average_dist <- mean(distance)
   clustering_result <- list("medoids" = medoids, "clustering" = assignment)
 
-  # Compute distance:
+  # compute distance
   if (type == "hard") { # average distance for hard clustering
     clustering_result[["avg_min_dist"]] <- average_dist
 
   } else { # type = "fuzzy": weighted average distance for fuzzy clustering
 
-    # Computation of membership scores:
+    # computation of membership scores
     clustering_result[["avg_weighted_dist"]] <- average_dist
     membership            <- as.data.frame(assignment_dat$membership)
     row.names(membership) <- data$Name
     clustering_result[["membership_scores"]] <- membership
     
-    # Computation of Dunn's partition coefficient:
+    # computation of Dunn's partition coefficient
     dunn <- sum(membership^2) / nrow(membership)
     dunn_norm <- (dunn - (1 / ncol(membership))) / ( 1 - 1 / ncol(membership))
     dunn <- c(dunn, dunn_norm)
@@ -140,7 +146,8 @@ assign_cluster <- function(data, metric, medoids, dist_matrix = NULL,
 #'
 #' @import checkmate
 #'
-calculate_memb_score <- function(dist_med, m = 2) {
+calculate_memb_score <- function(dist_med,
+                                 m = 2) {
 
   checkmate::assert_numeric(dist_med, lower = 0)
   checkmate::assert_number(m, lower = 1)
@@ -164,4 +171,3 @@ calculate_memb_score <- function(dist_med, m = 2) {
   }
   return(list_memb)
 }
-

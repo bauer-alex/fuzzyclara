@@ -117,11 +117,22 @@
 #'
 #' @references TODO add CLARA and CLARANS papers, and maybe something else?
 #'
-fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
-                       algorithm = "clara", samples = 10, sample_size = NULL,
-                       max_neighbors = 100, num_local = 10, type = "hard",
-                       cores = 1, seed = 1234, m = 1.5, verbose = 1,
-                       scale = TRUE, build = FALSE, ...) {
+fuzzyclara <- function(data,
+                       clusters      = 5,
+                       metric        = "euclidean",
+                       algorithm     = "clara",
+                       samples       = 10,
+                       sample_size   = NULL,
+                       max_neighbors = 100,
+                       num_local     = 10,
+                       type          = "hard",
+                       cores         = 1,
+                       seed          = 1234,
+                       m             = 1.5,
+                       verbose       = 1,
+                       scale         = TRUE,
+                       build         = FALSE,
+                       ...) {
 
   checkmate::assert(checkmate::check_data_frame(data),
                     checkmate::check_matrix(data), combine = "or")
@@ -139,7 +150,7 @@ fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
   checkmate::assert_logical(scale, len = 1)
   checkmate::assert_logical(build, len = 1)
   
-  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  # some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2
   sd <- NULL
 
   # pam requires the number of clusters to be smaller than the number of
@@ -149,12 +160,12 @@ fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
                               null.ok = TRUE)
   }
 
-  # Convert data into data.frame if necessary:
+  # convert data into data.frame if necessary
   if (!("data.frame" %in% class(data))) {
     data <- as.data.frame(data)
   }
 
-  # Extract name of metric:
+  # extract name of metric
   if (inherits(metric, "function")) {
     name_metric <- deparse(substitute(metric))
   }
@@ -162,34 +173,48 @@ fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
     name_metric <- metric
   }
   
-  # Scaling of numerical variables:
+  # scaling of numerical variables
   if(scale == TRUE){
     ind <- unlist(lapply(data, is.numeric), use.names = TRUE)
-    # Store scaling parameters in a list:
+    # store scaling parameters in a list
     scaling <- list()
     scaling$mean <- colMeans(data[, ind])
     scaling$sd <- apply(X = data, MARGIN = 2, FUN = sd)
-    # Scaling:
+    # scaling
     data[, ind] <- scale(data[, ind])
   }
 
-  # Choice of clustering algorithm:
-  # clara algorithm:
+  # choice of clustering algorithm
+  # CLARA algorithm
   if (algorithm == "clara") {
-    result <- clustering_clara(data, clusters = clusters, metric = metric,
-                               samples = samples, sample_size = sample_size,
-                               type = type, cores = cores, seed = seed, m = m,
-                               verbose = verbose, build = build, ...)
+    result <- clustering_clara(data,
+                               clusters    = clusters,
+                               metric      = metric,
+                               samples     = samples,
+                               sample_size = sample_size,
+                               type        = type,
+                               cores       = cores,
+                               seed        = seed,
+                               m           = m,
+                               verbose     = verbose,
+                               build       = build,
+                               ...)
   }
   if (algorithm == "clarans") {
-    result <- clustering_clarans(data, clusters = clusters, metric = metric,
+    result <- clustering_clarans(data,
+                                 clusters      = clusters,
+                                 metric        = metric,
                                  max_neighbors = max_neighbors,
-                                 num_local = num_local, type = type,
-                                 cores = cores, seed = seed, m = m,
-                                 verbose = verbose, ...)
+                                 num_local     = num_local,
+                                 type          = type,
+                                 cores         = cores,
+                                 seed          = seed,
+                                 m             = m,
+                                 verbose       = verbose,
+                                 ...)
   }
   
-  # Add scaling parameters to output information:
+  # add scaling parameters to output information
   if (scale == TRUE) {
     result$scaling <- scaling
   }
@@ -197,6 +222,6 @@ fuzzyclara <- function(data, clusters = 5, metric = "euclidean",
     result$scaling <- FALSE
   }
 
-  # Return of clustering solution:
+  # return of clustering solution
   return(result)
 }

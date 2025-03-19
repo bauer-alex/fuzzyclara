@@ -63,15 +63,24 @@
 #'                                       verbose         = 0)
 #' cc_number
 #' 
-evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
-                                     metric = "euclidean",
-                                     algorithm = "clara", samples = 10,
-                                     sample_size = NULL, num_local = 5,
-                                     max_neighbors = 100, type = "hard",
-                                     cores = 1, seed = 1234, m = 1.5,
-                                     scale = TRUE, build = FALSE,
-                                     verbose = 1, plot = TRUE,
-                                     return_results = FALSE, ...) {
+evaluate_cluster_numbers <- function(data,
+                                     clusters_range = 2:5,
+                                     metric         = "euclidean",
+                                     algorithm      = "clara",
+                                     samples        = 10,
+                                     sample_size    = NULL, 
+                                     num_local      = 5,
+                                     max_neighbors  = 100,
+                                     type           = "hard",
+                                     cores          = 1,
+                                     seed           = 1234,
+                                     m              = 1.5,
+                                     scale          = TRUE,
+                                     build          = FALSE,
+                                     verbose        = 1,
+                                     plot           = TRUE,
+                                     return_results = FALSE,
+                                     ...) {
 
   checkmate::assert_data_frame(data)
   checkmate::assert_integer(clusters_range, lower = 1, upper = nrow(data))
@@ -85,62 +94,77 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
   checkmate::assert_logical(return_results, len = 1)
 
 
-  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  # some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2
   sd <- NULL
 
-  # Scaling of numerical variables:
+  # scaling of numerical variables
   if(scale == TRUE){
     ind <- unlist(lapply(data, is.numeric), use.names = TRUE)
-    # Store scaling parameters in a list:
+    # store scaling parameters in a list
     scaling <- list()
     scaling$mean <- colMeans(data[, ind])
     scaling$sd <- apply(X = data, MARGIN = 2, FUN = sd)
-    # Scaling:
+    # scaling
     data[, ind] <- scale(data[, ind])
   }
 
-  # Compute clustering for different cluster numbers:
+  # compute clustering for different cluster numbers
   if (algorithm == "clara") {
-    y <- clustering_clara(data, clusters = clusters_range, metric = metric,
-                          sample_size = sample_size, samples = samples,
-                          build = build, type = type, seed = seed, m = m,
-                          verbose = verbose, cores = cores)
-    # Change criteria for fuzzy clustering with a single cluster:
+    y <- clustering_clara(data,
+                          clusters    = clusters_range,
+                          metric      = metric,
+                          sample_size = sample_size,
+                          samples     = samples,
+                          build       = build,
+                          type        = type,
+                          seed        = seed,
+                          m           = m,
+                          verbose     = verbose,
+                          cores       = cores)
+    # change criteria for fuzzy clustering with a single cluster
     if (type == "fuzzy") {
       names(y[[1]])[3] <- "avg_weighted_dist"
     }
   }
   if (algorithm == "clarans") {
-    y <- clustering_clarans(data, clusters = clusters_range, metric = metric,
-                            max_neighbors = max_neighbors, num_local = num_local,
-                            algorithm = "clarans", type = type, seed = seed,
-                            m = m, verbose = verbose, cores = cores, ...)
+    y <- clustering_clarans(data,
+                            clusters      = clusters_range,
+                            metric        = metric,
+                            max_neighbors = max_neighbors,
+                            num_local     = num_local,
+                            algorithm     = "clarans",
+                            type          = type,
+                            seed          = seed,
+                            m             = m,
+                            verbose       = verbose,
+                            cores         = cores,
+                            ...)
   }
 
   if (plot == TRUE) {
     plot_cluster <- plot_cluster_numbers(y)
 
-    # Return the plot (and the cluster results):
+    # return the plot (and the cluster results)
       if(return_results == FALSE){
         return(plot_cluster)
       } else{
         res <- list(plot_cluster, y)
         names(res) <- c("plot", "cluster_results")
         
-        # Add scaling parameters to output information:
+        # add scaling parameters to output information
         if (scale == TRUE) {
-          res$cluster_results <- lapply(X = seq_along(res$cluster_results),
+          res$cluster_results <- lapply(X   = seq_along(res$cluster_results),
                                         FUN = function(i) {
             res$cluster_results[[i]]$scaling <- scaling
-            class(res$cluster_results[[i]]) <- c("fuzzyclara", class(res))
+            class(res$cluster_results[[i]])  <- c("fuzzyclara", class(res))
             return(res$cluster_results[[i]])
           })
         }
         if (scale == FALSE) {
-          res$cluster_results <- lapply(X = seq_along(res$cluster_results),
+          res$cluster_results <- lapply(X   = seq_along(res$cluster_results),
                                         FUN = function(i) {
             res$cluster_results[[i]]$scaling <- FALSE
-            class(res$cluster_results[[i]]) <- c("fuzzyclara", class(res))
+            class(res$cluster_results[[i]])  <- c("fuzzyclara", class(res))
             return(res$cluster_results[[i]])
           })
         }
@@ -158,6 +182,7 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
 }
 
 
+
 #' Function to provide graphical visualization for selecting the optimal number
 #' of clusters.
 #' The function provides graphical visualization showing the minimal (weighted)
@@ -167,7 +192,8 @@ evaluate_cluster_numbers <- function(data, clusters_range = 2:5,
 #' @param clusters_range Optional range for the number of clusters. Defaults to
 #' \code{NULL}.
 #' @export
-plot_cluster_numbers <- function(cluster_results, clusters_range = NULL) {
+plot_cluster_numbers <- function(cluster_results,
+                                 clusters_range = NULL) {
   
   checkmate::assert_list(cluster_results)
   checkmate::assert_integer(clusters_range, null.ok = TRUE)
@@ -175,27 +201,27 @@ plot_cluster_numbers <- function(cluster_results, clusters_range = NULL) {
     checkmate::assert_class(cluster_results[[i]], "fuzzyclara")
   }
   
-  # Extract cluster range from list of clustering results if not provided:
+  # extract cluster range from list of clustering results if not provided
   if (is.null(clusters_range)) {
     clusters_range <- sapply(X = seq_along(cluster_results),
                              FUN = function(i) {length(cluster_results[[i]]$medoids)})
   }
   
-  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  # some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2
   cluster_number <- NULL
   
-  # Create data.frame with criterion results:
+  # create data.frame with criterion results
   criterion_df <- data.frame(cluster_number = clusters_range,
                              criterion = rep(0, length(clusters_range)))
   criterion <- ifelse(cluster_results[[1]]$type == "fuzzy",
                       yes = "avg_weighted_dist", no = "avg_min_dist")
-  # Select criterion for choice of cluster number:
-  criterion_df$criterion <- as.numeric(sapply(X = seq_along(clusters_range),
+  # select criterion for choice of cluster number
+  criterion_df$criterion <- as.numeric(sapply(X   = seq_along(clusters_range),
                                               FUN = function(i) {cluster_results[[i]][criterion]}))
-  # Sort data.frame according to cluster number in ascending order:
+  # sort data.frame according to cluster number in ascending order
   criterion_df <- criterion_df %>% arrange(cluster_number, descending = FALSE)
   
-  # Graphical visualization:
+  # visualization
   ylab_text <- ifelse(cluster_results[[1]]$type == "hard", "Minimal Average Distance",
                       "Minimal Weighted \nAverage Distance") # for type = "fuzzy"
   

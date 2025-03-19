@@ -145,10 +145,16 @@
 #' plot(x = cc_fuzzy, data = USArrests_enriched, 
 #'      type = "parallel", sample_percentage = 1, plot_membership_scores = TRUE)      
 #'      
-plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
-                            na.omit = FALSE, membership_threshold = 0,
-                            sample_percentage = 1, 
-                            plot_membership_scores = FALSE, seed = 42, ...){
+plot.fuzzyclara <- function(x,
+                            data, 
+                            type                   = NULL,
+                            variable               = NULL,
+                            na.omit                = FALSE,
+                            membership_threshold   = 0,
+                            sample_percentage      = 1, 
+                            plot_membership_scores = FALSE,
+                            seed                   = 42,
+                            ...) {
 
   checkmate::assert_class(x, class = "fuzzyclara")
   checkmate::assert(checkmate::check_data_frame(data),
@@ -163,12 +169,12 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
   checkmate::assert_numeric(membership_threshold, lower = 0, upper = 1)
 
 
-  # Convertion of matrix to data.frame:
+  # convertion of matrix to data.frame
   if (!(any(class(data) == "data.frame"))) {
     data <- as.data.frame(data)
   }
 
-  # Data preparation:
+  # data preparation
   data <- data %>%
     mutate(cluster = as.factor(x$clustering))
 
@@ -184,9 +190,9 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
     }
   }
  
-  # Handle 'type = NULL':
+  # handle 'type = NULL'
   if (is.null(type)) {
-    # Check if 'variable' argument was specified
+    # check if 'variable' argument was specified
     if (is.null(variable)) {
       stop("Please specify the 'type' or the variable' argument.")
     }
@@ -195,45 +201,66 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
   }
   
 
-  # Creation of plot object:
+  # creation of plot object
   if (type == "barplot") {
-    plot <- clara_barplot(x = x, data = data, variable = variable,
-                          na.omit = na.omit,
-                          membership_threshold = membership_threshold, ...)
+    plot <- clara_barplot(x                    = x,
+                          data                 = data,
+                          variable             = variable,
+                          na.omit              = na.omit,
+                          membership_threshold = membership_threshold,
+                          ...)
 
   } else if (type == "boxplot") {
-    plot <- clara_boxplot(x = x, data = data, variable = variable,
-                          na.omit = na.omit,
-                          membership_threshold = membership_threshold, ...)
+    plot <- clara_boxplot(x                    = x,
+                          data                 = data,
+                          variable             = variable,
+                          na.omit              = na.omit,
+                          membership_threshold = membership_threshold,
+                          ...)
 
   } else if (type == "wordclouds") {
-    plot <- clara_wordcloud(x = x, data = data, variable = variable,
-                            na.omit = na.omit, seed = seed,
-                            membership_threshold = membership_threshold, ...)
+    plot <- clara_wordcloud(x                    = x,
+                            data                 = data,
+                            variable             = variable,
+                            na.omit              = na.omit,
+                            seed                 = seed,
+                            membership_threshold = membership_threshold,
+                            ...)
 
   } else if (type == "silhouette") {
-    plot <- clara_silhouette(x = x, data = data,
-                             membership_threshold = membership_threshold, ...)
+    plot <- clara_silhouette(x                    = x,
+                             data                 = data,
+                             membership_threshold = membership_threshold,
+                             ...)
 
   } else if (type == "pca") {
-    plot <- clara_pca(x = x, data = data,
-                      membership_threshold = membership_threshold, ...)
+    plot <- clara_pca(x                    = x,
+                      data                 = data,
+                      membership_threshold = membership_threshold,
+                      ...)
 
   } else if (type == "scatterplot") {
-    plot <- clara_scatterplot(x = x, data = data, na.omit = na.omit,
-                              membership_threshold = membership_threshold, ...)
+    plot <- clara_scatterplot(x                    = x,
+                              data                 = data,
+                              na.omit              = na.omit,
+                              membership_threshold = membership_threshold,
+                              ...)
   
   } else if (type == "parallel") {
-    plot <- clara_parallel(x = x, data = data, seed = seed,
-                           membership_threshold = membership_threshold, 
-                           sample_percentage = sample_percentage,
-                           plot_membership_scores = plot_membership_scores, ...)
+    plot <- clara_parallel(x                      = x,
+                           data                   = data,
+                           seed                   = seed,
+                           membership_threshold   = membership_threshold, 
+                           sample_percentage      = sample_percentage,
+                           plot_membership_scores = plot_membership_scores,
+                           ...)
   }
 
 
-  # Return plot:
+  # return plot
   return(plot)
 }
+
 
 
 #' Plot function barplot
@@ -254,8 +281,12 @@ plot.fuzzyclara <- function(x, data, type = NULL, variable = NULL,
 #' @import checkmate cluster dplyr factoextra ggplot2 ggpubr
 #' @export
 #'
-clara_barplot <- function(x, data, variable, group_by = NULL,
-                          na.omit = FALSE, membership_threshold = 0) {
+clara_barplot <- function(x,
+                          data,
+                          variable,
+                          group_by             = NULL,
+                          na.omit              = FALSE,
+                          membership_threshold = 0) {
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
@@ -264,12 +295,12 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
   checkmate::assert_logical(na.omit, len = 1)
   checkmate::assert_numeric(membership_threshold, lower = 0, upper = 1)
   
-  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  # some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2
   cluster <- max_memb_score <- NULL
   
-  # Select observations based on membership_threshold:
+  # select observations based on membership_threshold
   if (x$type == "fuzzy") {
-    # Filter relevant observation based on the membership score threshold:
+    # filter relevant observation based on the membership score threshold
     relevant_obs <- x$membership_scores %>%
       mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
                                               na.rm = TRUE))) %>%
@@ -277,12 +308,12 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
     data <- data %>% dplyr::filter(row.names(data) %in% rownames(relevant_obs))
   }
   
-  # Remove missing values if specified:
+  # remove missing values if specified
   if (na.omit == TRUE) {
     data <- data %>% filter(!is.na(!!sym(variable)))
   }
 
-  if (is.numeric(as.data.frame(data)[, variable])){
+  if (is.numeric(as.data.frame(data)[, variable])) {
     stop("The specified 'variable' has to be non-numeric.")
   }
 
@@ -291,7 +322,7 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
     geom_bar(position = "fill") + theme_minimal() +
     scale_fill_brewer(palette = "Accent")
 
-  if(!is.null(group_by)){
+  if (!is.null(group_by)) {
     if (!(group_by %in% names(data))) {
       stop("Dataset does not contain the given grouping variable.")
     }
@@ -315,8 +346,12 @@ clara_barplot <- function(x, data, variable, group_by = NULL,
 #' @import checkmate cluster dplyr factoextra ggplot2 ggpubr
 #' @export
 #'
-clara_boxplot <- function(x, data, variable, group_by = NULL,
-                          na.omit = FALSE, membership_threshold = 0) {
+clara_boxplot <- function(x,
+                          data,
+                          variable,
+                          group_by             = NULL,
+                          na.omit              = FALSE,
+                          membership_threshold = 0) {
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
@@ -326,12 +361,12 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
   checkmate::assert_numeric(membership_threshold, lower = 0, upper = 1)
 
 
-  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  # some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2
   cluster <- max_memb_score <- NULL
   
-  # Select observations based on membership_threshold:
+  # select observations based on membership_threshold
   if (x$type == "fuzzy") {
-    # Filter relevant observation based on the membership score threshold:
+    # filter relevant observation based on the membership score threshold
     relevant_obs <- x$membership_scores %>%
       mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
                                               na.rm = TRUE))) %>%
@@ -339,12 +374,12 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
     data <- data %>% dplyr::filter(row.names(data) %in% rownames(relevant_obs))
   }
   
-  # Remove missing values if specified:
+  # remove missing values if specified
   if (na.omit == TRUE) {
     data <- data %>% filter(!is.na(!!sym(variable)))
   }
 
-  if (!is.numeric(as.data.frame(data)[, variable])){
+  if (!is.numeric(as.data.frame(data)[, variable])) {
     stop("The specified 'variable' has to be numeric.")
   }
 
@@ -353,7 +388,7 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
                                         fill = cluster)) +
     geom_boxplot() + theme_minimal()
 
-  if(!is.null(group_by)){
+  if (!is.null(group_by)) {
     if (!(group_by %in% names(data))) {
       stop("Dataset does not contain the given grouping variable.")
     }
@@ -363,6 +398,7 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
 
   return(plot)
 }
+
 
 
 #' Plot function wordcloud
@@ -383,8 +419,12 @@ clara_boxplot <- function(x, data, variable, group_by = NULL,
 #' @import checkmate cluster dplyr factoextra ggplot2 ggpubr ggwordcloud
 #' @export
 #'
-clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42,
-                            membership_threshold = 0){
+clara_wordcloud <- function(x,
+                            data,
+                            variable,
+                            na.omit              = na.omit,
+                            seed                 = 42,
+                            membership_threshold = 0) {
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
@@ -393,17 +433,17 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42,
   checkmate::assert_logical(na.omit, len = 1)
   checkmate::assert_numeric(membership_threshold, lower = 0, upper = 1)
   
-  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  # some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2
   cluster <- var <- angle <- max_memb_score <- NULL
   
-  # Remove missing values if specified:
+  # remove missing values if specified
   if (na.omit == TRUE) {
     data <- data %>% filter(!is.na(!!sym(variable)))
   }
   
-  # Select observations based on membership_threshold:
+  # select observations based on membership_threshold
   if (x$type == "fuzzy") {
-    # Filter relevant observation based on the membership score threshold:
+    # filter relevant observation based on the membership score threshold
     relevant_obs <- x$membership_scores %>%
       mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
                                               na.rm = TRUE))) %>%
@@ -426,6 +466,7 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42,
 
   return(plot)
 }
+
 
 
 #' Plot function PCA
@@ -452,9 +493,14 @@ clara_wordcloud <- function(x, data, variable, na.omit = na.omit, seed = 42,
 #' @importFrom stats as.formula prcomp
 #' @export
 #'
-clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
-                      membership_threshold = 0, alpha_fuzzy = 0.4,
-                      focus = FALSE, focus_clusters = NULL) {
+clara_pca <- function(x,
+                      data,
+                      group_by             = NULL,
+                      plot_all_fuzzy       = TRUE,
+                      membership_threshold = 0,
+                      alpha_fuzzy          = 0.4,
+                      focus                = FALSE,
+                      focus_clusters       = NULL) {
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
@@ -466,19 +512,19 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
   checkmate::assert_vector(focus_clusters, null.ok = TRUE)
 
   
-  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  # some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2
   max_memb_score <- cluster <- Dim.1 <- Dim.2 <- NULL
   
   
   if (x$type == "fuzzy") {
-    # Filter relevant observation based on the membership score threshold:
+    # filter relevant observation based on the membership score threshold
     relevant_obs <- x$membership_scores %>%
       mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
                                               na.rm = TRUE))) %>%
       filter(max_memb_score >= membership_threshold)
     rel_obs <- rownames(relevant_obs)
     
-    # Transparent observations for scatterplots:
+    # transparent observations for scatterplots
     transparent_obs <- data %>%
       dplyr::filter(!(row.names(data) %in% rownames(relevant_obs)))
     
@@ -487,13 +533,13 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
   }
   
   
-  if(x$type == "fuzzy" && focus == TRUE){ # for focus = TRUE, perform PCA on whole dataset
+  if (x$type == "fuzzy" && focus == TRUE) { # for focus = TRUE, perform PCA on whole dataset
       data$cluster <- NULL
   }
 
   num_vars <- unlist(lapply(data, is.numeric))
 
-  # Dimension reduction using PCA
+  # dimension reduction using PCA
   pca_result <- stats::prcomp(data[, num_vars], center = FALSE, scale = FALSE) # data are already scaled
   individuals_coord <- as.data.frame(get_pca_ind(pca_result)$coord)
 
@@ -502,21 +548,21 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
   }
 
   
-  # Compute the eigenvalues
+  # compute the eigenvalues
   eigenvalue    <- round(get_eigenvalue(pca_result), 1)
   variance_perc <- eigenvalue$variance.percent
 
-  # Plot with memberships of all clusters:
-  if(x$type == "fuzzy" & focus == TRUE){
+  # plot with memberships of all clusters
+  if(x$type == "fuzzy" & focus == TRUE) {
     # convert data into long format containing information on membership scores
     individuals_coord <- cbind(individuals_coord, x$membership_scores)
     data_long         <- individuals_coord %>%
       tidyr::gather("cluster", "prob", colnames(x$membership_scores))
 
     # select only clusters given by focus_clusters
-    if(!is.null(focus_clusters)){
+    if(!is.null(focus_clusters)) {
       clusters_select <- paste0("Cluster", focus_clusters)
-      if(!all(clusters_select %in% data_long$cluster)){
+      if(!all(clusters_select %in% data_long$cluster)) {
         stop("clusters specified by focus_clusters aren't found in the data.")
       }
 
@@ -552,7 +598,7 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
 
   } else { # normal PCA plot
 
-    # Add clusters
+    # add clusters
     individuals_coord$cluster <- data$cluster
 
     if (x$type == "fuzzy") {
@@ -582,7 +628,7 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
       ) + stat_mean(aes(color = cluster), size = 4) + theme_minimal()
     }
     
-    # Add transparent values for fuzzy clustering:
+    # add transparent values for fuzzy clustering
     if (x$type == "fuzzy" && plot_all_fuzzy == TRUE &&
         nrow(transparent_obs != 0)) {
       if (!is.null(group_by)) {
@@ -604,6 +650,7 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
 
   return(plot)
 }
+
 
 
 #' Plot function parallel coordinate plot
@@ -628,8 +675,12 @@ clara_pca <- function(x, data, group_by = NULL, plot_all_fuzzy = TRUE,
 #' @import checkmate dplyr ggplot2 ggpubr tidyr tibble
 #' @export
 #' 
-clara_parallel <- function(x, data, membership_threshold = 0, seed = 42,
-                           plot_membership_scores = FALSE, sample_percentage = 0.2) {
+clara_parallel <- function(x,
+                           data,
+                           membership_threshold   = 0,
+                           seed                   = 42,
+                           plot_membership_scores = FALSE,
+                           sample_percentage      = 0.2) {
   
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
@@ -637,12 +688,12 @@ clara_parallel <- function(x, data, membership_threshold = 0, seed = 42,
   checkmate::assert_numeric(sample_percentage, lower = 0, upper = 1)
   
   
-  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  # some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2
   cluster <- max_memb_score <- name <- variable <- value <- . <- NULL
   
-  # Select observations based on membership_threshold:
+  # select observations based on membership_threshold
   if (x$type == "fuzzy") {
-    # Filter relevant observation based on the membership score threshold:
+    # filter relevant observation based on the membership score threshold
     relevant_obs <- x$membership_scores %>%
       mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
                                               na.rm = TRUE))) %>%
@@ -650,31 +701,31 @@ clara_parallel <- function(x, data, membership_threshold = 0, seed = 42,
     data <- data %>% dplyr::filter(row.names(data) %in% rownames(relevant_obs))
   }
   
-  # Sample x percent of observations to avoid overplotting
+  # sample x percent of observations to avoid overplotting
   if (sample_percentage != 1) {
     rows <- nrow(data)
     selected_rows <- sample(x = rows, size = sample_percentage * rows)
     data <- data[selected_rows,]
   }
   
-  # Add column with membership scores
+  # add column with membership scores
   if (plot_membership_scores == TRUE) {
-    "memb_score" <-  apply(X = x$membership_scores, MARGIN = 1,
-                            FUN = max)
+    "memb_score" <-  apply(X      = x$membership_scores,
+                           MARGIN = 1,
+                           FUN    = max)
     data <- cbind(data, memb_score)
   }
   
-  # Reformat data to long format and add row.names to data:
-  data <- data %>% mutate(cluster = as.numeric(cluster))
-  num_vars <- unlist(lapply(data, is.numeric))
-  data <- data[, num_vars]
+  # reformat data to long format and add row.names to data
+  data      <- data %>% mutate(cluster = as.numeric(cluster))
+  num_vars  <- unlist(lapply(data, is.numeric))
+  data      <- data[, num_vars]
   data_long <- data %>% rownames_to_column(var = "name") %>%
     pivot_longer(cols = 2:(ncol(.) - 2), names_to = "variable")
-  # Extract observations with medoids: 
+  # extract observations with medoids
   data_long_medoids <- data_long %>% filter(name %in% x$medoids)
    
-  # Parallel coordinate plot:
-  
+  # parallel coordinate plot
   plot <- ggplot(mapping = aes(x = variable, y = value, group = name,
                                col = cluster)) +
     geom_line(data = data_long, aes(alpha = memb_score)) + #mapping = aes(alpha = memb_score)) +
@@ -685,6 +736,7 @@ clara_parallel <- function(x, data, membership_threshold = 0, seed = 42,
     theme(axis.title.x    = element_blank(),
           legend.position = "none",
           axis.text.x     = element_text(angle = 45, hjust = 1))
+  
   return(plot)
 }
 
@@ -715,10 +767,16 @@ clara_parallel <- function(x, data, membership_threshold = 0, seed = 42,
 #' @import checkmate cluster dplyr factoextra ggplot2 ggpubr tidyr
 #' @export
 #'
-clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
-                              membership_threshold = 0, alpha_fuzzy = 0.4,
-                              focus = FALSE, focus_clusters = NULL,
-                              na.omit = FALSE) {
+clara_scatterplot <- function(x,
+                              data,
+                              x_var,
+                              y_var,
+                              plot_all_fuzzy       = TRUE,
+                              membership_threshold = 0,
+                              alpha_fuzzy          = 0.4,
+                              focus                = FALSE,
+                              focus_clusters       = NULL,
+                              na.omit              = FALSE) {
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
@@ -732,7 +790,7 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
   checkmate::assert_logical(na.omit, len = 1)
   
 
-  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  # some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2
   max_memb_score <- variable <- cluster <- prob <- NULL
   
   
@@ -741,20 +799,20 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
     stop("Please specify the variables correctly. Both variable and group_by should contain the names of metric variables.")
   }
   
-  # Remove missing values if specified:
+  # remove missing values if specified
   if (na.omit == TRUE) {
     data <- data %>% filter(!is.na(!!sym(variable)))
   }
 
   if (x$type == "fuzzy") {
-    # Filter relevant observation based on the membership score threshold:
+    # filter relevant observation based on the membership score threshold
     relevant_obs <- x$membership_scores %>%
       mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
                                               na.rm = TRUE))) %>%
       filter(max_memb_score >= membership_threshold)
     rel_obs <- rownames(relevant_obs)
     
-    # Transparent observations for scatterplots:
+    # transparent observations for scatterplots
     transparent_obs <- data %>%
       dplyr::filter(!(row.names(data) %in% rownames(relevant_obs)))
     
@@ -791,14 +849,14 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
       guides(color = "none",
              alpha = guide_legend(title = "membership \n probability"))
 
-  } else{ # normal scatterplot
+  } else { # normal scatterplot
     plot <- data %>%
       ggplot(aes(x = !!ensym(x_var), y = !!ensym(y_var), color = cluster) )+
       geom_point() +
       geom_smooth(method = "lm") +
       theme_minimal()
 
-    if(x$type == "fuzzy" && plot_all_fuzzy == TRUE){
+    if (x$type == "fuzzy" && plot_all_fuzzy == TRUE) {
       plot <- plot +
         geom_point(data = transparent_obs,
                    aes(x = !!ensym(x_var), y = !!ensym(y_var)),
@@ -808,6 +866,7 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
 
   return(plot)
 }
+
 
 
 #' Plot function silhouette
@@ -832,12 +891,13 @@ clara_scatterplot <- function(x, data, x_var, y_var, plot_all_fuzzy = TRUE,
 #' @import checkmate cluster dplyr factoextra ggplot2 ggpubr
 #' @export
 #'
-clara_silhouette <- function(x, data,
-                             metric = "euclidean",
+clara_silhouette <- function(x,
+                             data,
+                             metric               = "euclidean",
                              silhouette_subsample = FALSE,
-                             scale_sil = TRUE,
-                             silhouette_table = TRUE,
-                             membership_threshold = 0){
+                             scale_sil            = TRUE,
+                             silhouette_table     = TRUE,
+                             membership_threshold = 0) {
 
   checkmate::assert_class(x, classes = "fuzzyclara")
   checkmate::assert_data_frame(data)
@@ -846,11 +906,11 @@ clara_silhouette <- function(x, data,
   checkmate::assert_numeric(membership_threshold, lower = 0, upper = 1)
 
 
-  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  # some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2
   max_memb_score <- cluster <- sil_width <- NULL
   
   if (x$type == "fuzzy") {
-    # Filter relevant observation based on the membership score threshold:
+    # filter relevant observation based on the membership score threshold
     relevant_obs <- x$membership_scores %>%
       mutate(max_memb_score = do.call(pmax, c(x$membership_scores,
                                               na.rm = TRUE))) %>%
@@ -880,10 +940,10 @@ clara_silhouette <- function(x, data,
 
     checkmate::assert_true(x$algorithm == "clara") # because for clarans, no distance matrix is calculated
 
-    if(x$type == "hard"){ # hard clustering
+    if (x$type == "hard") { # hard clustering
 
       data_sub <- data[x$subsample_ids, ]
-      sil <- silhouette(as.numeric(data_sub$cluster), x$dist_matrix)
+      sil      <- silhouette(as.numeric(data_sub$cluster), x$dist_matrix)
 
     } else { # x$type = "fuzzy" -> data is already filtered by threshold. Distance matrix has to be filtered too
 
@@ -893,7 +953,7 @@ clara_silhouette <- function(x, data,
 
       data_sub <- data[rel_obs_sil,]
 
-      # get corresponding distance matrix:
+      # get corresponding distance matrix
       dist_matrix           <- as.matrix(x$dist_matrix)
       rownames(dist_matrix) <- rownames(x$distance_to_medoids)[x$subsample_ids]
       colnames(dist_matrix) <- rownames(x$distance_to_medoids)[x$subsample_ids]
@@ -914,14 +974,14 @@ clara_silhouette <- function(x, data,
     plot$plot <- fviz_silhouette(sil, print.summary = FALSE) + theme_minimal() +
       theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
     
-    # Prepare silhouette table for each cluster:
+    # prepare silhouette table for each cluster
     plot$silhouette_table <- as.data.frame.matrix(sil) %>%
       group_by(cluster) %>%
       summarize(size = n(), sil_width = mean(sil_width)) %>%
       as.data.frame()
     colnames(plot$silhouette_table) <- c("Cluster", "Size", "Silhouette width")
     
-    # Overall silhouette width:
+    # overall silhouette width
     plot$average_silhouette_width <- mean(as.data.frame.matrix(sil)$sil_width)
   }
 

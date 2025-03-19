@@ -22,7 +22,7 @@ test_that("evaluate_cl_nums_clara", { # plot to select number of clusters
   expect_identical(dim(cc_number$data),
                    as.integer(c(5, 2)))
 
-  # compare result to manually calculated clustering result:
+  # compare result to manually calculated clustering result
   cc_hard <- fuzzyclara(data        = USArrests,
                         clusters    = 2,
                         metric      = "euclidean",
@@ -67,7 +67,7 @@ test_that("evaluate_cl_nums_clara", { # plot to select number of clusters
                          verbose     = 0)
   expect_identical(cluster_results[[1]], cc_fuzzy)
   
-  # results without plot and without scaling:
+  # results without plot and without scaling
   cc_results <- evaluate_cluster_numbers(
     data           = USArrests,
     clusters_range = 2:6,
@@ -163,7 +163,7 @@ test_that("plot_cl_nums", { # plot to select number of clusters
   expect_s3_class(cc_plot, "ggplot")
   expect_s3_class(cc_plot$layers[[1]]$geom, "GeomLine")
   
-  # check with given cluster range:
+  # check with given cluster range
   cc_plot <- plot_cluster_numbers(cluster_results = cc_number,
                                   clusters_range = 2:6)
   expect_s3_class(cc_plot, "ggplot")

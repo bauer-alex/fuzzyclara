@@ -35,7 +35,3 @@ print.fuzzyclara <- function(x, ...) {
     print(x$membership_scores)
   }
 }
-
-
-
-

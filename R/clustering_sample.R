@@ -20,16 +20,24 @@
 #'
 #' @import checkmate cluster dplyr
 #'
-clustering_sample <- function(data, sample_ids, dist, clusters = 5,
-                              metric = "euclidean", sample_size = NULL,
-                              type = "hard", seed = 1234, m = 1.5, verbose = 1,
-                              verbose_toLogFile = FALSE, build = FALSE, ...) {
+clustering_sample <- function(data, 
+                              sample_ids,
+                              dist,
+                              clusters          = 5,
+                              metric            = "euclidean",
+                              sample_size       = NULL,
+                              type              = "hard",
+                              seed              = 1234,
+                              m                 = 1.5,
+                              verbose           = 1,
+                              verbose_toLogFile = FALSE,
+                              build             = FALSE,
+                              ...) {
   
-  # Set a seed for random initialization in vegclust:
+  # set a seed for random initialization in vegclust
   set.seed(seed)
 
   checkmate::assert_data_frame(data)
-  # TODO how to check 'sample_ids'?
   checkmate::assert_vector(clusters)
   checkmate::assert_number(sample_size, null.ok = TRUE)
   if (!is.null(sample_size)) {
@@ -41,45 +49,47 @@ clustering_sample <- function(data, sample_ids, dist, clusters = 5,
   checkmate::assert_logical(verbose_toLogFile, len = 1)
   checkmate::assert_logical(build, len = 1)
 
-  # Reduction of data to sample observations:
+  # reduction of data to sample observations
   data_sample <- data %>% dplyr::slice(sample_ids)
 
-  # Clustering of data sample:
+  # clustering of data sample
   if (verbose >= 2) {
     print_logMessage("Perform the main clustering step...",
                      verbose_toLogFile = verbose_toLogFile)
   }
-  clustering_results_sample <- perform_sample_clustering(dist = dist,
-                                                         data = data_sample,
+  clustering_results_sample <- perform_sample_clustering(dist     = dist,
+                                                         data     = data_sample,
                                                          clusters = clusters,
-                                                         type = type,
-                                                         metric = metric,
-                                                         names = data_sample$Name,
-                                                         m = m, build = build,
+                                                         type     = type,
+                                                         metric   = metric,
+                                                         names    = data_sample$Name,
+                                                         m        = m,
+                                                         build    = build,
                                                          ...)
 
-  # Assignment of each observations of the entire dataset to closest medoid
-  # and additional information on clustering:
+  # assignment of each observations of the entire dataset to closest medoid
+  # and additional information on clustering
   if (verbose >= 2) {
     print_logMessage("Assigning each observation to a cluster...",
                      verbose_toLogFile = verbose_toLogFile)
   }
-  clustering_results <- assign_cluster(data = data,
+  clustering_results <- assign_cluster(data    = data,
                                        medoids = clustering_results_sample$medoid,
-                                       metric = metric,
-                                       type = type,
-                                       m = m)
+                                       metric  = metric,
+                                       type    = type,
+                                       m       = m)
 
-  # Add information about subsample, distance matrix, clustering of subsample
-  # for silhouette plot:
+  # add information about subsample, distance matrix, clustering of subsample
+  # for silhouette plot
   clustering_results[["subsample_ids"]] <- sample_ids
-  clustering_results[["dist_matrix"]] <- dist
+  clustering_results[["dist_matrix"]]   <- dist
   clustering_results[["subsample_clustering"]] <- clustering_results[["clustering"]][sample_ids]
 
 
-  # Return of clustering results:
+  # return of clustering results
   return(clustering_results)
 }
+
 
 
 #' Compute the dissimilarity matrix for a data sample
@@ -94,21 +104,23 @@ clustering_sample <- function(data, sample_ids, dist, clusters = 5,
 #'
 #' @import checkmate proxy
 #'
-compute_distance_matrix <- function(data, sample_ids, metric = "euclidean") {
+compute_distance_matrix <- function(data,
+                                    sample_ids,
+                                    metric = "euclidean") {
 
   checkmate::assert_data_frame(data)
 
   
-  # Some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2:
+  # some NULL definitions to appease CRAN checks regarding use of dplyr/ggplot2
   Name <- NULL
   
-  # Reduction of data to sample observations:
+  # reduction of data to sample observations
   data <- data %>% dplyr::slice(sample_ids)
 
-  # Deletion of column "Name":
+  # deletion of column "Name"
   data <- data %>% dplyr::select(-Name)
 
-  # Calculation of dissimilarity matrix:
+  # calculation of dissimilarity matrix
   distance <- proxy::dist(data, method = metric)
 
   if(!(sum(is.na(distance)) + sum(is.infinite(distance)) == 0)){
@@ -119,10 +131,11 @@ compute_distance_matrix <- function(data, sample_ids, metric = "euclidean") {
 }
 
 
+
 #' Perform pam or vegclust clustering on a data sample
 #'
 #' Function to perform pam in a hard or fuzzy way on a data sample
-
+#' 
 #' @inheritParams fuzzyclara
 #' @param dist Dissimilarity matrix
 #' @param data Data sample
@@ -142,9 +155,16 @@ compute_distance_matrix <- function(data, sample_ids, metric = "euclidean") {
 #'
 #' @import checkmate cluster vegclust
 #'
-perform_sample_clustering <- function(dist, data, clusters, type, metric,
-                                      names, m = 2, build = FALSE,
-                                      verbose = 1, verbose_toLogFile = FALSE,
+perform_sample_clustering <- function(dist,
+                                      data,
+                                      clusters,
+                                      type,
+                                      metric,
+                                      names,
+                                      m                 = 2,
+                                      build             = FALSE,
+                                      verbose           = 1,
+                                      verbose_toLogFile = FALSE,
                                       ...) {
 
   checkmate::assert_class(dist, classes = "dist")
@@ -156,17 +176,17 @@ perform_sample_clustering <- function(dist, data, clusters, type, metric,
   checkmate::assert_choice(verbose, choices = 0:2)
   checkmate::assert_logical(verbose_toLogFile, len = 1)
 
-  # Hard pam clustering:
+  # hard pam clustering
   if (type == "hard") {
     pam_sample <- pam(x = dist, k = clusters, diss = TRUE, ...)
     medoids    <- as.character(pam_sample$medoids)
     clustering <- pam_sample$clustering
   }
 
-  # Fuzzy pam clustering:
+  # fuzzy pam clustering
   if (type == "fuzzy") {
 
-    # Additional build algorithm if specified:
+    # additional build algorithm if specified
     if (build == TRUE) {
 
       dist <- as.matrix(dist)
@@ -176,13 +196,13 @@ perform_sample_clustering <- function(dist, data, clusters, type, metric,
                          verbose_toLogFile = verbose_toLogFile)
       }
 
-      # Select first medoid as the one which has the smallest cost
+      # select first medoid as the one which has the smallest cost
       starting_medoids    <- c()
       starting_medoids[1] <- names[which.min(rowSums(dist))]
 
-      # Select other medoids according to minimal costs:
+      # select other medoids according to minimal costs
       for (i in 2:clusters) {
-        # Search for cost-minimizing next medoid:
+        # search for cost-minimizing next medoid
         non_medoids <- names[!names %in% starting_medoids]
         costs <- lapply(X = non_medoids, FUN = function(non_medoid) {
           medoids <- c(starting_medoids, non_medoid)
@@ -197,8 +217,8 @@ perform_sample_clustering <- function(dist, data, clusters, type, metric,
         starting_medoids <- c(starting_medoids, non_medoids[which.min(costs)])
       }
 
-      starting_medoids <- which(names %in% starting_medoids)
-      dist <- proxy::as.dist(dist)
+      starting_medoids             <- which(names %in% starting_medoids)
+      dist                         <- proxy::as.dist(dist)
       attributes(dist)[["Labels"]] <- as.character(1:nrow(data))
       fuzzy_sample <- vegclustdist(x          = dist,
                                    mobileMemb = starting_medoids,
@@ -222,7 +242,7 @@ perform_sample_clustering <- function(dist, data, clusters, type, metric,
     clustering       <- as.numeric(clustering_df)
   }
 
-  # Return clustering information:
+  # return clustering information
   clustering_result <- list("medoids"    = medoids,
                             "clustering" = clustering)
   return(clustering_result)

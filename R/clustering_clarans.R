@@ -20,10 +20,17 @@
 #'
 #' @references TODO add CLARANS paper
 #'
-clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
-                               type = "hard", num_local = 5,
-                               max_neighbors = 100, cores = 1, seed = 1234,
-                               m = 1.5, verbose = 1, ...) {
+clustering_clarans <- function(data,
+                               clusters      = 5,
+                               metric        = "euclidean",
+                               type          = "hard",
+                               num_local     = 5,
+                               max_neighbors = 100,
+                               cores         = 1, 
+                               seed          = 1234,
+                               m             = 1.5,
+                               verbose       = 1,
+                               ...) {
 
   checkmate::assert_data_frame(data)
   checkmate::assert_vector(clusters)
@@ -35,15 +42,15 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
   checkmate::assert_number(m, lower = 1)
   checkmate::assert_choice(verbose, choices = 0:2)
 
-  # Setting a seed for random processes:
+  # setting a seed for random processes
   set.seed(seed)
 
-  # Adding row.names to column:
+  # adding row.names to column
   data <- data %>% tibble::rownames_to_column(var = "Name")
   row.names(data) <- data$Name
 
-  # Randomly draw pairs of medoids and non-medoids as well as starting medoids
-  # for each local iteration:
+  # randomly draw pairs of medoids and non-medoids as well as starting medoids
+  # for each local iteration
   samples_local <- lapply(X = 1:num_local, FUN = function(i) {
     samples_cluster <- lapply(X = seq_along(clusters), FUN = function(j) {
       sample_med       <- sample(x       = 1:clusters[j],
@@ -62,20 +69,23 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
     })
     return(samples_cluster)
   })
-  # Sample definition is performed before parallelized computations in order
+  # sample definition is performed before parallelized computations in order
   # to get reproducible results.
 
 
-  # Calculation of clustering results for each iteration (local minimum):
+  # calculation of clustering results for each iteration (local minimum)
   if (cores == 1) { # single core
     clustering_results_list <- lapply(X = 1:num_local, FUN = function(i) {
       if (verbose >= 1) { message("--- Performing calculations for local iteration ", i) }
       clustering_numbers_list <- lapply(X = seq_along(clusters), FUN = function(j) {
-        clustering <- clustering_local(data = data,
-                                       sample_local = samples_local[[i]][[j]],
-                                       clusters = clusters[j], metric = metric,
-                                       m = m, max_neighbors = max_neighbors,
-                                       type = type, verbose = verbose,
+        clustering <- clustering_local(data              = data,
+                                       sample_local      = samples_local[[i]][[j]],
+                                       clusters          = clusters[j],
+                                       metric            = metric,
+                                       m                 = m,
+                                       max_neighbors     = max_neighbors,
+                                       type              = type,
+                                       verbose           = verbose,
                                        verbose_toLogFile = TRUE)
         return(clustering)
       })
@@ -87,7 +97,7 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
     print_logMessage(paste0("Run clustering on ", cores, " cores."),
                      verbose_toLogFile = TRUE, reset_logFile = TRUE)
 
-    # Windows:
+    # Windows
     if (Sys.info()['sysname'] == "Windows") {
 
       local_cluster <- makePSOCKcluster(rep("localhost", cores))
@@ -103,10 +113,14 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
                                                                 verbose_toLogFile = TRUE)
                                              }
                                              clustering_numbers_list <- lapply(X = seq_along(clusters), FUN = function(j) {
-                                               clustering <- clustering_local(data = data, sample_local = samples_local[[i]][[j]],
-                                                                              clusters = clusters[j], metric = metric,
-                                                                              m = m, max_neighbors = max_neighbors,
-                                                                              type = type, verbose = verbose,
+                                               clustering <- clustering_local(data              = data,
+                                                                              sample_local      = samples_local[[i]][[j]],
+                                                                              clusters          = clusters[j],
+                                                                              metric            = metric,
+                                                                              m                 = m,
+                                                                              max_neighbors     = max_neighbors,
+                                                                              type              = type,
+                                                                              verbose           = verbose,
                                                                               verbose_toLogFile = TRUE)
                                                return(clustering)
                                              })
@@ -122,11 +136,14 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
                            verbose_toLogFile = TRUE)
         }
         clustering_numbers_list <- lapply(X = seq_along(clusters), FUN = function(j) {
-          clustering <- clustering_local(data = data,
-                                         sample_local = samples_local[[i]][[j]],
-                                         clusters = clusters[j], metric = metric,
-                                         m = m, max_neighbors = max_neighbors,
-                                         type = type, verbose = verbose,
+          clustering <- clustering_local(data              = data,
+                                         sample_local      = samples_local[[i]][[j]],
+                                         clusters          = clusters[j],
+                                         metric            = metric,
+                                         m                 = m, 
+                                         max_neighbors     = max_neighbors,
+                                         type              = type,
+                                         verbose           = verbose,
                                          verbose_toLogFile = TRUE)
           return(clustering)
          })
@@ -135,11 +152,11 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
     }
   }
 
-  # Return of results list for all numbers of clusters:
+  # return of results list for all numbers of clusters
   results_list <- lapply(X = seq_along(clusters), FUN = function(j) {
 
-    # Selection of best clustering solution (according to smallest average
-    # distance to closest cluster medoid):
+    # selection of best clustering solution (according to smallest average
+    # distance to closest cluster medoid)
     min_distance_list <- lapply(X = 1:num_local, FUN = function(i) {
       if (type == "hard") {
         dist <- clustering_results_list[[i]][[j]]$avg_min_dist
@@ -158,13 +175,13 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
     best_solution[["algorithm"]] <- "clarans"
     best_solution[["metric"]]    <- metric
 
-    # Return of clustering solution based on the best local iteration:
+    # return of clustering solution based on the best local iteration
     class(best_solution) <- c("fuzzyclara", class(best_solution))
 
     return(best_solution)
   })
 
-  # Change output format if only a single cluster is evaluated:
+  # change output format if only a single cluster is evaluated
   if (length(clusters) == 1) {
     results_list <- results_list[[1]]
   }
@@ -196,10 +213,16 @@ clustering_clarans <- function(data, clusters = 5, metric = "euclidean",
 #'
 #' @references TODO add CLARANS paper
 #'
-clustering_local <- function(data, sample_local, clusters = 5,
-                             metric = "euclidean", max_neighbors = 100,
-                             type = "hard", m = 1.5, verbose = 1,
-                             verbose_toLogFile = FALSE, ...) {
+clustering_local <- function(data,
+                             sample_local,
+                             clusters          = 5,
+                             metric            = "euclidean",
+                             max_neighbors     = 100,
+                             type              = "hard",
+                             m                 = 1.5,
+                             verbose           = 1,
+                             verbose_toLogFile = FALSE,
+                             ...) {
 
   checkmate::assert_data_frame(data)
   checkmate::assert_list(sample_local, len = 3)
@@ -209,7 +232,7 @@ clustering_local <- function(data, sample_local, clusters = 5,
   checkmate::assert_choice(verbose, choices = 0:2)
   checkmate::assert_logical(verbose_toLogFile, len = 1)
 
-  # Extract name of metric:
+  # extract name of metric
   if (inherits(metric, "function")) {
     name_metric <- deparse(substitute(metric))
 
@@ -217,30 +240,35 @@ clustering_local <- function(data, sample_local, clusters = 5,
     name_metric <- metric
   }
 
-  # Compute average distance for clustering based on starting medoids:
+  # compute average distance for clustering based on starting medoids
   medoids_current <- sample_local$start
-  cost_obj        <- assign_cluster(data = data, medoids = medoids_current,
-                                    metric = metric, type = type, m = m)
+  cost_obj        <- assign_cluster(data    = data,
+                                    medoids = medoids_current,
+                                    metric  = metric,
+                                    type    = type,
+                                    m       = m)
   cost_current    <- ifelse(type == "hard", cost_obj$avg_min_dist,
                             cost_obj$avg_weighted_dist) # for type == "fuzzy"
 
-  # Iterative swap of medoids and non-medoids:
+  # iterative swap of medoids and non-medoids
   neighbor <- 1
   while (neighbor <= max_neighbors) {
 
-    # Change medoid and non-medoid:
-    medoids <- medoids_current
-    med     <- sample_local$medoids[neighbor]
+    # change medoid and non-medoid
+    medoids     <- medoids_current
+    med         <- sample_local$medoids[neighbor]
     non_medoids <- data$Name[!data$Name %in% medoids]
-    non_med <- non_medoids[sample_local$non_medoids[neighbor]]
+    non_med     <- non_medoids[sample_local$non_medoids[neighbor]]
 
-      # Compute average distance based on new medoids:
+      # compute average distance based on new medoids
       medoids[med] <- non_med
 
-      # Change current local clustering solution if costs are lower:
-      cost_obj <- assign_cluster(data = data, medoids = medoids,
-                                 metric = metric, type = type,
-                                 m = m)
+      # change current local clustering solution if costs are lower
+      cost_obj <- assign_cluster(data    = data,
+                                 medoids = medoids,
+                                 metric  = metric,
+                                 type    = type,
+                                 m       = m)
       cost     <- ifelse(type == "hard", cost_obj$avg_min_dist,
                          cost_obj$avg_weighted_dist) # for type == "fuzzy"
 
@@ -252,17 +280,15 @@ clustering_local <- function(data, sample_local, clusters = 5,
       neighbor <- neighbor + 1
   }
 
-  # Create clustering output based on the best medoids:
-  clustering_results <- assign_cluster(data = data, medoids = medoids_current,
-                                       metric = metric, type = type,
-                                       m = m, return_data_medoids = TRUE,
-                                       return_distMatrix = TRUE)
+  # create clustering output based on the best medoids
+  clustering_results <- assign_cluster(data                = data, 
+                                       medoids             = medoids_current,
+                                       metric              = metric,
+                                       type                = type,
+                                       m                   = m, 
+                                       return_data_medoids = TRUE,
+                                       return_distMatrix   = TRUE)
 
   # Return of clustering results:
   return(clustering_results)
 }
-
-
-
-
-

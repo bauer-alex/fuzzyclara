@@ -5,14 +5,14 @@ test_that("fuzzyclara_hard_clara", { # hard CLARA clustering
   # hard clustering
   n_clusters <- 3
   cc_hard   <- fuzzyclara(data        = USArrests,
-                           clusters    = n_clusters,
-                           metric      = "euclidean",
-                           samples     = 1,
-                           sample_size = NULL,
-                           type        = "hard",
-                           seed        = 3526,
-                           verbose     = 0)
-
+                          clusters    = n_clusters,
+                          metric      = "euclidean",
+                          samples     = 1,
+                          sample_size = NULL,
+                          type        = "hard",
+                          seed        = 3526,
+                          verbose     = 0)
+  
   invisible(capture.output(print(cc_hard)))
 
   # check whole object
@@ -31,13 +31,13 @@ test_that("fuzzyclara_hard_clara", { # hard CLARA clustering
   # data as matrix
   n_clusters <- 3
   cc_hard   <- fuzzyclara(data        = as.matrix(USArrests),
-                           clusters    = n_clusters,
-                           metric      = "euclidean",
-                           samples     = 1,
-                           sample_size = NULL,
-                           type        = "hard",
-                           seed        = 3526,
-                           verbose     = 0)
+                          clusters    = n_clusters,
+                          metric      = "euclidean",
+                          samples     = 1,
+                          sample_size = NULL,
+                          type        = "hard",
+                          seed        = 3526,
+                          verbose     = 0)
 
   # check whole object
   expect_s3_class(cc_hard, "fuzzyclara")
@@ -63,15 +63,15 @@ test_that("fuzzyclara_hard_clarans", { # hard CLARANS clustering
   # hard clustering
   n_clusters <- 3
   cc_hard   <- fuzzyclara(data        = USArrests,
-                           clusters    = n_clusters,
-                           metric      = "euclidean",
-                           algorithm   = "clarans",
-                           num_local   = 2,
-                           max_neighbors = 20,
-                           type        = "hard",
-                           seed        = 3526,
-                           verbose     = 0)
-
+                          clusters    = n_clusters,
+                          metric      = "euclidean",
+                          algorithm   = "clarans",
+                          num_local   = 2,
+                          max_neighbors = 20,
+                          type        = "hard",
+                          seed        = 3526,
+                          verbose     = 0)
+  
   invisible(capture.output(print(cc_hard)))
 
   # check whole object
@@ -90,14 +90,14 @@ test_that("fuzzyclara_hard_clarans", { # hard CLARANS clustering
   # data as matrix
   n_clusters <- 3
   cc_hard   <- fuzzyclara(data        = as.matrix(USArrests),
-                           clusters    = n_clusters,
-                           metric      = "euclidean",
-                           algorithm   = "clarans",
-                           num_local   = 2,
-                           max_neighbors = 20,
-                           type        = "hard",
-                           seed        = 3526,
-                           verbose     = 2)
+                          clusters    = n_clusters,
+                          metric      = "euclidean",
+                          algorithm   = "clarans",
+                          num_local   = 2,
+                          max_neighbors = 20,
+                          type        = "hard",
+                          seed        = 3526,
+                          verbose     = 2)
 
   # check whole object
   expect_s3_class(cc_hard, "fuzzyclara")
@@ -118,7 +118,7 @@ test_that("fuzzyclara_fuzzy_clara", { # fuzzy clustering
                           samples     = 1,
                           sample_size = 20,
                           type        = "fuzzy",
-                          m = 3,
+                          m           = 3,
                           seed        = 3526,
                           verbose     = 0)
 
@@ -152,8 +152,8 @@ test_that("fuzzyclara_fuzzy_clara_build", { # fuzzy clustering with build algori
                           samples     = 1,
                           sample_size = NULL,
                           type        = "fuzzy",
-                          m = 3,
-                          build = TRUE,
+                          m           = 3,
+                          build       = TRUE,
                           seed        = 3526,
                           verbose     = 2)
 
@@ -181,16 +181,16 @@ test_that("fuzzyclara_fuzzy_clarans", { # fuzzy clustering
 
   # fuzzy clustering
   n_clusters <- 3
-  cc_fuzzy  <- fuzzyclara(data        = USArrests,
-                          clusters    = n_clusters,
-                          metric      = "euclidean",
-                          algorithm   = "clarans",
-                          num_local   = 2,
+  cc_fuzzy  <- fuzzyclara(data          = USArrests,
+                          clusters      = n_clusters,
+                          metric        = "euclidean",
+                          algorithm     = "clarans",
+                          num_local     = 2,
                           max_neighbors = 20,
-                          type        = "fuzzy",
-                          m = 3,
-                          seed        = 3526,
-                          verbose     = 2)
+                          type          = "fuzzy",
+                          m             = 3,
+                          seed          = 3526,
+                          verbose       = 2)
 
   invisible(capture.output(print(cc_fuzzy)))
 
