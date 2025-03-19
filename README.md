@@ -52,8 +52,9 @@ suggestions for additional functionalities please open a [GitHub
 issue](https://github.com/bauer-alex/fuzzyclara/issues). Alternatively,
 feel free to contact us directly [via email](mailto:baueralexander@posteo.de).
 
-Contributions (via pull requests or otherwise) are welcome. Before you
-open a pull request or share your updates with us, please make sure that
+Contributions (via pull requests or otherwise) are welcome.
+Please adhere to the [Advanced R style guide](http://adv-r.had.co.nz/Style.html) when contributing code.
+Before you open a pull request or share your updates with us, please make sure that
 all unit tests pass without errors or warning messages. You can run the
 unit tests by calling
 
