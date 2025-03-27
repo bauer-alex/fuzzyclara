@@ -23,7 +23,8 @@
 #'
 #' @import cluster parallel checkmate tibble dplyr tidyselect
 #'
-#' @references TODO add CLARA paper
+#' @references Kaufman, L., and Rousseeuw, P. J. (1986). Clustering large data sets.
+#' \emph{Pattern Recognition in Practice}, 425--437.
 #'
 clustering_clara <- function(data, 
                              clusters    = 5,

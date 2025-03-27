@@ -158,5 +158,10 @@ cc_mink
 
 }
 \references{
-TODO add CLARA and CLARANS papers, and maybe something else?
+Kaufman, L., and Rousseeuw, P. J. (1986). Clustering large data sets.
+\emph{Pattern Recognition in Practice}, 425--437.
+
+Ng, R. T., and Han, J. (2002). CLARANS: A method for clustering
+objects for spatial data mining. \emph{IEEE transactions on knowledge and data engineering},
+14(5), 1003--1016. \doi{10.1109/tkde.2002.1033770}.
 }

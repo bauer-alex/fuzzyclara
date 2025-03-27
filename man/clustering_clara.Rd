@@ -71,5 +71,6 @@ If the clustering is run on mulitple cores, the verbose messages are printed
 in a file \code{clustering_progress.log} (if \code{verbose > 0}).
 }
 \references{
-TODO add CLARA paper
+Kaufman, L., and Rousseeuw, P. J. (1986). Clustering large data sets.
+\emph{Pattern Recognition in Practice}, 425--437.
 }

@@ -18,7 +18,9 @@
 #'
 #' @import checkmate cluster dplyr parallel tibble tidyselect
 #'
-#' @references TODO add CLARANS paper
+#' @references Ng, R. T., and Han, J. (2002). CLARANS: A method for clustering
+#' objects for spatial data mining. \emph{IEEE transactions on knowledge and data engineering},
+#' 14(5), 1003--1016. \doi{10.1109/tkde.2002.1033770}.
 #'
 clustering_clarans <- function(data,
                                clusters      = 5,
@@ -211,7 +213,9 @@ clustering_clarans <- function(data,
 #'
 #' @import checkmate cluster dplyr
 #'
-#' @references TODO add CLARANS paper
+#' @references Ng, R. T., and Han, J. (2002). CLARANS: A method for clustering
+#' objects for spatial data mining. \emph{IEEE transactions on knowledge and data engineering},
+#' 14(5), 1003--1016. \doi{10.1109/tkde.2002.1033770}.
 #'
 clustering_local <- function(data,
                              sample_local,
