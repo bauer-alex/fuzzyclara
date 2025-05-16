@@ -56,7 +56,7 @@ scaling quadratically ($O(n^2)$) in terms of runtime and memory usage.
 Sampling-based algorithms like CLARA [@kaufman_rousseew_1986] or
 CLARANS [@ng_han_2002] allow for a more efficient estimation in such situations.
 Second, PAM is a hard clustering algorithm where each observation is assigned to a single cluster.
-This assumption is often not resembling reality when observations share
+This assumption often does not resemble reality when observations share
 characteristics of several *typical* clusters.
 Such structures are taken into account by *fuzzy clustering* methods, which
 compute membership scores for each observation to every cluster.
@@ -148,7 +148,7 @@ characteristics of several tourist types, we use the fuzzy version with a
 membership exponent of $m = 1.5$. The elbow criterion (see \autoref{fig:elbow})
 suggests the use of a five cluster solution.
 
-![Elbow plot of clustering solutions with 1 to 10 clusters, depicting the minial average weighted distance.\label{fig:elbow}](figures/travel_elbow.png)
+![Elbow plot of clustering solutions with 1 to 10 clusters, depicting the minimal average weighted distance.\label{fig:elbow}](figures/travel_elbow.png)
 
 \autoref{fig:parcoord} highlights the characteristics of the different clusters.
 While clusters 1 and 3 show a tendency to trips of shorter length, lower
