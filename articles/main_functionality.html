@@ -58,7 +58,7 @@
                         <h4 data-toc-skip class="author">Maximilian
 Weigert, Asmik Nalmpatian, Jana Gauss, Alexander Bauer</h4>
             
-            <h4 data-toc-skip class="date">16.May 2025</h4>
+            <h4 data-toc-skip class="date">20.May 2025</h4>
       
 
       <div class="d-none name"><code>main_functionality.Rmd</code></div>
@@ -67,8 +67,37 @@ Weigert, Asmik Nalmpatian, Jana Gauss, Alexander Bauer</h4>
     
     
 <p>This document gives an overview of the functionality provided by the
-R package <code>fuzzyclara</code>.</p>
+R package <code>fuzzyclara</code>. All examples are based on the dataset
+<code>USArrests</code> which lists four criminal statistics for each
+federal state in the U.S. in 1973:</p>
+<ul>
+<li>column <code>Murder</code> contains the number of murder arrests per
+100,000 inhabitants</li>
+<li>column <code>Assault</code> contains the number of assault arrests
+per 100,000 inhabitants</li>
+<li>column <code>UrbanPop</code> contains the percentage of the
+population living in urban areas</li>
+<li>column <code>Rape</code> contains the number of rape arrests per
+100,000 inhabitants</li>
+</ul>
+<p>Exemplarily, let’s take a quick look at the first rows of
+<code>USArrests</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">USArrests</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##            Murder Assault UrbanPop Rape</span></span>
+<span><span class="co">## Alabama      13.2     236       58 21.2</span></span>
+<span><span class="co">## Alaska       10.0     263       48 44.5</span></span>
+<span><span class="co">## Arizona       8.1     294       80 31.0</span></span>
+<span><span class="co">## Arkansas      8.8     190       50 19.5</span></span>
+<span><span class="co">## California    9.0     276       91 40.6</span></span>
+<span><span class="co">## Colorado      7.9     204       78 38.7</span></span></code></pre>
+<p>Based on these four dimensions we will try to cluster the federal
+states into homogeneous groups throughout all of the examples in this
+vignette.</p>
+<p>For starting the analyses, let’s first load the
+<code>fuzzyclara</code> package, and additionally the <code>dplyr</code>
+package for general data handling.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bauer-alex.github.io/fuzzyclara/" class="external-link">fuzzyclara</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
@@ -77,16 +106,28 @@ R package <code>fuzzyclara</code>.</p>
 <div class="section level3">
 <h3 id="hard-clustering">Hard clustering<a class="anchor" aria-label="anchor" href="#hard-clustering"></a>
 </h3>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<p>Applying function <code>fuzzyclara</code> with argument
+<code>type = "hard"</code> allows us to perform a hard clustering of the
+federal states utilizing the CLARA clustering algorithm. In this
+example, let’s compute a cluster solution with 3 clusters based on the
+euclidean distance metric.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cc_hard</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fuzzyclara.html">fuzzyclara</a></span><span class="op">(</span>data        <span class="op">=</span> <span class="va">USArrests</span>,</span>
 <span>                      clusters    <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>                      metric      <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
-<span>                      samples     <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                      sample_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>                      type        <span class="op">=</span> <span class="st">"hard"</span>,</span>
 <span>                      seed        <span class="op">=</span> <span class="fl">3526</span>,</span>
-<span>                      verbose     <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
-<span><span class="va">cc_hard</span></span></code></pre></div>
+<span>                      verbose     <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
+<p>The output object contains the <code>Medoids</code> – i.e., the most
+central / most <em>typical</em> observation for each of the three
+clusters –, the <code>Clustering</code> vector specifying for each
+observation which cluster it belongs to, and the
+<code>Minimum average distance</code>, which is defined as the average
+distance between each observation to its cluster, with
+<code>Minimum</code> referring to this average distance value of the
+outputted optimal cluster solution.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cc_hard</span></span></code></pre></div>
 <pre><code><span><span class="co">## Clustering results</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Medoids</span></span>
@@ -102,96 +143,108 @@ R package <code>fuzzyclara</code>.</p>
 <div class="section level3">
 <h3 id="fuzzy-clustering">Fuzzy clustering<a class="anchor" aria-label="anchor" href="#fuzzy-clustering"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<p>Alternatively, it is possible to perform a fuzzy clustering by
+setting <code>type = "fuzzy"</code>. Additionally, the <em>fuzziness
+parameter</em> <code>m</code> could be set to any value between 1 and 2.
+2, i.e. the default value, encodes full fuzzyness, and 1 encodes no
+fuzziness at all, i.e. a hard clustering.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cc_fuzzy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fuzzyclara.html">fuzzyclara</a></span><span class="op">(</span>data        <span class="op">=</span> <span class="va">USArrests</span>,</span>
 <span>                       clusters    <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>                       metric      <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
-<span>                       samples     <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                       sample_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>                       type        <span class="op">=</span> <span class="st">"fuzzy"</span>,</span>
 <span>                       m           <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                       seed        <span class="op">=</span> <span class="fl">3526</span>,</span>
-<span>                       verbose     <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
-<span><span class="va">cc_fuzzy</span></span></code></pre></div>
+<span>                       verbose     <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
+<p>The output contains the same elements as the hard clustering output
+above. Additionally it includes a matrix of the
+<code>Membership scores</code>. For each federal state this matrix
+contains the membership probabilities to the three different
+clusters.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cc_fuzzy</span></span></code></pre></div>
 <pre><code><span><span class="co">## Clustering results</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Medoids</span></span>
-<span><span class="co">## [1] "Oklahoma"  "Arizona"   "Tennessee"</span></span>
+<span><span class="co">## [1] "Tennessee" "Kansas"    "Oklahoma" </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Clustering</span></span>
-<span><span class="co">##  [1] 3 3 1 2 1 1 2 2 1 3 2 2 1 2 2 2 2 3 2 1 2 1 2 3 2 2 2 1 2 2 1 1 3 2 2 2 2 2</span></span>
-<span><span class="co">## [39] 2 3 2 3 3 2 2 2 2 2 2 2</span></span>
+<span><span class="co">##  [1] 3 3 2 2 3 3 1 2 3 3 1 1 2 1 1 1 1 3 1 3 2 3 1 3 2 1 1 3 1 2 3 3 3 1 2 2 2 1</span></span>
+<span><span class="co">## [39] 2 3 1 3 3 2 1 2 2 1 1 2</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Minimum average weighted distance</span></span>
-<span><span class="co">## [1] 1.94242</span></span>
+<span><span class="co">## [1] 1.803336</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Membership scores</span></span>
 <span><span class="co">##                 Cluster1  Cluster2  Cluster3</span></span>
-<span><span class="co">## Alabama        0.2040878 0.2391714 0.5567409</span></span>
-<span><span class="co">## Alaska         0.3373655 0.2726496 0.3899849</span></span>
-<span><span class="co">## Arizona        1.0000000 0.0000000 0.0000000</span></span>
-<span><span class="co">## Arkansas       0.2075892 0.3966215 0.3957893</span></span>
-<span><span class="co">## California     0.5401685 0.2248051 0.2350264</span></span>
-<span><span class="co">## Colorado       0.4475538 0.2744007 0.2780455</span></span>
-<span><span class="co">## Connecticut    0.2348136 0.5280016 0.2371848</span></span>
-<span><span class="co">## Delaware       0.2906227 0.4701428 0.2392345</span></span>
-<span><span class="co">## Florida        0.4443412 0.2316682 0.3239905</span></span>
-<span><span class="co">## Georgia        0.2091524 0.2149396 0.5759081</span></span>
-<span><span class="co">## Hawaii         0.2482766 0.4883161 0.2634073</span></span>
-<span><span class="co">## Idaho          0.2209589 0.5129169 0.2661242</span></span>
-<span><span class="co">## Illinois       0.4666698 0.2739684 0.2593617</span></span>
-<span><span class="co">## Indiana        0.1344369 0.6694262 0.1961369</span></span>
-<span><span class="co">## Iowa           0.2311216 0.4905457 0.2783327</span></span>
-<span><span class="co">## Kansas         0.1310680 0.6999444 0.1689876</span></span>
-<span><span class="co">## Kentucky       0.1917648 0.4401893 0.3680459</span></span>
-<span><span class="co">## Louisiana      0.2560625 0.2412981 0.5026393</span></span>
-<span><span class="co">## Maine          0.2396947 0.4695769 0.2907285</span></span>
-<span><span class="co">## Maryland       0.4281216 0.2306369 0.3412416</span></span>
-<span><span class="co">## Massachusetts  0.2682437 0.5043343 0.2274220</span></span>
-<span><span class="co">## Michigan       0.4467571 0.2192029 0.3340400</span></span>
-<span><span class="co">## Minnesota      0.2158369 0.5379562 0.2462069</span></span>
-<span><span class="co">## Mississippi    0.2484292 0.2817416 0.4698292</span></span>
-<span><span class="co">## Missouri       0.2669546 0.3898602 0.3431852</span></span>
-<span><span class="co">## Montana        0.1922866 0.5233027 0.2844107</span></span>
-<span><span class="co">## Nebraska       0.1814854 0.5935543 0.2249603</span></span>
-<span><span class="co">## Nevada         0.4372644 0.2469118 0.3158237</span></span>
-<span><span class="co">## New Hampshire  0.2351771 0.4821286 0.2826942</span></span>
-<span><span class="co">## New Jersey     0.3025875 0.4474846 0.2499279</span></span>
-<span><span class="co">## New Mexico     0.4736616 0.2098122 0.3165261</span></span>
-<span><span class="co">## New York       0.4959333 0.2489337 0.2551329</span></span>
-<span><span class="co">## North Carolina 0.2984813 0.2995500 0.4019686</span></span>
-<span><span class="co">## North Dakota   0.2525175 0.4409055 0.3065770</span></span>
-<span><span class="co">## Ohio           0.1722044 0.6264071 0.2013885</span></span>
+<span><span class="co">## Alabama        0.2040460 0.2391839 0.5567701</span></span>
+<span><span class="co">## Alaska         0.2719599 0.2995615 0.4284785</span></span>
+<span><span class="co">## Arizona        0.2912537 0.3570246 0.3517217</span></span>
+<span><span class="co">## Arkansas       0.3117482 0.3444874 0.3437645</span></span>
+<span><span class="co">## California     0.2991169 0.3426518 0.3582313</span></span>
+<span><span class="co">## Colorado       0.2962308 0.3495630 0.3542062</span></span>
+<span><span class="co">## Connecticut    0.4491401 0.3801099 0.1707500</span></span>
+<span><span class="co">## Delaware       0.3352479 0.4405673 0.2241849</span></span>
+<span><span class="co">## Florida        0.2669007 0.3056477 0.4274516</span></span>
+<span><span class="co">## Georgia        0.1968660 0.2182788 0.5848552</span></span>
+<span><span class="co">## Hawaii         0.4237938 0.3743009 0.2019053</span></span>
+<span><span class="co">## Idaho          0.4520930 0.3607393 0.1871677</span></span>
+<span><span class="co">## Illinois       0.2896688 0.3648928 0.3454384</span></span>
+<span><span class="co">## Indiana        0.4889041 0.3952814 0.1158145</span></span>
+<span><span class="co">## Iowa           0.4570114 0.3464276 0.1965610</span></span>
+<span><span class="co">## Kansas         1.0000000 0.0000000 0.0000000</span></span>
+<span><span class="co">## Kentucky       0.3795356 0.3379237 0.2825408</span></span>
+<span><span class="co">## Louisiana      0.2186218 0.2534421 0.5279361</span></span>
+<span><span class="co">## Maine          0.4305496 0.3517018 0.2177486</span></span>
+<span><span class="co">## Maryland       0.2487187 0.3029895 0.4482918</span></span>
+<span><span class="co">## Massachusetts  0.3913847 0.4194642 0.1891511</span></span>
+<span><span class="co">## Michigan       0.2493973 0.2973997 0.4532030</span></span>
+<span><span class="co">## Minnesota      0.4998620 0.3431076 0.1570304</span></span>
+<span><span class="co">## Mississippi    0.2589493 0.2777979 0.4632528</span></span>
+<span><span class="co">## Missouri       0.2766903 0.3846825 0.3386273</span></span>
+<span><span class="co">## Montana        0.4634338 0.3476314 0.1889348</span></span>
+<span><span class="co">## Nebraska       0.5706268 0.3113644 0.1180088</span></span>
+<span><span class="co">## Nevada         0.2804828 0.3157030 0.4038142</span></span>
+<span><span class="co">## New Hampshire  0.4478725 0.3480498 0.2040777</span></span>
+<span><span class="co">## New Jersey     0.3560591 0.4131753 0.2307656</span></span>
+<span><span class="co">## New Mexico     0.2477356 0.2998723 0.4523921</span></span>
+<span><span class="co">## New York       0.2879315 0.3516556 0.3604129</span></span>
+<span><span class="co">## North Carolina 0.2803112 0.3073087 0.4123801</span></span>
+<span><span class="co">## North Dakota   0.4100544 0.3479818 0.2419639</span></span>
+<span><span class="co">## Ohio           0.3856241 0.4649088 0.1494671</span></span>
 <span><span class="co">## Oklahoma       0.0000000 1.0000000 0.0000000</span></span>
-<span><span class="co">## Oregon         0.2597840 0.4842455 0.2559705</span></span>
-<span><span class="co">## Pennsylvania   0.1733916 0.6187011 0.2079073</span></span>
-<span><span class="co">## Rhode Island   0.2938264 0.4548769 0.2512968</span></span>
-<span><span class="co">## South Carolina 0.2521289 0.2569116 0.4909595</span></span>
-<span><span class="co">## South Dakota   0.2294820 0.4627901 0.3077278</span></span>
+<span><span class="co">## Oregon         0.3433985 0.4295453 0.2270562</span></span>
+<span><span class="co">## Pennsylvania   0.5287534 0.3527194 0.1185273</span></span>
+<span><span class="co">## Rhode Island   0.3877163 0.3943983 0.2178854</span></span>
+<span><span class="co">## South Carolina 0.2356506 0.2625723 0.5017771</span></span>
+<span><span class="co">## South Dakota   0.4224678 0.3468786 0.2306536</span></span>
 <span><span class="co">## Tennessee      0.0000000 0.0000000 1.0000000</span></span>
-<span><span class="co">## Texas          0.3315450 0.2977964 0.3706587</span></span>
-<span><span class="co">## Utah           0.2550652 0.5204090 0.2245258</span></span>
-<span><span class="co">## Vermont        0.2537642 0.4173744 0.3288614</span></span>
-<span><span class="co">## Virginia       0.1470128 0.6016305 0.2513568</span></span>
-<span><span class="co">## Washington     0.2420740 0.5403595 0.2175666</span></span>
-<span><span class="co">## West Virginia  0.2356115 0.4301945 0.3341939</span></span>
-<span><span class="co">## Wisconsin      0.2298126 0.5057011 0.2644864</span></span>
-<span><span class="co">## Wyoming        0.1652925 0.6041126 0.2305949</span></span></code></pre>
+<span><span class="co">## Texas          0.2671642 0.3264780 0.4063578</span></span>
+<span><span class="co">## Utah           0.4039993 0.4163641 0.1796366</span></span>
+<span><span class="co">## Vermont        0.3885133 0.3420083 0.2694783</span></span>
+<span><span class="co">## Virginia       0.3228721 0.4775930 0.1995348</span></span>
+<span><span class="co">## Washington     0.3711711 0.4483203 0.1805086</span></span>
+<span><span class="co">## West Virginia  0.3948646 0.3405676 0.2645678</span></span>
+<span><span class="co">## Wisconsin      0.4704313 0.3477120 0.1818566</span></span>
+<span><span class="co">## Wyoming        0.4126438 0.4250942 0.1622620</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="clustering-with-self-defined-distance-function-and-other-distance-functions">Clustering with self-defined distance function and other distance
 functions<a class="anchor" aria-label="anchor" href="#clustering-with-self-defined-distance-function-and-other-distance-functions"></a>
 </h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dist_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span></span>
+<p>It is possible to pass your own distance function to function
+<code>fuzzyclara</code> through the argument <code>metric</code>, as
+shown in the following example and as explained in
+<code><a href="../reference/fuzzyclara.html">?fuzzyclara</a></code>.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># define a quadratic distance function</span></span>
+<span><span class="va">dist_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">y</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">cc_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fuzzyclara.html">fuzzyclara</a></span><span class="op">(</span>data        <span class="op">=</span> <span class="va">USArrests</span>,</span>
 <span>                      clusters    <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>                      metric      <span class="op">=</span> <span class="va">dist_function</span>,</span>
-<span>                      samples     <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                      sample_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>                      type        <span class="op">=</span> <span class="st">"fuzzy"</span>,</span>
 <span>                      m           <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                      seed        <span class="op">=</span> <span class="fl">3526</span>,</span>
@@ -200,73 +253,74 @@ functions<a class="anchor" aria-label="anchor" href="#clustering-with-self-defin
 <pre><code><span><span class="co">## Clustering results</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Medoids</span></span>
-<span><span class="co">## [1] "Oklahoma"  "Arizona"   "Tennessee"</span></span>
+<span><span class="co">## [1] "Tennessee" "Kansas"    "Oklahoma" </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Clustering</span></span>
-<span><span class="co">##  [1] 3 3 1 2 1 1 2 2 1 3 2 2 1 2 2 2 2 3 2 1 2 1 2 3 2 2 2 1 2 2 1 1 3 2 2 2 2 2</span></span>
-<span><span class="co">## [39] 2 3 2 3 3 2 2 2 2 2 2 2</span></span>
+<span><span class="co">##  [1] 3 3 2 2 3 3 1 2 3 3 1 1 2 1 1 1 1 3 1 3 2 3 1 3 2 1 1 3 1 2 3 3 3 1 2 2 2 1</span></span>
+<span><span class="co">## [39] 2 3 1 3 3 2 1 2 2 1 1 2</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Minimum average weighted distance</span></span>
-<span><span class="co">## [1] 1.94242</span></span>
+<span><span class="co">## [1] 1.803336</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Membership scores</span></span>
 <span><span class="co">##                 Cluster1  Cluster2  Cluster3</span></span>
-<span><span class="co">## Alabama        0.2040878 0.2391714 0.5567409</span></span>
-<span><span class="co">## Alaska         0.3373655 0.2726496 0.3899849</span></span>
-<span><span class="co">## Arizona        1.0000000 0.0000000 0.0000000</span></span>
-<span><span class="co">## Arkansas       0.2075892 0.3966215 0.3957893</span></span>
-<span><span class="co">## California     0.5401685 0.2248051 0.2350264</span></span>
-<span><span class="co">## Colorado       0.4475538 0.2744007 0.2780455</span></span>
-<span><span class="co">## Connecticut    0.2348136 0.5280016 0.2371848</span></span>
-<span><span class="co">## Delaware       0.2906227 0.4701428 0.2392345</span></span>
-<span><span class="co">## Florida        0.4443412 0.2316682 0.3239905</span></span>
-<span><span class="co">## Georgia        0.2091524 0.2149396 0.5759081</span></span>
-<span><span class="co">## Hawaii         0.2482766 0.4883161 0.2634073</span></span>
-<span><span class="co">## Idaho          0.2209589 0.5129169 0.2661242</span></span>
-<span><span class="co">## Illinois       0.4666698 0.2739684 0.2593617</span></span>
-<span><span class="co">## Indiana        0.1344369 0.6694262 0.1961369</span></span>
-<span><span class="co">## Iowa           0.2311216 0.4905457 0.2783327</span></span>
-<span><span class="co">## Kansas         0.1310680 0.6999444 0.1689876</span></span>
-<span><span class="co">## Kentucky       0.1917648 0.4401893 0.3680459</span></span>
-<span><span class="co">## Louisiana      0.2560625 0.2412981 0.5026393</span></span>
-<span><span class="co">## Maine          0.2396947 0.4695769 0.2907285</span></span>
-<span><span class="co">## Maryland       0.4281216 0.2306369 0.3412416</span></span>
-<span><span class="co">## Massachusetts  0.2682437 0.5043343 0.2274220</span></span>
-<span><span class="co">## Michigan       0.4467571 0.2192029 0.3340400</span></span>
-<span><span class="co">## Minnesota      0.2158369 0.5379562 0.2462069</span></span>
-<span><span class="co">## Mississippi    0.2484292 0.2817416 0.4698292</span></span>
-<span><span class="co">## Missouri       0.2669546 0.3898602 0.3431852</span></span>
-<span><span class="co">## Montana        0.1922866 0.5233027 0.2844107</span></span>
-<span><span class="co">## Nebraska       0.1814854 0.5935543 0.2249603</span></span>
-<span><span class="co">## Nevada         0.4372644 0.2469118 0.3158237</span></span>
-<span><span class="co">## New Hampshire  0.2351771 0.4821286 0.2826942</span></span>
-<span><span class="co">## New Jersey     0.3025875 0.4474846 0.2499279</span></span>
-<span><span class="co">## New Mexico     0.4736616 0.2098122 0.3165261</span></span>
-<span><span class="co">## New York       0.4959333 0.2489337 0.2551329</span></span>
-<span><span class="co">## North Carolina 0.2984813 0.2995500 0.4019686</span></span>
-<span><span class="co">## North Dakota   0.2525175 0.4409055 0.3065770</span></span>
-<span><span class="co">## Ohio           0.1722044 0.6264071 0.2013885</span></span>
+<span><span class="co">## Alabama        0.2040460 0.2391839 0.5567701</span></span>
+<span><span class="co">## Alaska         0.2719599 0.2995615 0.4284785</span></span>
+<span><span class="co">## Arizona        0.2912537 0.3570246 0.3517217</span></span>
+<span><span class="co">## Arkansas       0.3117482 0.3444874 0.3437645</span></span>
+<span><span class="co">## California     0.2991169 0.3426518 0.3582313</span></span>
+<span><span class="co">## Colorado       0.2962308 0.3495630 0.3542062</span></span>
+<span><span class="co">## Connecticut    0.4491401 0.3801099 0.1707500</span></span>
+<span><span class="co">## Delaware       0.3352479 0.4405673 0.2241849</span></span>
+<span><span class="co">## Florida        0.2669007 0.3056477 0.4274516</span></span>
+<span><span class="co">## Georgia        0.1968660 0.2182788 0.5848552</span></span>
+<span><span class="co">## Hawaii         0.4237938 0.3743009 0.2019053</span></span>
+<span><span class="co">## Idaho          0.4520930 0.3607393 0.1871677</span></span>
+<span><span class="co">## Illinois       0.2896688 0.3648928 0.3454384</span></span>
+<span><span class="co">## Indiana        0.4889041 0.3952814 0.1158145</span></span>
+<span><span class="co">## Iowa           0.4570114 0.3464276 0.1965610</span></span>
+<span><span class="co">## Kansas         1.0000000 0.0000000 0.0000000</span></span>
+<span><span class="co">## Kentucky       0.3795356 0.3379237 0.2825408</span></span>
+<span><span class="co">## Louisiana      0.2186218 0.2534421 0.5279361</span></span>
+<span><span class="co">## Maine          0.4305496 0.3517018 0.2177486</span></span>
+<span><span class="co">## Maryland       0.2487187 0.3029895 0.4482918</span></span>
+<span><span class="co">## Massachusetts  0.3913847 0.4194642 0.1891511</span></span>
+<span><span class="co">## Michigan       0.2493973 0.2973997 0.4532030</span></span>
+<span><span class="co">## Minnesota      0.4998620 0.3431076 0.1570304</span></span>
+<span><span class="co">## Mississippi    0.2589493 0.2777979 0.4632528</span></span>
+<span><span class="co">## Missouri       0.2766903 0.3846825 0.3386273</span></span>
+<span><span class="co">## Montana        0.4634338 0.3476314 0.1889348</span></span>
+<span><span class="co">## Nebraska       0.5706268 0.3113644 0.1180088</span></span>
+<span><span class="co">## Nevada         0.2804828 0.3157030 0.4038142</span></span>
+<span><span class="co">## New Hampshire  0.4478725 0.3480498 0.2040777</span></span>
+<span><span class="co">## New Jersey     0.3560591 0.4131753 0.2307656</span></span>
+<span><span class="co">## New Mexico     0.2477356 0.2998723 0.4523921</span></span>
+<span><span class="co">## New York       0.2879315 0.3516556 0.3604129</span></span>
+<span><span class="co">## North Carolina 0.2803112 0.3073087 0.4123801</span></span>
+<span><span class="co">## North Dakota   0.4100544 0.3479818 0.2419639</span></span>
+<span><span class="co">## Ohio           0.3856241 0.4649088 0.1494671</span></span>
 <span><span class="co">## Oklahoma       0.0000000 1.0000000 0.0000000</span></span>
-<span><span class="co">## Oregon         0.2597840 0.4842455 0.2559705</span></span>
-<span><span class="co">## Pennsylvania   0.1733916 0.6187011 0.2079073</span></span>
-<span><span class="co">## Rhode Island   0.2938264 0.4548769 0.2512968</span></span>
-<span><span class="co">## South Carolina 0.2521289 0.2569116 0.4909595</span></span>
-<span><span class="co">## South Dakota   0.2294820 0.4627901 0.3077278</span></span>
+<span><span class="co">## Oregon         0.3433985 0.4295453 0.2270562</span></span>
+<span><span class="co">## Pennsylvania   0.5287534 0.3527194 0.1185273</span></span>
+<span><span class="co">## Rhode Island   0.3877163 0.3943983 0.2178854</span></span>
+<span><span class="co">## South Carolina 0.2356506 0.2625723 0.5017771</span></span>
+<span><span class="co">## South Dakota   0.4224678 0.3468786 0.2306536</span></span>
 <span><span class="co">## Tennessee      0.0000000 0.0000000 1.0000000</span></span>
-<span><span class="co">## Texas          0.3315450 0.2977964 0.3706587</span></span>
-<span><span class="co">## Utah           0.2550652 0.5204090 0.2245258</span></span>
-<span><span class="co">## Vermont        0.2537642 0.4173744 0.3288614</span></span>
-<span><span class="co">## Virginia       0.1470128 0.6016305 0.2513568</span></span>
-<span><span class="co">## Washington     0.2420740 0.5403595 0.2175666</span></span>
-<span><span class="co">## West Virginia  0.2356115 0.4301945 0.3341939</span></span>
-<span><span class="co">## Wisconsin      0.2298126 0.5057011 0.2644864</span></span>
-<span><span class="co">## Wyoming        0.1652925 0.6041126 0.2305949</span></span></code></pre>
-<p>You can also use other distance functions from the proxy package like
-Gower, Manhattan etc. In order to specify arguments of the distance
-metric (e. g. <em>p</em> for Minkowski distance), you can use a
+<span><span class="co">## Texas          0.2671642 0.3264780 0.4063578</span></span>
+<span><span class="co">## Utah           0.4039993 0.4163641 0.1796366</span></span>
+<span><span class="co">## Vermont        0.3885133 0.3420083 0.2694783</span></span>
+<span><span class="co">## Virginia       0.3228721 0.4775930 0.1995348</span></span>
+<span><span class="co">## Washington     0.3711711 0.4483203 0.1805086</span></span>
+<span><span class="co">## West Virginia  0.3948646 0.3405676 0.2645678</span></span>
+<span><span class="co">## Wisconsin      0.4704313 0.3477120 0.1818566</span></span>
+<span><span class="co">## Wyoming        0.4126438 0.4250942 0.1622620</span></span></code></pre>
+<p>You can also use other distance functions from the <code>proxy</code>
+package like Gower, Manhattan etc. In order to specify arguments of the
+distance metric (e. g. <em>p</em> for Minkowski distance), you can use a
 self-defined distance function.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cc_manh</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fuzzyclara.html">fuzzyclara</a></span><span class="op">(</span>data        <span class="op">=</span> <span class="va">USArrests</span>,</span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Example 1: Manhattan distance</span></span>
+<span><span class="va">cc_manh</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fuzzyclara.html">fuzzyclara</a></span><span class="op">(</span>data        <span class="op">=</span> <span class="va">USArrests</span>,</span>
 <span>                      clusters    <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>                      metric      <span class="op">=</span> <span class="st">"manhattan"</span>,</span>
 <span>                      samples     <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -286,8 +340,9 @@ self-defined distance function.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## Minimum average distance</span></span>
 <span><span class="co">## [1] 2.011671</span></span></code></pre>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dist_mink</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Example 2: Minkowski distance with parameter 'p = 1'</span></span>
+<span><span class="va">dist_mink</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu">proxy</span><span class="fu">::</span><span class="fu">dist</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">"minkowski"</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="va">cc_mink</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fuzzyclara.html">fuzzyclara</a></span><span class="op">(</span>data        <span class="op">=</span> <span class="va">USArrests</span>,</span>
@@ -314,16 +369,20 @@ self-defined distance function.</p>
 <div class="section level3">
 <h3 id="select-optimal-number-of-clusters">Select optimal number of clusters<a class="anchor" aria-label="anchor" href="#select-optimal-number-of-clusters"></a>
 </h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<p>To evaluate the optimal number of clusters for your application, you
+can define a to be evaluated <code>clusters_range</code> in function
+<code>evaluate_cluster_numbers</code>. The function produces a scree
+plot to compare the cluster solutions.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cc_number</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/evaluate_cluster_numbers.html">evaluate_cluster_numbers</a></span><span class="op">(</span></span>
-<span>                       data            <span class="op">=</span> <span class="va">USArrests</span>,</span>
-<span>                       clusters_range  <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">6</span>,</span>
-<span>                       metric          <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
-<span>                       samples         <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                       sample_size     <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                       type            <span class="op">=</span> <span class="st">"hard"</span>,</span>
-<span>                       seed            <span class="op">=</span> <span class="fl">3526</span>,</span>
-<span>                       verbose         <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>  data            <span class="op">=</span> <span class="va">USArrests</span>,</span>
+<span>  clusters_range  <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">6</span>,</span>
+<span>  metric          <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
+<span>  type            <span class="op">=</span> <span class="st">"hard"</span>,</span>
+<span>  seed            <span class="op">=</span> <span class="fl">3526</span>,</span>
+<span>  verbose         <span class="op">=</span> <span class="fl">0</span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">cc_number</span></span></code></pre></div>
 <p><img src="main_functionality_files/figure-html/optimal%20number%20clusters-1.png" width="700"></p>
 </div>
@@ -331,199 +390,222 @@ self-defined distance function.</p>
 <div class="section level2">
 <h2 id="plot-of-clustering-results">Plot of clustering results<a class="anchor" aria-label="anchor" href="#plot-of-clustering-results"></a>
 </h2>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Enrich the USArrest dataset by area and state</span></span>
+<p>This section showcases all types of visualizations implemented in
+<code>fuzzyclara</code>. To have some more exemplary data to plot, let’s
+first add the <code>State</code> (i.e., the name of the federal state)
+and the <code>Area</code> (i.e., West / Midwest / South / Northeast)
+information as proper columns to the data.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># define state areas</span></span>
+<span><span class="va">states_west</span>      <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Washington"</span>, <span class="st">"Oregon"</span>, <span class="st">"California"</span>, <span class="st">"Nevada"</span>, <span class="st">"Arizona"</span>,</span>
+<span>                      <span class="st">"Idaho"</span>, <span class="st">"Montana"</span>, <span class="st">"Wyoming"</span>, <span class="st">"Colorado"</span>, <span class="st">"New Mexico"</span>,</span>
+<span>                      <span class="st">"Utah"</span>, <span class="st">"Hawaii"</span>, <span class="st">"Alaska"</span><span class="op">)</span></span>
+<span><span class="va">states_south</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Texas"</span>, <span class="st">"Oklahoma"</span>, <span class="st">"Arkansas"</span>, <span class="st">"Louisiana"</span>, <span class="st">"Mississippi"</span>,</span>
+<span>                      <span class="st">"Alabama"</span>, <span class="st">"Tennessee"</span>, <span class="st">"Kentucky"</span>, <span class="st">"Georgia"</span>, <span class="st">"Florida"</span>,</span>
+<span>                      <span class="st">"South Carolina"</span>, <span class="st">"North Carolina"</span>, <span class="st">"Virginia"</span>, <span class="st">"West Virginia"</span><span class="op">)</span></span>
+<span><span class="va">states_midwest</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Kansas"</span>, <span class="st">"Nebraska"</span>, <span class="st">"South Dakota"</span>, <span class="st">"North Dakota"</span>,</span>
+<span>                      <span class="st">"Minnesota"</span>, <span class="st">"Missouri"</span>, <span class="st">"Iowa"</span>, <span class="st">"Illinois"</span>, <span class="st">"Indiana"</span>,</span>
+<span>                      <span class="st">"Michigan"</span>, <span class="st">"Wisconsin"</span>, <span class="st">"Ohio"</span><span class="op">)</span></span>
+<span><span class="va">states_northeast</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Maine"</span>, <span class="st">"New Hampshire"</span>, <span class="st">"New York"</span>, <span class="st">"Massachusetts"</span>,</span>
+<span>                      <span class="st">"Rhode Island"</span>, <span class="st">"Vermont"</span>, <span class="st">"Pennsylvania"</span>, <span class="st">"New Jersey"</span>,</span>
+<span>                      <span class="st">"Connecticut"</span>, <span class="st">"Delaware"</span>, <span class="st">"Maryland"</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># enrich data with 'State' and 'Area' information as proper columns</span></span>
 <span><span class="va">USArrests_enriched</span> <span class="op">&lt;-</span> <span class="va">USArrests</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>State <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">USArrests</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>         Area  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span><span class="va">State</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Washington"</span>, <span class="st">"Oregon"</span>,</span>
-<span>                 <span class="st">"California"</span>, <span class="st">"Nevada"</span>, <span class="st">"Arizona"</span>, <span class="st">"Idaho"</span>, <span class="st">"Montana"</span>,</span>
-<span>                 <span class="st">"Wyoming"</span>, <span class="st">"Colorado"</span>, <span class="st">"New Mexico"</span>, <span class="st">"Utah"</span>, <span class="st">"Hawaii"</span>,</span>
-<span>                 <span class="st">"Alaska"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"West"</span>,</span>
-<span>                 <span class="va">State</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Texas"</span>, <span class="st">"Oklahoma"</span>, <span class="st">"Arkansas"</span>, <span class="st">"Louisiana"</span>,</span>
-<span>                 <span class="st">"Mississippi"</span>, <span class="st">"Alabama"</span>, <span class="st">"Tennessee"</span>, <span class="st">"Kentucky"</span>, <span class="st">"Georgia"</span>,</span>
-<span>                 <span class="st">"Florida"</span>, <span class="st">"South Carolina"</span>, <span class="st">"North Carolina"</span>, <span class="st">"Virginia"</span>,</span>
-<span>                 <span class="st">"West Virginia"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"South"</span>,</span>
-<span>                 <span class="va">State</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Kansas"</span>, <span class="st">"Nebraska"</span>, <span class="st">"South Dakota"</span>,</span>
-<span>                 <span class="st">"North Dakota"</span>, <span class="st">"Minnesota"</span>, <span class="st">"Missouri"</span>, <span class="st">"Iowa"</span>, <span class="st">"Illinois"</span>,</span>
-<span>                 <span class="st">"Indiana"</span>, <span class="st">"Michigan"</span>, <span class="st">"Wisconsin"</span>, <span class="st">"Ohio"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Midwest"</span>,</span>
-<span>                 <span class="va">State</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Maine"</span>, <span class="st">"New Hampshire"</span>, <span class="st">"New York"</span>,</span>
-<span>                 <span class="st">"Massachusetts"</span>, <span class="st">"Rhode Island"</span>, <span class="st">"Vermont"</span>, <span class="st">"Pennsylvania"</span>,</span>
-<span>                 <span class="st">"New Jersey"</span>, <span class="st">"Connecticut"</span>, <span class="st">"Delaware"</span>, <span class="st">"Maryland"</span><span class="op">)</span> <span class="op">~</span></span>
-<span>                   <span class="st">"Northeast"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>State <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">USArrests</span><span class="op">)</span>,</span>
+<span>         State <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">State</span><span class="op">)</span>,</span>
+<span>         Area  <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span><span class="va">State</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">states_west</span>      <span class="op">~</span> <span class="st">"West"</span>,</span>
+<span>                           <span class="va">State</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">states_south</span>     <span class="op">~</span> <span class="st">"South"</span>,</span>
+<span>                           <span class="va">State</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">states_midwest</span>   <span class="op">~</span> <span class="st">"Midwest"</span>,</span>
+<span>                           <span class="va">State</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">states_northeast</span> <span class="op">~</span> <span class="st">"Northeast"</span><span class="op">)</span>,</span>
+<span>         Area  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">Area</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="boxplot">Boxplot<a class="anchor" aria-label="anchor" href="#boxplot"></a>
 </h3>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<p>Simply applying the general <code>plot</code> function to an object
+of class <code>fuzzyclara</code> we can use boxplots to visualize the
+differences between the clusters regarding a metric variable. In this
+example, let’s compare the distribution of the <code>Assault</code>
+variable between the clusters obtained using the hard clustering
+approach.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x        <span class="op">=</span> <span class="va">cc_hard</span>,</span>
 <span>     data     <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
 <span>     variable <span class="op">=</span> <span class="st">"Assault"</span><span class="op">)</span> </span></code></pre></div>
-<p><img src="main_functionality_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
+<p><img src="main_functionality_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="barplot">Barplot<a class="anchor" aria-label="anchor" href="#barplot"></a>
 </h3>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<p>If the variable that should be plotted is not metric, but
+categorical, the function defaults to displaying a stacked bar plot.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x        <span class="op">=</span> <span class="va">cc_hard</span>,</span>
 <span>     data     <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
 <span>     variable <span class="op">=</span> <span class="st">"Area"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="main_functionality_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
+<p><img src="main_functionality_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="wordcloud">Wordcloud<a class="anchor" aria-label="anchor" href="#wordcloud"></a>
 </h3>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<p>Specifying <code>type = "wordclouds"</code> as an argument to the
+<code>plot</code> function, it is possible to draw one wordcloud per
+cluster based on a specific variable. Due to the lack of a proper
+character variable, we here examplarily apply the wordcloud to the
+<code>State</code> variable. Please note, though, that this is obviously
+not the standard application for a wordcloud due to every state name
+appearing only once in the dataset.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x        <span class="op">=</span> <span class="va">cc_hard</span>,</span>
 <span>     data     <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
 <span>     variable <span class="op">=</span> <span class="st">"State"</span>,</span>
 <span>     type     <span class="op">=</span> <span class="st">"wordclouds"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="main_functionality_files/figure-html/unnamed-chunk-3-1.png" width="576"></p>
+<p><img src="main_functionality_files/figure-html/unnamed-chunk-6-1.png" width="576"></p>
 </div>
 <div class="section level3">
 <h3 id="scatterplot">Scatterplot<a class="anchor" aria-label="anchor" href="#scatterplot"></a>
 </h3>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<p>Instead of only displaying the distribution of one single variable,
+it is also possible to specify <code>type = "scatterplot"</code> and
+both the arguments <code>x_var</code> and <code>y_var</code>, to create
+a scatterplot of the data, joint with estimated cluster-specific linear
+trends.</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x     <span class="op">=</span> <span class="va">cc_hard</span>,</span>
 <span>     data  <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
 <span>     type  <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
 <span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>,</span>
 <span>     y_var <span class="op">=</span> <span class="st">"Assault"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## `geom_smooth()` using formula = 'y ~ x'</span></span></code></pre>
-<p><img src="main_functionality_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<p>For fuzzy clustering, you can focus on one or more clusters and plot
-the membership probability:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x     <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
+<p><img src="main_functionality_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p>For a fuzzy clustering solution, you can additionally enrich the
+scatterplot by each observation’s membership probability, plotted as
+each point’s transparency level. Simply specify
+<code>focus = TRUE</code>:</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># plot of all clusters</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x     <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
 <span>     data  <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
 <span>     type  <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
 <span>     x_var <span class="op">=</span> <span class="st">"Murder"</span>,</span>
 <span>     y_var <span class="op">=</span> <span class="st">"Assault"</span>, </span>
 <span>     focus <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="main_functionality_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x              <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
+<p><img src="main_functionality_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># plot only of selected clusters, by specifying argument 'focus_clusters'</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x              <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
 <span>     data           <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
 <span>     type           <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
 <span>     x_var          <span class="op">=</span> <span class="st">"Murder"</span>,</span>
 <span>     y_var          <span class="op">=</span> <span class="st">"Assault"</span>, </span>
 <span>     focus          <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>     focus_clusters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="main_functionality_files/figure-html/unnamed-chunk-5-2.png" width="700"></p>
+<span>     focus_clusters <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<p><img src="main_functionality_files/figure-html/unnamed-chunk-8-2.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="pca">PCA<a class="anchor" aria-label="anchor" href="#pca"></a>
 </h3>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<p>The cluster solution can be visualized based on a Principal Component
+Analysis (PCA) by specifying <code>type = "pca"</code> in the base
+<code>plot</code> function. Additionally, argument <code>group_by</code>
+can be used to specify a variable which should be depicted as different
+point shapes.</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x        <span class="op">=</span> <span class="va">cc_hard</span>,</span>
 <span>     data     <span class="op">=</span> <span class="va">USArrests_enriched</span>, </span>
 <span>     type     <span class="op">=</span> <span class="st">"pca"</span>,</span>
 <span>     group_by <span class="op">=</span> <span class="st">"Area"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="main_functionality_files/figure-html/unnamed-chunk-6-1.png" width="576"></p>
-<p>For fuzzy clustering, you can focus on one or more clusters and plot
-the membership probability:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x     <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
+<p><img src="main_functionality_files/figure-html/unnamed-chunk-9-1.png" width="576"></p>
+<p>For fuzzy clustering, you can focus on one or more clusters and also
+plot the membership probability.</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># plot of all clusters</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x     <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
 <span>     data  <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
 <span>     type  <span class="op">=</span> <span class="st">"pca"</span>,</span>
 <span>     focus <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="main_functionality_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x              <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
+<p><img src="main_functionality_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># plot only of selected clusters, by specifying argument 'focus_clusters'</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x              <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
 <span>     data           <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
 <span>     type           <span class="op">=</span> <span class="st">"pca"</span>,</span>
 <span>     focus          <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>     focus_clusters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="main_functionality_files/figure-html/unnamed-chunk-7-2.png" width="700"></p>
+<span>     focus_clusters <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<p><img src="main_functionality_files/figure-html/unnamed-chunk-10-2.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="silhouette">Silhouette<a class="anchor" aria-label="anchor" href="#silhouette"></a>
 </h3>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x    <span class="op">=</span> <span class="va">cc_hard</span>,</span>
-<span>     data <span class="op">=</span> <span class="va">USArrests</span>,</span>
-<span>     type <span class="op">=</span> <span class="st">"silhouette"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## $plot</span></span></code></pre>
-<p><img src="main_functionality_files/figure-html/unnamed-chunk-8-1.png" width="576"></p>
-<pre><code><span><span class="co">## </span></span>
-<span><span class="co">## $silhouette_table</span></span>
-<span><span class="co">##   Cluster Size Silhouette width</span></span>
+<p>A standard silhouette plot can be plotted by setting
+<code>type = "silhouette"</code>. The output object of the base
+<code>plot</code> function will be a list, including the visualization
+as element <code>plot</code>, the per-cluster average silhouette value
+as element <code>silhouette_table</code> and the overall average
+silhouette value as element <code>average_silhouette_width</code>.</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">silhouettes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x    <span class="op">=</span> <span class="va">cc_hard</span>,</span>
+<span>                    data <span class="op">=</span> <span class="va">USArrests</span>,</span>
+<span>                    type <span class="op">=</span> <span class="st">"silhouette"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">silhouettes</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
+<p><img src="main_functionality_files/figure-html/unnamed-chunk-11-1.png" width="864"></p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">silhouettes</span><span class="op">$</span><span class="va">silhouette_table</span></span></code></pre></div>
+<pre><code><span><span class="co">##   Cluster Size Silhouette width</span></span>
 <span><span class="co">## 1       1   10        0.4604416</span></span>
 <span><span class="co">## 2       2   19        0.2757843</span></span>
-<span><span class="co">## 3       3   21        0.2797126</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## $average_silhouette_width</span></span>
-<span><span class="co">## [1] 0.3143656</span></span></code></pre>
+<span><span class="co">## 3       3   21        0.2797126</span></span></code></pre>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">silhouettes</span><span class="op">$</span><span class="va">average_silhouette_width</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 0.3143656</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="fuzzy-clustering-threshold-for-membership-scores">Fuzzy clustering: Threshold for membership scores<a class="anchor" aria-label="anchor" href="#fuzzy-clustering-threshold-for-membership-scores"></a>
 </h3>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<p>As an additional option for the PCA plot for fuzzy clustering
+solutions, it is possible to set the <code>memebership_threshold</code>
+argument. All observations with a membership probability above this
+threshold will be recognized as being part of the respective <em>core
+cluster</em> and will be highlighted accordingly in the PCA plot.</p>
+<p>If we set <code>membership_threshold = 0</code> all observations
+belonging to one cluster are part of its core cluster.</p>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x                    <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
 <span>     data                 <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
 <span>     type                 <span class="op">=</span> <span class="st">"pca"</span>,</span>
 <span>     variable             <span class="op">=</span> <span class="st">"Assault"</span>,</span>
-<span>     membership_threshold <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> </span></code></pre></div>
-<p><img src="main_functionality_files/figure-html/unnamed-chunk-9-1.png" width="576"></p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x                    <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
-<span>     data                 <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
-<span>     type                 <span class="op">=</span> <span class="st">"pca"</span>,</span>
-<span>     variable             <span class="op">=</span> <span class="st">"Assault"</span>,</span>
-<span>     membership_threshold <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
-<p><img src="main_functionality_files/figure-html/unnamed-chunk-9-2.png" width="576"></p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x                    <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
-<span>     data                 <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
-<span>     type                 <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
-<span>     x_var                <span class="op">=</span> <span class="st">"Murder"</span>,</span>
-<span>     y_var                <span class="op">=</span> <span class="st">"Assault"</span>,</span>
 <span>     membership_threshold <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
-<p><img src="main_functionality_files/figure-html/unnamed-chunk-10-1.png" width="576"></p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x                    <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
-<span>     data                 <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
-<span>     type                 <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
-<span>     x_var                <span class="op">=</span> <span class="st">"Murder"</span>,</span>
-<span>     y_var                <span class="op">=</span> <span class="st">"Assault"</span>,</span>
-<span>     membership_threshold <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in qt((1 - level)/2, df): NaNs produced</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in max(ids, na.rm = TRUE): no non-missing arguments to max; returning</span></span>
-<span><span class="co">## -Inf</span></span></code></pre>
-<p><img src="main_functionality_files/figure-html/unnamed-chunk-10-2.png" width="576"></p>
+<p><img src="main_functionality_files/figure-html/unnamed-chunk-12-1.png" width="576"></p>
+<p>If we instead set <code>membership_threshold = 0.5</code>, only the
+few observations with a membership probability above 0.5 will be
+highlighted as being part of the core cluster.</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x                    <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
 <span>     data                 <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
+<span>     type                 <span class="op">=</span> <span class="st">"pca"</span>,</span>
+<span>     variable             <span class="op">=</span> <span class="st">"Assault"</span>,</span>
+<span>     membership_threshold <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
+<p><img src="main_functionality_files/figure-html/unnamed-chunk-13-1.png" width="576"></p>
+<p>The argument <code>membership_threshold</code> has a similar effect
+on scatterplots.</p>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># scatterplot with membership_threshold 0</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x                    <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
+<span>     data                 <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
 <span>     type                 <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
 <span>     x_var                <span class="op">=</span> <span class="st">"Murder"</span>,</span>
 <span>     y_var                <span class="op">=</span> <span class="st">"Assault"</span>,</span>
-<span>     membership_threshold <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>     plot_all_fuzzy       <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in qt((1 - level)/2, df): NaNs produced</span></span>
-<span><span class="co">## Warning in qt((1 - level)/2, df): no non-missing arguments to max; returning</span></span>
-<span><span class="co">## -Inf</span></span></code></pre>
-<p><img src="main_functionality_files/figure-html/unnamed-chunk-10-3.png" width="576"></p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x                    <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
-<span>     data                 <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
-<span>     type                 <span class="op">=</span> <span class="st">"pca"</span>,</span>
-<span>     group_by             <span class="op">=</span> <span class="st">"Area"</span>,</span>
 <span>     membership_threshold <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
-<p><img src="main_functionality_files/figure-html/unnamed-chunk-11-1.png" width="576"></p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x                    <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
+<p><img src="main_functionality_files/figure-html/unnamed-chunk-14-1.png" width="576"></p>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># scatterplot with membership_threshold 0.5</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x                    <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
 <span>     data                 <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
-<span>     type                 <span class="op">=</span> <span class="st">"pca"</span>,</span>
-<span>     group_by             <span class="op">=</span> <span class="st">"Area"</span>,</span>
+<span>     type                 <span class="op">=</span> <span class="st">"scatterplot"</span>,</span>
+<span>     x_var                <span class="op">=</span> <span class="st">"Murder"</span>,</span>
+<span>     y_var                <span class="op">=</span> <span class="st">"Assault"</span>,</span>
 <span>     membership_threshold <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
-<p><img src="main_functionality_files/figure-html/unnamed-chunk-11-2.png" width="576"></p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x                    <span class="op">=</span> <span class="va">cc_fuzzy</span>,</span>
-<span>     data                 <span class="op">=</span> <span class="va">USArrests_enriched</span>,</span>
-<span>     type                 <span class="op">=</span> <span class="st">"pca"</span>,</span>
-<span>     group_by             <span class="op">=</span> <span class="st">"Area"</span>,</span>
-<span>     membership_threshold <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>     plot_all_fuzzy       <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="main_functionality_files/figure-html/unnamed-chunk-11-3.png" width="576"></p>
+<p><img src="main_functionality_files/figure-html/unnamed-chunk-14-2.png" width="576"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
