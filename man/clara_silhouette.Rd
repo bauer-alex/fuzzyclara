@@ -39,5 +39,5 @@ be plotted. Must be a number between 0 and 1. Defaults to 0.}
 silhouette plot
 }
 \description{
-Function to plot a scatterplot
+Function to plot a silhouette plot
 }

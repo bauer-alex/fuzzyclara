@@ -43,7 +43,8 @@ transparency (TRUE) or not (FALSE). Defaults to FALSE.}
 \item{seed}{random number seed (needed for \code{clara_wordcloud} and
 \code{clara_parallel})}
 
-\item{...}{Further arguments for internal plot functions.}
+\item{...}{Further arguments for internal plot functions. For each type
+there is an internal plot function. See for example \code{?clara_pca}.}
 }
 \value{
 Clustering plot

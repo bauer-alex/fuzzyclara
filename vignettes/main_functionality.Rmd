@@ -16,6 +16,25 @@ editor_options:
 
 This document gives an overview of the functionality provided by the R package
 `fuzzyclara`.
+All examples are based on the dataset `USArrests` which lists four
+criminal statistics for each federal state in the U.S. in 1973:
+
+- column `Murder` contains the number of murder arrests per 100,000 inhabitants
+- column `Assault` contains the number of assault arrests per 100,000 inhabitants
+- column `UrbanPop` contains the percentage of the population living in urban areas
+- column `Rape` contains the number of rape arrests per 100,000 inhabitants
+
+Exemplarily, let's take a quick look at the first rows of `USArrests`:
+
+```{r}
+head(USArrests)
+```
+
+Based on these four dimensions we will try to cluster the federal states
+into homogeneous groups throughout all of the examples in this vignette.
+
+For starting the analyses, let's first load the `fuzzyclara` package,
+and additionally the `dplyr` package for general data handling.
 
 ```{r packages, message = FALSE}
 library(fuzzyclara)
@@ -26,34 +45,64 @@ library(dplyr)
 ## Clustering
 
 ### Hard clustering
+
+Applying function `fuzzyclara` with argument `type = "hard"` allows us to perform a
+hard clustering of the federal states utilizing the CLARA clustering algorithm.
+In this example, let's compute a cluster solution with 3 clusters based on the
+euclidean distance metric.
+
 ```{r, hard clustering example}
 cc_hard <- fuzzyclara(data        = USArrests,
                       clusters    = 3,
                       metric      = "euclidean",
-                      samples     = 1,
-                      sample_size = NULL,
                       type        = "hard",
                       seed        = 3526,
                       verbose     = 0)
+```
+
+The output object contains the `Medoids` -- i.e., the most central / most *typical* observation
+for each of the three clusters --, the `Clustering` vector specifying for each observation
+which cluster it belongs to, and the `Minimum average distance`, which is defined as the average distance between each observation to its cluster, with `Minimum` referring to
+this average distance value of the outputted optimal cluster solution.
+
+```{r}
 cc_hard
 ```
 
 ### Fuzzy clustering
+
+Alternatively, it is possible to perform a fuzzy clustering by setting
+`type = "fuzzy"`. Additionally, the *fuzziness parameter* `m` could be set to
+any value between 1 and 2. 2, i.e. the default value, encodes full fuzzyness, and
+1 encodes no fuzziness at all, i.e. a hard clustering.
+
 ```{r, fuzzy clustering example}
 cc_fuzzy <- fuzzyclara(data        = USArrests,
                        clusters    = 3,
                        metric      = "euclidean",
-                       samples     = 1,
-                       sample_size = NULL,
                        type        = "fuzzy",
                        m           = 2,
                        seed        = 3526,
                        verbose     = 0)
+```
+
+The output contains the same elements as the hard clustering output above.
+Additionally it includes a matrix of the `Membership scores`. For each federal state
+this matrix contains the membership probabilities to the three different clusters.
+
+```{r}
 cc_fuzzy
 ```
 
+
 ### Clustering with self-defined distance function and other distance functions
+
+It is possible to pass your own distance function to function `fuzzyclara`
+through the argument `metric`, as shown in the following example and as explained
+in `?fuzzyclara`.
+
 ```{r, self-defined distance function, warning = FALSE}
+# define a quadratic distance function
 dist_function <- function(x, y) {
   sqrt(sum((x - y)^2))
 }
@@ -61,8 +110,6 @@ dist_function <- function(x, y) {
 cc_dist <- fuzzyclara(data        = USArrests,
                       clusters    = 3,
                       metric      = dist_function,
-                      samples     = 1,
-                      sample_size = NULL,
                       type        = "fuzzy",
                       m           = 2,
                       seed        = 3526,
@@ -70,8 +117,10 @@ cc_dist <- fuzzyclara(data        = USArrests,
 cc_dist
 ```
 
-You can also use other distance functions from the proxy package like Gower, Manhattan etc. In order to specify arguments of the distance metric (e. g. *p* for Minkowski distance), you can use a self-defined distance function.
+You can also use other distance functions from the `proxy` package like Gower, Manhattan etc. In order to specify arguments of the distance metric (e. g. *p* for Minkowski distance), you can use a self-defined distance function.
+
 ```{r manhattan, warning = FALSE}
+# Example 1: Manhattan distance
 cc_manh <- fuzzyclara(data        = USArrests,
                       clusters    = 3,
                       metric      = "manhattan",
@@ -82,6 +131,7 @@ cc_manh <- fuzzyclara(data        = USArrests,
                       verbose     = 0)
 cc_manh
 
+# Example 2: Minkowski distance with parameter 'p = 1'
 dist_mink <- function(x, y) {
   proxy::dist(list(x, y), method = "minkowski", p = 1)
 }
@@ -96,47 +146,68 @@ cc_mink <- fuzzyclara(data        = USArrests,
 cc_mink
 ```
 
+
 ### Select optimal number of clusters
+
+To evaluate the optimal number of clusters for your application, you can 
+define a to be evaluated `clusters_range` in function `evaluate_cluster_numbers`.
+The function produces a scree plot to compare the cluster solutions.
+
 ```{r optimal number clusters, warning = FALSE}
 cc_number <- evaluate_cluster_numbers(
-                       data            = USArrests,
-                       clusters_range  = 2:6,
-                       metric          = "euclidean",
-                       samples         = 1,
-                       sample_size     = NULL,
-                       type            = "hard",
-                       seed            = 3526,
-                       verbose         = 0)
+  data            = USArrests,
+  clusters_range  = 2:6,
+  metric          = "euclidean",
+  type            = "hard",
+  seed            = 3526,
+  verbose         = 0
+)
+
 cc_number
 ```
 
 
-
 ## Plot of clustering results
+
+This section showcases all types of visualizations implemented in `fuzzyclara`.
+To have some more exemplary data to plot, let's first add the `State` (i.e., the 
+name of the federal state) and the `Area` (i.e., West / Midwest / South / Northeast)
+information as proper columns to the data.
+
 ```{r, enrichment example}
-# Enrich the USArrest dataset by area and state
+# define state areas
+states_west      <- c("Washington", "Oregon", "California", "Nevada", "Arizona",
+                      "Idaho", "Montana", "Wyoming", "Colorado", "New Mexico",
+                      "Utah", "Hawaii", "Alaska")
+states_south     <- c("Texas", "Oklahoma", "Arkansas", "Louisiana", "Mississippi",
+                      "Alabama", "Tennessee", "Kentucky", "Georgia", "Florida",
+                      "South Carolina", "North Carolina", "Virginia", "West Virginia")
+states_midwest   <- c("Kansas", "Nebraska", "South Dakota", "North Dakota",
+                      "Minnesota", "Missouri", "Iowa", "Illinois", "Indiana",
+                      "Michigan", "Wisconsin", "Ohio")
+states_northeast <- c("Maine", "New Hampshire", "New York", "Massachusetts",
+                      "Rhode Island", "Vermont", "Pennsylvania", "New Jersey",
+                      "Connecticut", "Delaware", "Maryland")
 
+# enrich data with 'State' and 'Area' information as proper columns
 USArrests_enriched <- USArrests %>% 
-  mutate(State = as.factor(rownames(USArrests)),
-         Area  = as.factor(case_when(State %in% c("Washington", "Oregon",
-                 "California", "Nevada", "Arizona", "Idaho", "Montana",
-                 "Wyoming", "Colorado", "New Mexico", "Utah", "Hawaii",
-                 "Alaska") ~ "West",
-                 State %in% c("Texas", "Oklahoma", "Arkansas", "Louisiana",
-                 "Mississippi", "Alabama", "Tennessee", "Kentucky", "Georgia",
-                 "Florida", "South Carolina", "North Carolina", "Virginia",
-                 "West Virginia") ~ "South",
-                 State %in% c("Kansas", "Nebraska", "South Dakota",
-                 "North Dakota", "Minnesota", "Missouri", "Iowa", "Illinois",
-                 "Indiana", "Michigan", "Wisconsin", "Ohio") ~ "Midwest",
-                 State %in% c("Maine", "New Hampshire", "New York",
-                 "Massachusetts", "Rhode Island", "Vermont", "Pennsylvania",
-                 "New Jersey", "Connecticut", "Delaware", "Maryland") ~
-                   "Northeast")))
-
+  mutate(State = rownames(USArrests),
+         State = factor(State),
+         Area  = case_when(State %in% states_west      ~ "West",
+                           State %in% states_south     ~ "South",
+                           State %in% states_midwest   ~ "Midwest",
+                           State %in% states_northeast ~ "Northeast"),
+         Area  = factor(Area))
 ```
 
 ### Boxplot
+
+Simply applying the general `plot` function to an object of class `fuzzyclara`
+we can use boxplots to visualize the differences between the clusters regarding
+a metric variable.
+In this example, let's compare the distribution of the `Assault` variable between
+the clusters obtained using the hard clustering approach.
+
 ```{r}
 plot(x        = cc_hard,
      data     = USArrests_enriched,
@@ -144,6 +215,10 @@ plot(x        = cc_hard,
 ```
 
 ### Barplot
+
+If the variable that should be plotted is not metric, but categorical,
+the function defaults to displaying a stacked bar plot.
+
 ```{r}
 plot(x        = cc_hard,
      data     = USArrests_enriched,
@@ -151,6 +226,14 @@ plot(x        = cc_hard,
 ```
 
 ### Wordcloud
+
+Specifying `type = "wordclouds"` as an argument to the `plot` function,
+it is possible to draw one wordcloud per cluster based on a specific variable.
+Due to the lack of a proper character variable, we here examplarily apply the
+wordcloud to the `State` variable. Please note, though, that this is obviously
+not the standard application for a wordcloud due to every state name appearing
+only once in the dataset.
+
 ```{r fig.width=6, fig.height=4}
 plot(x        = cc_hard,
      data     = USArrests_enriched,
@@ -159,17 +242,26 @@ plot(x        = cc_hard,
 ```
 
 ### Scatterplot
-```{r}
+
+Instead of only displaying the distribution of one single variable,
+it is also possible to specify `type = "scatterplot"` and both the arguments
+`x_var` and `y_var`, to create a scatterplot of the data, joint with
+estimated cluster-specific linear trends.
+
+```{r, message=FALSE}
 plot(x     = cc_hard,
      data  = USArrests_enriched,
      type  = "scatterplot",
      x_var = "Murder",
      y_var = "Assault")
-
 ```
 
-For fuzzy clustering, you can focus on one or more clusters and plot the membership probability:
+For a fuzzy clustering solution, you can additionally enrich the scatterplot
+by each observation's membership probability, plotted as each point's transparency
+level. Simply specify `focus = TRUE`:
+
 ```{r}
+# plot of all clusters
 plot(x     = cc_fuzzy,
      data  = USArrests_enriched,
      type  = "scatterplot",
@@ -177,19 +269,24 @@ plot(x     = cc_fuzzy,
      y_var = "Assault", 
      focus = TRUE)
 
+# plot only of selected clusters, by specifying argument 'focus_clusters'
 plot(x              = cc_fuzzy,
      data           = USArrests_enriched,
      type           = "scatterplot",
      x_var          = "Murder",
      y_var          = "Assault", 
      focus          = TRUE,
-     focus_clusters = c(1))
-
+     focus_clusters = 1)
 ```
 
 
-
 ### PCA
+
+The cluster solution can be visualized based on a Principal Component Analysis (PCA)
+by specifying `type = "pca"` in the base `plot` function.
+Additionally, argument `group_by` can be used to specify a variable which should
+be depicted as different point shapes.
+
 ```{r fig.width=6, fig.height=4}
 plot(x        = cc_hard,
      data     = USArrests_enriched, 
@@ -197,38 +294,67 @@ plot(x        = cc_hard,
      group_by = "Area")
 ```
 
-For fuzzy clustering, you can focus on one or more clusters and plot the membership probability:
+For fuzzy clustering, you can focus on one or more clusters and also plot the membership probability.
+
 ```{r}
+# plot of all clusters
 plot(x     = cc_fuzzy,
      data  = USArrests_enriched,
      type  = "pca",
      focus = TRUE)
 
+# plot only of selected clusters, by specifying argument 'focus_clusters'
 plot(x              = cc_fuzzy,
      data           = USArrests_enriched,
      type           = "pca",
      focus          = TRUE,
-     focus_clusters = c(1))
-
+     focus_clusters = 1)
 ```
-
 
 
 ### Silhouette
-```{r fig.width=6, fig.height=4}
-plot(x    = cc_hard,
-     data = USArrests,
-     type = "silhouette")
+
+A standard silhouette plot can be plotted by setting `type = "silhouette"`.
+The output object of the base `plot` function will be a list, including the visualization
+as element `plot`, the per-cluster average silhouette value as element `silhouette_table`
+and the overall average silhouette value as element `average_silhouette_width`.
+
+```{r fig.width=9, fig.height=4}
+silhouettes <- plot(x    = cc_hard,
+                    data = USArrests,
+                    type = "silhouette")
+
+silhouettes$plot
+
+silhouettes$silhouette_table
+
+silhouettes$average_silhouette_width
 ```
 
 ### Fuzzy clustering: Threshold for membership scores
+
+As an additional option for the PCA plot for fuzzy clustering solutions,
+it is possible to set the `memebership_threshold` argument.
+All observations with a membership probability above this threshold will be
+recognized as being part of the respective *core cluster* and will be highlighted accordingly
+in the PCA plot.
+
+If we set `membership_threshold = 0` all observations belonging to one cluster
+are part of its core cluster.
+
 ```{r fig.width=6, fig.height=4}
 plot(x                    = cc_fuzzy,
      data                 = USArrests_enriched,
      type                 = "pca",
      variable             = "Assault",
-     membership_threshold = 0) 
+     membership_threshold = 0)
+```
 
+If we instead set `membership_threshold = 0.5`, only the few observations
+with a membership probability above 0.5 will be highlighted as being part of the
+core cluster.
+
+```{r fig.width=6, fig.height=4}
 plot(x                    = cc_fuzzy,
      data                 = USArrests_enriched,
      type                 = "pca",
@@ -236,7 +362,10 @@ plot(x                    = cc_fuzzy,
      membership_threshold = 0.5)
 ```
 
+The argument `membership_threshold` has a similar effect on scatterplots.
+
 ```{r fig.width=6, fig.height=4, message = FALSE}
+# scatterplot with membership_threshold 0
 plot(x                    = cc_fuzzy,
      data                 = USArrests_enriched,
      type                 = "scatterplot",
@@ -244,39 +373,11 @@ plot(x                    = cc_fuzzy,
      y_var                = "Assault",
      membership_threshold = 0)
 
+# scatterplot with membership_threshold 0.5
 plot(x                    = cc_fuzzy,
      data                 = USArrests_enriched,
      type                 = "scatterplot",
      x_var                = "Murder",
      y_var                = "Assault",
      membership_threshold = 0.5)
-
-plot(x                    = cc_fuzzy,
-     data                 = USArrests_enriched,
-     type                 = "scatterplot",
-     x_var                = "Murder",
-     y_var                = "Assault",
-     membership_threshold = 0.5,
-     plot_all_fuzzy       = TRUE)
-```
-
-```{r fig.width=6, fig.height=4, message = FALSE}
-plot(x                    = cc_fuzzy,
-     data                 = USArrests_enriched,
-     type                 = "pca",
-     group_by             = "Area",
-     membership_threshold = 0)
-
-plot(x                    = cc_fuzzy,
-     data                 = USArrests_enriched,
-     type                 = "pca",
-     group_by             = "Area",
-     membership_threshold = 0.5)
-
-plot(x                    = cc_fuzzy,
-     data                 = USArrests_enriched,
-     type                 = "pca",
-     group_by             = "Area",
-     membership_threshold = 0.5,
-     plot_all_fuzzy       = TRUE)
 ```

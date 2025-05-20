@@ -19,7 +19,8 @@
 #' transparency (TRUE) or not (FALSE). Defaults to FALSE.
 #' @param seed random number seed (needed for \code{clara_wordcloud} and
 #' \code{clara_parallel})
-#' @param ... Further arguments for internal plot functions.
+#' @param ... Further arguments for internal plot functions. For each type
+#' there is an internal plot function. See for example \code{?clara_pca}.
 #' @return Clustering plot
 #'
 #' @import checkmate cluster dplyr factoextra ggplot2 ggpubr
@@ -181,7 +182,7 @@ plot.fuzzyclara <- function(x,
   int_vars <- unlist(lapply(data, is.integer))
   data[, int_vars] <- lapply(data[, int_vars], as.numeric)
 
-  # if PCA or , scale the data
+  # if PCA or parallel plot, scale the data
   # could be also used as an argument to the function
   if (!is.null(type) && type %in% c("pca", "parallel")) {
     ind <- unlist(lapply(data, is.numeric), use.names = TRUE)
@@ -553,7 +554,7 @@ clara_pca <- function(x,
   variance_perc <- eigenvalue$variance.percent
 
   # plot with memberships of all clusters
-  if(x$type == "fuzzy" & focus == TRUE) {
+  if (x$type == "fuzzy" & focus == TRUE) {
     # convert data into long format containing information on membership scores
     individuals_coord <- cbind(individuals_coord, x$membership_scores)
     data_long         <- individuals_coord %>%
@@ -580,7 +581,7 @@ clara_pca <- function(x,
         ylab = paste0("Dim 2 (", variance_perc[2], "% )" )) +
         theme_minimal() + facet_wrap(~cluster) +
         guides(color = "none",
-               alpha = guide_legend(title = "membership \n probability"))
+               alpha = guide_legend(title = "membership\nprobability"))
 
     } else { # group_by = NULL
       plot <- ggscatter(
@@ -593,7 +594,7 @@ clara_pca <- function(x,
       ) + theme_minimal() +
         facet_wrap(~cluster) +
         guides(color = "none",
-               alpha = guide_legend(title = "membership \n probability"))
+               alpha = guide_legend(title = "membership\nprobability"))
     }
 
   } else { # normal PCA plot
@@ -617,6 +618,7 @@ clara_pca <- function(x,
         xlab = paste0("Dim 1 (", variance_perc[1], "% )" ),
         ylab = paste0("Dim 2 (", variance_perc[2], "% )" )
       ) + stat_mean(aes(color = cluster), size = 4) + theme_minimal()
+      
     } else {
       plot <- ggscatter(
         individuals_coord, x = "Dim.1", y = "Dim.2",
@@ -847,7 +849,7 @@ clara_scatterplot <- function(x,
                  color = cluster)) +
       geom_point() + theme_minimal() + facet_wrap(~cluster) +
       guides(color = "none",
-             alpha = guide_legend(title = "membership \n probability"))
+             alpha = guide_legend(title = "membership\nprobability"))
 
   } else { # normal scatterplot
     plot <- data %>%
@@ -871,7 +873,7 @@ clara_scatterplot <- function(x,
 
 #' Plot function silhouette
 #'
-#' Function to plot a scatterplot
+#' Function to plot a silhouette plot
 #'
 #' @inheritParams plot.fuzzyclara
 #' @param metric  A character specifying a predefined dissimilarity metric (like
