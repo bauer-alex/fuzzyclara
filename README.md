@@ -43,6 +43,10 @@ The most current version from GitHub can be installed via
 
 ``` r
 devtools::install_github("bauer-alex/fuzzyclara")
+
+# potential installation problems (specifically on MacOS) might be resolved
+# by previously specifically installing some dependency packages
+install.packages(c("vegclust", "ggwordcloud", "ggpubr", "factoextra"))
 ```
 
 ## How to Contribute
