@@ -34,8 +34,9 @@ functions and diverse visualization techniques.
 ## Documentation and Useful Materials
 
 To get an overview of the functionalities of the package, check out the
-[package
-vignette](https://bauer-alex.github.io/fuzzyclara/articles/main_functionality.html).
+[JOSS publication](https://joss.theoj.org/papers/10.21105/joss.07887)
+or the 
+[package vignette](https://bauer-alex.github.io/fuzzyclara/articles/main_functionality.html).
 
 ## Installation
 
